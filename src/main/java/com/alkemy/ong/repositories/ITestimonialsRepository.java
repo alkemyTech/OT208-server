@@ -1,7 +1,7 @@
 package com.alkemy.ong.repositories;
 
 import com.alkemy.ong.models.TestimonialsEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @class TestimonialsRepository
  */
 @Repository
-public interface ITestimonialsRepository extends CrudRepository<TestimonialsEntity, Long> {
+public interface ITestimonialsRepository extends JpaRepository<TestimonialsEntity, Long> {
 }
