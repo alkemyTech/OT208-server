@@ -3,10 +3,13 @@
  */
 package com.alkemy.ong.repositories;
 
+import com.alkemy.ong.models.MemberEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 /**
  *
  * @author acamus
  */
-public class MemberRepo {
+public interface MemberRepo extends JpaRepository<MemberEntity, Long>{
     
 }
