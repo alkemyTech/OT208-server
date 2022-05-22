@@ -5,15 +5,18 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /*
 COMO desarrollador 
@@ -31,7 +34,8 @@ timestamps
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@EntityListeners(AuditingEntityListener.class)
+@Table(name = "roles")
+@EntityListeners(AuditingEntityListener.class)
 public class RoleEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
