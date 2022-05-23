@@ -65,8 +65,8 @@ public class UserEntity implements Serializable {
 	private List<Role> roleIds;
 
 	@CreatedDate
-	private LocalDateTime created;
+	private LocalDateTime timestamps;
 
 	@Column(nullable = false)
-	private boolean active = true;
+	private boolean softDelete = true;
 }
