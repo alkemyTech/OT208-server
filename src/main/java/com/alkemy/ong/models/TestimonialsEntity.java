@@ -21,16 +21,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "testimonials")
-@Where(clause = "active = true")
+@Where(clause = "softDelete = true")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE testimonials SET active = false WHERE id=?")
+@SQLDelete(sql = "UPDATE testimonials SET softDelete = false WHERE id=?")
 public class TestimonialsEntity implements Serializable {
     private static final long serialVersionUID = 641554778L;
 
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long uuid;
 
     @Column(length = 100)
     private String name;
@@ -43,7 +43,7 @@ public class TestimonialsEntity implements Serializable {
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime created;
+    private LocalDateTime timestamps;
 
-    private boolean active = Boolean.TRUE;
+    private boolean softDelete = Boolean.TRUE;
 }
