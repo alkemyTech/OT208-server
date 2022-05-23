@@ -59,7 +59,7 @@ public class ActivityEntity implements Serializable {
 
     @Column(nullable = false)
     @CreatedDate
-    private LocalDateTime create;
+    private LocalDateTime created;
 
     private boolean active = Boolean.TRUE;
 
