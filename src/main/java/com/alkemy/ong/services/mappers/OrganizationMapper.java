@@ -1,7 +1,7 @@
 package com.alkemy.ong.services.mappers;
 
 import com.alkemy.ong.dto.OrganizationPublicDTO;
-import com.alkemy.ong.models.OrganizationEntity;
+import com.alkemy.ong.entities.OrganizationEntity;
 import org.springframework.stereotype.Component;
 
 @Component
