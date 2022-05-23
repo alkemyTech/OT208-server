@@ -3,6 +3,7 @@ package com.alkemy.ong.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,8 +18,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE news SET active = false WHERE id=?")
-@Where(clause = "active=true")
+@SQLDelete(sql = "UPDATE news SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete=false")
 @EntityListeners(AuditingEntityListener.class)
 public class NewsEntity implements Serializable {
 
@@ -26,8 +27,10 @@ public class NewsEntity implements Serializable {
     private static final long serialVersionUID = 2888946607675320668L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid")
+    @Column(length = 36)
+    private String id;
 
     @Column(nullable = false, length = 150)
     private String name;
@@ -43,9 +46,9 @@ public class NewsEntity implements Serializable {
     private CategoryEntity categoryId;
 
     @Column(nullable = false)
-    private boolean active = Boolean.TRUE;
+    private boolean softDelete = false;
 
     @Column(nullable = false)
     @CreatedDate
-    private LocalDateTime created;
+    private LocalDateTime timestamps;
 }
