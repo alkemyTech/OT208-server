@@ -30,8 +30,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE users SET active = false WHERE id=?")
-@Where(clause = "active = true")
+@SQLDelete(sql = "UPDATE users SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
 public class UserEntity implements Serializable {
 
 	private static final long serialVersionUID = -693893366266595654L;
@@ -68,5 +68,5 @@ public class UserEntity implements Serializable {
 	private LocalDateTime timestamps;
 
 	@Column(nullable = false)
-	private boolean softDelete = true;
+	private boolean softDelete = false;
 }
