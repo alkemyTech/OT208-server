@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @class TestimonialsRepository
  */
 @Repository
-public interface ITestimonialsRepository extends JpaRepository<TestimonialsEntity, Long> {
+public interface ITestimonialsRepository extends JpaRepository<TestimonialsEntity, String> {
 }
