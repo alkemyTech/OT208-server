@@ -1,6 +1,6 @@
 package com.alkemy.ong.controllers;
 
-import com.alkemy.ong.dto.OrganizationPublicDTO;
+import com.alkemy.ong.dto.OrganizationPublicDataDTO;
 import com.alkemy.ong.services.OrganizationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,8 @@ public class OrganizationController {
     private final OrganizationService organizationService;
 
     @GetMapping("/public")
-    public ResponseEntity<OrganizationPublicDTO> publicData(@RequestParam Long id) {
-        OrganizationPublicDTO publicDataDTO = organizationService.getPublicOrganizationData(id);
+    public ResponseEntity<OrganizationPublicDataDTO> publicData(@RequestParam Long id) {
+        OrganizationPublicDataDTO publicDataDTO = organizationService.getPublicOrganizationData(id);
         return ResponseEntity.ok().body(publicDataDTO);
     }
 }

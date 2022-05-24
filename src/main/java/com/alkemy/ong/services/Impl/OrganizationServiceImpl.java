@@ -1,9 +1,9 @@
 package com.alkemy.ong.services.Impl;
 
-import com.alkemy.ong.dto.OrganizationPublicDTO;
-import com.alkemy.ong.entities.OrganizationEntity;
+import com.alkemy.ong.dto.OrganizationPublicDataDTO;
+import com.alkemy.ong.models.OrganizationEntity;
+import com.alkemy.ong.repository.OrganizationRepository;
 import com.alkemy.ong.services.mappers.OrganizationMapper;
-import com.alkemy.ong.repositories.OrganizationRepository;
 import com.alkemy.ong.services.OrganizationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationMapper organizationMapper;
 
     @Override
-    public OrganizationPublicDTO getPublicOrganizationData(Long id) {
-        OrganizationEntity organization = organizationRepository.getById(id);
+    public OrganizationPublicDataDTO getPublicOrganizationData(Long id) {
+        OrganizationEntity organization = organizationRepository.findById(id).orElseThrow();
         return organizationMapper.publicDataOrganization(organization);
     }
 }

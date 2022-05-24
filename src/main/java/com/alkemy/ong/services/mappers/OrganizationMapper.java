@@ -1,18 +1,19 @@
 package com.alkemy.ong.services.mappers;
 
-import com.alkemy.ong.dto.OrganizationPublicDTO;
-import com.alkemy.ong.entities.OrganizationEntity;
+import com.alkemy.ong.dto.OrganizationPublicDataDTO;
+import com.alkemy.ong.models.OrganizationEntity;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class OrganizationMapper {
 
-    public OrganizationPublicDTO publicDataOrganization(OrganizationEntity organizationEntity){
-        OrganizationPublicDTO organizationPublicDTO = new OrganizationPublicDTO();
-        organizationPublicDTO.setName(organizationEntity.getName());
-        organizationPublicDTO.setImage(organizationEntity.getImage());
-        organizationPublicDTO.setPhone(organizationEntity.getPhone());
-        organizationPublicDTO.setAddress(organizationEntity.getAddress());
-        return organizationPublicDTO;
+    private final ModelMapper mapper;
+
+    public OrganizationPublicDataDTO publicDataOrganization(OrganizationEntity organizationEntity){
+        return mapper.map(organizationEntity, OrganizationPublicDataDTO.class);
     }
+
 }
