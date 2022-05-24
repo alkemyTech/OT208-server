@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @Entity(name = "testimonials")
 @Where(clause = "softDelete = false")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE testimonials SET softDelete = false WHERE id=?")
+@SQLDelete(sql = "UPDATE testimonials SET soft_delete = false WHERE id=?")
 public class TestimonialsEntity implements Serializable {
     private static final long serialVersionUID = 641554778L;
 
