@@ -27,6 +27,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
@@ -48,9 +49,9 @@ public class MemberEntity implements Serializable {
     private static final long serialVersionUID = 641554778L;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name= "uuid", strategy = "uuid2")
+    private String id;
     
     @Column(nullable = false, length = 50)
     private String name;
