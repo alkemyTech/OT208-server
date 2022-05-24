@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 public interface OrganizationRepository extends JpaRepository<OrganizationEntity, Long>{
     
     /**
-    * Method to search only the records with the active field set to true, 
+    * Method to search only the records with the softDelete field set to false, 
     * @return List(Entity)
     */
-    @Query("SELECT o FROM OrganizationEntity o WHERE o.active = true")
-    public List<OrganizationEntity> searchActive();
+    @Query("SELECT o FROM OrganizationEntity o WHERE o.softDelete = false")
+    public List<OrganizationEntity> searchAllNonDeleted();
     
 }
