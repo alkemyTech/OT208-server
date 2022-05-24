@@ -62,7 +62,7 @@ public class UserEntity implements Serializable {
 	@JoinTable(	name = "roles_users",
 				joinColumns = @JoinColumn(name = "user_id"),
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private List<Role> roleIds;
+	private List<RoleEntity> roleIds;
 
 	@CreatedDate
 	private LocalDateTime timestamps;
