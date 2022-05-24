@@ -1,8 +1,8 @@
 package com.alkemy.ong.services;
 
 
-import com.alkemy.ong.dto.OrganizationPublicDataDTO;
+import com.alkemy.ong.dto.OrganizationPublicDataDto;
 
 public interface OrganizationService {
-    OrganizationPublicDataDTO getPublicOrganizationData(Long id);
+    OrganizationPublicDataDto getPublicOrganizationData(Long id);
 }
