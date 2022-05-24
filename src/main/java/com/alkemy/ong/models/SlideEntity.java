@@ -12,19 +12,21 @@ package com.alkemy.ong.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
+/*
  * @author Eduardo Sanchez <https://github.com/EdwardDavys/>
  */
 
-@Entity()
+@Entity
 @Table(name = "slides")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class SlideEntity implements Serializable {
 
     private static final long serialVersionUID =1L;
@@ -32,7 +34,7 @@ public class SlideEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id",nullable = false)
-    private long id;
+    private Long id;
 
     @Column(nullable = false,length = 80)
     private String imageUrl;
@@ -40,7 +42,7 @@ public class SlideEntity implements Serializable {
     @Column(columnDefinition = "TEXT",nullable = false)
     private String text;
 
-    @Column(nullable = false,length = 50)
+    @Column(name = "orders",nullable = false)
     private Integer order;
 
     @ManyToOne(optional = false,cascade = CascadeType.ALL)
