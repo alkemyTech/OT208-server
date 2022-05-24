@@ -14,10 +14,10 @@ import org.springframework.data.jpa.repository.Query;
 public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
     
     /**
-    * Method to search only the records with the active field set to true, 
+    * Method to search only the records with the softDelete field set to false, 
     * @return List(Entity)
     */
-    @Query("SELECT m FROM MemberEntity m WHERE m.active = true")
-    public List<MemberEntity> searchActive();
+    @Query("SELECT m FROM MemberEntity m WHERE m.softDelete = false")
+    public List<MemberEntity> searchAllNonDeleted();
     
 }

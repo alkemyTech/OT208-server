@@ -40,8 +40,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE members SET active = false WHERE id=?")
-@Where(clause = "active = true")
+@SQLDelete(sql = "UPDATE members SET softDelete = true WHERE id=?")
+@Where(clause = "softDelete = false")
 @EntityListeners(AuditingEntityListener.class)
 public class MemberEntity implements Serializable {
     
@@ -72,8 +72,8 @@ public class MemberEntity implements Serializable {
    
     @Column(nullable = false)
     @CreatedDate
-    private LocalDateTime created;
+    private LocalDateTime timestamps;
    
-    private boolean active = Boolean.TRUE;
+    private boolean softDelete = Boolean.FALSE;
     
 }
