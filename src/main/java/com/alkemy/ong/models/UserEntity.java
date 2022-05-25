@@ -68,5 +68,5 @@ public class UserEntity implements Serializable {
 	private LocalDateTime timestamps;
 
 	@Column(nullable = false)
-	private boolean softDelete = false;
+	private Boolean softDelete = Boolean.TRUE;
 }
