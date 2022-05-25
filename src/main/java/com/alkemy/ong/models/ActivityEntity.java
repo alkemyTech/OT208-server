@@ -46,10 +46,10 @@ public class ActivityEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2",strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id ;
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GeneratedValue(generator = "uuid")
+    @Column(length = 36)
+    private String id;
 
     @Column(nullable = false, length = 60)
     private String name;
@@ -65,6 +65,6 @@ public class ActivityEntity implements Serializable {
     private LocalDateTime timestamps;
 
     @Column(nullable = false)
-    private boolean softDelete = Boolean.FALSE;
+    private Boolean softDelete = Boolean.FALSE;
 
 }
