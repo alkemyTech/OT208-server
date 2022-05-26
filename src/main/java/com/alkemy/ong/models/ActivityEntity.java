@@ -1,4 +1,23 @@
+/*
+* Ticket OT208-21
+* COMO desarollador
+* QUIERO agregar la entidad Activity
+* PARA representar en la implementacion la estructura de datos
+*
+* Criterios de Aceptacion:
+* Nombre de la tabla: activities, Campos:
+* name: VARCHAR NOT NULL
+* content: TEXT NOT NULL
+* image: VARCHAR NOT NULL
+* timestamps y softDelete
+*/
+
+
 package com.alkemy.ong.models;
+
+/*
+* @autor Eduardo Sanchez
+*/
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,21 +31,19 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class Testimonials
- */
+@Entity
+@Table(name = "activities")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "testimonials")
+@SQLDelete(sql = "UPDATE activities SET softDelete = true WHERE id=?")
 @Where(clause = "softDelete = false")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE testimonials SET soft_delete = false WHERE id=?")
-public class TestimonialsEntity implements Serializable {
-    private static final long serialVersionUID = 641554778L;
+public class ActivityEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -34,18 +51,20 @@ public class TestimonialsEntity implements Serializable {
     @Column(length = 36)
     private String id;
 
-    @Column(length = 100)
+    @Column(nullable = false, length = 60)
     private String name;
 
-    @Column(nullable = false, length = 150)
-    private String image;
-
-    @Column(nullable = false, length = 150)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @CreatedDate
+    @Column(nullable = false, length = 80)
+    private String image;
+
     @Column(nullable = false)
+    @CreatedDate
     private LocalDateTime timestamps;
 
-    private boolean softDelete = Boolean.FALSE;
+    @Column(nullable = false)
+    private Boolean softDelete = Boolean.FALSE;
+
 }

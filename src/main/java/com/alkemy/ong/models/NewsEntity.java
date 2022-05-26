@@ -13,20 +13,18 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class Testimonials
- */
+@Entity
+@Table(name="news")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "testimonials")
-@Where(clause = "softDelete = false")
+@SQLDelete(sql = "UPDATE news SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete=false")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE testimonials SET soft_delete = false WHERE id=?")
-public class TestimonialsEntity implements Serializable {
-    private static final long serialVersionUID = 641554778L;
+public class NewsEntity implements Serializable {
+
+
+    private static final long serialVersionUID = 2888946607675320668L;
 
     @Id
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -34,18 +32,23 @@ public class TestimonialsEntity implements Serializable {
     @Column(length = 36)
     private String id;
 
-    @Column(length = 100)
+    @Column(nullable = false, length = 150)
     private String name;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private  String content;
 
     @Column(nullable = false, length = 150)
     private String image;
 
-    @Column(nullable = false, length = 150)
-    private String content;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name="category_id")
+    private CategoryEntity categoryId;
 
-    @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime timestamps;
+    private boolean softDelete = false;
 
-    private boolean softDelete = Boolean.FALSE;
+    @Column(nullable = false)
+    @CreatedDate
+    private LocalDateTime timestamps;
 }

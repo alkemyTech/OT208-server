@@ -1,7 +1,7 @@
 package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.dto.UserDTO;
-import com.alkemy.ong.dtos.request.UserLogindto;
+import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.exeptions.EmailExistsException;
 import com.alkemy.ong.exeptions.RoleExistException;
 import com.alkemy.ong.models.RoleEntity;
@@ -16,7 +16,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
 
-    public UserDetails login(UserLogindto userLoginDto) {
+    public UserDetails login(UserLoginDto userLoginDto) {
         UserDetails userDetails;
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -94,4 +96,5 @@ public class UserServiceImpl implements UserService {
                 "Rol dont's exist:" + role);
         }
     }
+
 }
