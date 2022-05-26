@@ -2,6 +2,7 @@ package com.alkemy.ong.models;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -42,5 +44,8 @@ public class RoleEntity implements Serializable {
 	@CreatedDate
 	@Column(length = 50)
 	private Timestamp timestamp;
+        
+        @ManyToMany(mappedBy = "roleIds")
+        List<UserEntity> users;
 	
 }
