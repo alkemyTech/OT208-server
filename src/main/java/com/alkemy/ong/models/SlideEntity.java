@@ -12,6 +12,7 @@ package com.alkemy.ong.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -32,9 +33,9 @@ public class SlideEntity implements Serializable {
     private static final long serialVersionUID =1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
-    private Long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name= "uuid", strategy = "uuid2")
+    private String id;
 
     @Column(nullable = false,length = 80)
     private String imageUrl;

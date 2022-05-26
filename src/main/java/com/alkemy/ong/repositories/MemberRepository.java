@@ -1,25 +1,23 @@
 /*
- * Ticket OT208-15
+ * Ticket OT208-22
  */
 package com.alkemy.ong.repositories;
 
-import com.alkemy.ong.models.OrganizationEntity;
+import com.alkemy.ong.models.MemberEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 /**
  * @author Adrian E. Camus <https://acamus79.github.io/>
  */
-@Repository
-public interface OrganizationRepository extends JpaRepository<OrganizationEntity, Long>{
+public interface MemberRepository extends JpaRepository<MemberEntity, Long>{
     
     /**
     * Method to search only the records with the softDelete field set to false, 
     * @return List(Entity)
     */
-    @Query("SELECT o FROM OrganizationEntity o WHERE o.softDelete = false")
-    public List<OrganizationEntity> searchAllNonDeleted();
+    @Query("SELECT m FROM MemberEntity m WHERE m.softDelete = false")
+    public List<MemberEntity> searchAllNonDeleted();
     
 }
