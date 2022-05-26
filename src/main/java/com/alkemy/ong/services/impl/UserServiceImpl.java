@@ -2,6 +2,8 @@ package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dtos.request.UserLogindto;
+import com.alkemy.ong.exeptions.EmailExistsException;
+import com.alkemy.ong.exeptions.RoleExistException;
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.repositories.IRoleRepository;
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 
      * @param userDTO
-     * @return
+     * @return UserEntity Object
      * @throws EmailExistsException 
      */
     @Override
@@ -71,7 +73,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 
      * @param email
-     * @return 
+     * @return true/false
      */
     private boolean emailExist(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -80,7 +82,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 
      * @param role
-     * @return
+     * @return RoleEntity Object
      * @throws RoleExistException 
      */
     private RoleEntity roleExist(String role) throws RoleExistException {
