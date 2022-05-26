@@ -71,7 +71,23 @@ public class UserServiceImpl implements UserService {
 
         return userEntity;
     }
-    
+
+    /**
+     * Method to delete user
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean deleteUser(String id) {
+        if (id != null) {
+            this.userRepository.deleteById(id);
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * 
      * @param email

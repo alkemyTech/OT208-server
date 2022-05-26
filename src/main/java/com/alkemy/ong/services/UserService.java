@@ -12,6 +12,8 @@ import com.alkemy.ong.models.UserEntity;
  */
 public interface UserService {
     
-    UserEntity saveUser(UserDTO userDTO); 
+    UserEntity saveUser(UserDTO userDTO);
+
+    boolean deleteUser(String id);
     
 }
