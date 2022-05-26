@@ -2,16 +2,19 @@ package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.dto.request.user.UserLoginDto;
-import com.alkemy.ong.exeptions.EmailExistsException;
-import com.alkemy.ong.exeptions.RoleExistException;
+import com.alkemy.ong.exceptions.ArgumentRequiredException;
+import com.alkemy.ong.exceptions.EmailExistsException;
+import com.alkemy.ong.exceptions.RoleExistException;
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
+import com.alkemy.ong.payload.UserForm;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
 import java.util.Arrays;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,12 +26,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService { 
+public class UserServiceImpl implements UserService {
 
+    public static final String IS_REQUIRED_OR_DOESNT_EXIST = "El id del usuario es requerido o no existe";
     private final AuthenticationManager authenticationManager;
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
+    private final ModelMapper modelMapper;
 
     public UserDetails login(UserLoginDto userLoginDto) {
         UserDetails userDetails;
@@ -71,7 +76,19 @@ public class UserServiceImpl implements UserService {
 
         return userEntity;
     }
-    
+
+    @Override
+    public UserDTO updateUser(UserForm userForm, String id) {
+        if (id != null || !this.userRepository.findById(id).isPresent()) {
+            UserEntity userEntity = modelMapper.map(userForm, UserEntity.class);
+
+            userEntity = this.userRepository.save(userEntity);
+            return modelMapper.map(userEntity, UserDTO.class);
+        } else {
+            throw new ArgumentRequiredException(IS_REQUIRED_OR_DOESNT_EXIST);
+        }
+    }
+
     /**
      * 
      * @param email

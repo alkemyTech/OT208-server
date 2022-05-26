@@ -1,7 +1,7 @@
 /*
  * 
  */
-package com.alkemy.ong.exeptions;
+package com.alkemy.ong.exceptions;
 
 /**
  *

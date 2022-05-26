@@ -5,6 +5,7 @@ package com.alkemy.ong.services;
 
 import com.alkemy.ong.dto.UserDTO;
 import com.alkemy.ong.models.UserEntity;
+import com.alkemy.ong.payload.UserForm;
 
 /**
  *
@@ -12,6 +13,8 @@ import com.alkemy.ong.models.UserEntity;
  */
 public interface UserService {
     
-    UserEntity saveUser(UserDTO userDTO); 
+    UserEntity saveUser(UserDTO userDTO);
+
+    UserDTO updateUser(UserForm userForm, String id);
     
 }
