@@ -11,16 +11,18 @@ import com.alkemy.ong.payload.UserForm;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
-import java.util.Arrays;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class UserServiceImpl implements UserService {
     private final IRoleRepository roleRepository;
     private final ModelMapper modelMapper;
 
-    public UserDetails login(UserLoginDto userLoginDto) {
+    public UserDetails login(UserLoginDto userLoginDto) throws BadCredentialsException {
         UserDetails userDetails;
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -41,12 +43,10 @@ public class UserServiceImpl implements UserService {
         userDetails = (UserDetails) authentication.getPrincipal();
 
         return userDetails;
-
     }
 
     public Optional<UserEntity> findByEmail(String email) {
-        userRepository.findByEmail(email);
-        return null;
+        return userRepository.findByEmail(email);
     }
 
     /**
@@ -110,5 +110,4 @@ public class UserServiceImpl implements UserService {
                 "Rol dont's exist:" + role);
         }
     }
-
 }
