@@ -8,24 +8,19 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class Testimonials
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "testimonials")
-@Where(clause = "softDelete = false")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE testimonials SET soft_delete = false WHERE id=?")
+@SQLDelete(sql = "UPDATE testimonials SET softDelete = false WHERE id=?")
+@Where(clause = "softDelete = false")
 public class TestimonialsEntity implements Serializable {
+
     private static final long serialVersionUID = 641554778L;
 
     @Id
@@ -47,5 +42,5 @@ public class TestimonialsEntity implements Serializable {
     @Column(nullable = false)
     private LocalDateTime timestamps;
 
-    private boolean softDelete = Boolean.FALSE;
+    private Boolean softDelete = Boolean.FALSE;
 }

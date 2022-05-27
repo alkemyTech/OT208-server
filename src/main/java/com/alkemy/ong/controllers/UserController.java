@@ -1,6 +1,9 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
+
+import java.io.IOException;
+
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +32,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) {
         try {
-        	if (userServiceImpl.findByEmail(userLoginDto.getEmail()).isPresent()) {
+            if (userServiceImpl.findByEmail(userLoginDto.getEmail()).isPresent()) {
                 userServiceImpl.login(userLoginDto);
                 // return token
             }else
@@ -40,12 +43,6 @@ public class UserController {
         return ResponseEntity.ok("ok"); 
     }
     
-    /**
-     * SIGNUP Registration method that generates a token and an automatic login.
-     *
-     * @param userDTO
-     * @return String jwt Token
-     */
     @PostMapping("/register")
     public ResponseEntity<UserEntity> signup(@RequestBody @Valid UserRegisterDto userDTO) {
 //        userService.saveUser(userDTO);
@@ -55,7 +52,11 @@ public class UserController {
 //        final String jwt = jwtTokenUtil.generateToken(auth);
 //        return ResponseEntity.ok(new AuthResponseDTO(jwt));
         UserEntity user = userService.saveUser(userDTO);
-        emailService.sendEmailRegister(user.getEmail());
+        try {
+			emailService.sendEmailRegister(user.getEmail());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 }
