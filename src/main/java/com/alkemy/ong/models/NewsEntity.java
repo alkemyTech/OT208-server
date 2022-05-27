@@ -14,15 +14,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="news")
+@Table(name = "news")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE news SET soft_delete = true WHERE id=?")
-@Where(clause = "soft_delete=false")
+@SQLDelete(sql = "UPDATE news SET softDelete = true WHERE id=?")
+@Where(clause = "softDelete = false")
 @EntityListeners(AuditingEntityListener.class)
 public class NewsEntity implements Serializable {
-
 
     private static final long serialVersionUID = 2888946607675320668L;
 
@@ -36,17 +35,17 @@ public class NewsEntity implements Serializable {
     private String name;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private  String content;
+    private String content;
 
     @Column(nullable = false, length = 150)
     private String image;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    @JoinColumn(name="category_id")
+    @JoinColumn(name = "category_id")
     private CategoryEntity categoryId;
 
     @Column(nullable = false)
-    private boolean softDelete = false;
+    private Boolean softDelete = false;
 
     @Column(nullable = false)
     @CreatedDate
