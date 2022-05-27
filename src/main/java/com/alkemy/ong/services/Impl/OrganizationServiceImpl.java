@@ -1,12 +1,14 @@
-package com.alkemy.ong.services.Impl;
+package com.alkemy.ong.services.impl;
+
+import org.springframework.stereotype.Service;
 
 import com.alkemy.ong.dto.OrganizationPublicDataDto;
 import com.alkemy.ong.models.OrganizationEntity;
 import com.alkemy.ong.repositories.IOrganizationRepository;
-import com.alkemy.ong.services.mappers.OrganizationMapper;
 import com.alkemy.ong.services.OrganizationService;
+import com.alkemy.ong.services.mappers.OrganizationMapper;
+
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor

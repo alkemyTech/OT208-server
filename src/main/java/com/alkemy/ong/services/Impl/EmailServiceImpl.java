@@ -1,11 +1,11 @@
-package com.alkemy.ong.services.Impl;
+package com.alkemy.ong.services.impl;
 
-import com.alkemy.ong.services.EmailService;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alkemy.ong.services.EmailService;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
