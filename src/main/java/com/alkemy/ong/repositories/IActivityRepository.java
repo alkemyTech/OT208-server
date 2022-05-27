@@ -1,9 +1,9 @@
 package com.alkemy.ong.repositories;
 
-import com.alkemy.ong.models.TestimonialsEntity;
+import com.alkemy.ong.models.ActivityEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ITestimonialsRepository extends JpaRepository<TestimonialsEntity, String> {
+public interface IActivityRepository extends JpaRepository<ActivityEntity, String> {
 }
