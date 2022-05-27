@@ -1,17 +1,8 @@
 package com.alkemy.ong.services.impl;
 
-import java.util.Arrays;
-import java.util.Optional;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.dto.request.user.UserLoginDto;
+import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.exceptions.ArgumentRequiredException;
 import com.alkemy.ong.exeptions.EmailExistsException;
 import com.alkemy.ong.exeptions.RoleExistException;
 import com.alkemy.ong.models.RoleEntity;
@@ -21,6 +12,18 @@ import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -76,12 +79,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO updateUser(UserForm userForm, String id) {
+    public UserRegisterDto updateUser(UserForm userForm, String id) {
         if (id != null || !this.userRepository.findById(id).isPresent()) {
             UserEntity userEntity = modelMapper.map(userForm, UserEntity.class);
 
             userEntity = this.userRepository.save(userEntity);
-            return modelMapper.map(userEntity, UserDTO.class);
+            return modelMapper.map(userEntity, UserRegisterDto.class);
         } else {
             throw new ArgumentRequiredException(IS_REQUIRED_OR_DOESNT_EXIST);
         }

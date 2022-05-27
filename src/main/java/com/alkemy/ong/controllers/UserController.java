@@ -1,20 +1,18 @@
 package com.alkemy.ong.controllers;
 
-import com.alkemy.ong.dto.UserDTO;
+import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
-import javax.validation.Valid;
-
+import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.payload.UserForm;
+import com.alkemy.ong.services.UserService;
+import com.alkemy.ong.services.impl.UserServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
-import com.alkemy.ong.dto.request.user.UserLoginDto;
-import com.alkemy.ong.models.UserEntity;
-import com.alkemy.ong.services.UserService;
-import com.alkemy.ong.services.impl.UserServiceImpl;
 
-import lombok.RequiredArgsConstructor;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -57,9 +55,9 @@ public class UserController {
     }
 
     @PutMapping("users/{id}")
-    public ResponseEntity<UserDTO> update(@Valid @RequestBody UserForm userForm, @PathVariable String id) {
+    public ResponseEntity<UserRegisterDto> update(@Valid @RequestBody UserForm userForm, @PathVariable String id) {
         try {
-            UserDTO userDTO = this.userService.updateUser(userForm, id);
+            UserRegisterDto userDTO = this.userService.updateUser(userForm, id);
 
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } catch (Exception ex) {
