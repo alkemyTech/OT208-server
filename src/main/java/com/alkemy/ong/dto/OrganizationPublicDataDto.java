@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrganizationPublicDataDto {
+
     private String name;
     private String image;
     private Integer phone;
