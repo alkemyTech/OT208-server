@@ -1,12 +1,9 @@
 package com.alkemy.ong.services;
 
-import com.alkemy.ong.payload.RoleForm;
+import com.alkemy.ong.models.RoleEntity;
+import java.util.List;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class ValidationService
- */
 public interface ValidationService {
-    boolean roleValidation(RoleForm role);
+
+    public boolean roleValidation(List<RoleEntity> role);
 }

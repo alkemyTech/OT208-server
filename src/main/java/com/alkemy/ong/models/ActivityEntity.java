@@ -10,14 +10,8 @@
 * content: TEXT NOT NULL
 * image: VARCHAR NOT NULL
 * timestamps y softDelete
-*/
-
-
+ */
 package com.alkemy.ong.models;
-
-/*
-* @autor Eduardo Sanchez
-*/
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,11 +21,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "activities")
