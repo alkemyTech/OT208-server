@@ -27,7 +27,8 @@ public class UserController {
             if (userServiceImpl.findByEmail(userLoginDto.getEmail()).isPresent()) {
                 userServiceImpl.login(userLoginDto);
                 // return token
-            }
+            }else
+            	return ResponseEntity.notFound().build();
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("false");
         }

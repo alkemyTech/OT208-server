@@ -2,20 +2,21 @@ package com.alkemy.ong.models;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Data
@@ -42,8 +43,4 @@ public class RoleEntity implements Serializable {
     @CreatedDate
     @Column(length = 50)
     private Timestamp timestamps;
-
-    @ManyToMany(mappedBy = "roleIds")
-    List<UserEntity> users;
-
 }
