@@ -10,16 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("organization")
+@RequestMapping("/organization")
 @AllArgsConstructor
 public class OrganizationController {
 
     private final OrganizationService organizationService;
 
     @GetMapping("/public")
-    public ResponseEntity<OrganizationPublicDataDto> publicData(@RequestParam Long id) {
+    public ResponseEntity<OrganizationPublicDataDto> publicData(@RequestParam String id) {
         OrganizationPublicDataDto publicDataDTO = organizationService.getPublicOrganizationData(id);
         return ResponseEntity.ok().body(publicDataDTO);
     }
 }
-
