@@ -19,7 +19,6 @@ package com.alkemy.ong.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -31,9 +30,6 @@ import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-/**
- * @author Adrian E. Camus <https://acamus79.github.io/>
- */
 @Entity
 @Table(name = "organizations")
 @Data
@@ -43,39 +39,38 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Where(clause = "softDelete = false")
 @EntityListeners(AuditingEntityListener.class)
 public class OrganizationEntity implements Serializable {
-    
+
     private static final long serialVersionUID = 8111554778L;
-    
+
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name= "uuid", strategy = "uuid2")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    
+
     @Column(nullable = false, length = 50)
     private String name;
-    
+
     @Column(nullable = false, length = 80)
     private String image;
-    
+
     @Column(nullable = true, length = 150)
     private String address;
-            
+
     @Column(nullable = true, length = 150)
     private Integer phone;
-            
+
     @Column(nullable = false, length = 80)
     private String email;
-    
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String welcomeText;
-    
+
     @Column(columnDefinition = "TEXT", nullable = false)
     private String aboutUsText;
-    
+
     @Column(nullable = false)
     @CreatedDate
     private LocalDateTime timestamps;
-   
 
-    private boolean softDelete = Boolean.FALSE;
+    private Boolean softDelete = Boolean.FALSE;
 }

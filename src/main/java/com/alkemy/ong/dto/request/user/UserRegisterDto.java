@@ -1,4 +1,4 @@
-package com.alkemy.ong.dto;
+package com.alkemy.ong.dto.request.user;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -10,14 +10,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * @author Adrian E. Camus <https://acamus79.github.io/>
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
-    
+public class UserRegisterDto {
+
     private String id;
 
     @NotBlank(message = "The first Name field cannot be empty")
@@ -36,9 +33,9 @@ public class UserDTO {
     @NotEmpty(message = "The field must not be empty.")
     private String email;
 
-    @Size(min=8,message="Min 8 characters in password")
+    @Size(min = 8, message = "Min 8 characters in password")
     @NotEmpty(message = "The field must not be empty.")
     private String password;
-    
+
     private String photo;
 }
