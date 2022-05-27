@@ -30,10 +30,6 @@ import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-/**
- *
- * @author Adrian E. Camus <https://acamus79.github.io/>
- */
 @Entity
 @Table(name = "categories")
 @Data
@@ -42,28 +38,28 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @SQLDelete(sql = "UPDATE categories SET softDelete = true WHERE id=?")
 @Where(clause = "softDelete = false")
 @EntityListeners(AuditingEntityListener.class)
-public class CategoryEntity implements Serializable{
-    
-    private static final long serialVersionUID = 741558L;    
-    
+public class CategoryEntity implements Serializable {
+
+    private static final long serialVersionUID = 741558L;
+
     @Id
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @GeneratedValue(generator = "uuid")
     @Column(length = 36)
     private String id;
-    
+
     @Column(nullable = false, length = 50)
     private String name;
-   
+
     private String description;
-    
+
     @Column(nullable = false, length = 80)
     private String image;
-    
+
     @Column(nullable = false)
     @CreatedDate
     private LocalDateTime timestamps;
-   
-    private boolean softDelete = Boolean.FALSE;
-    
+
+    private Boolean softDelete = Boolean.FALSE;
+
 }

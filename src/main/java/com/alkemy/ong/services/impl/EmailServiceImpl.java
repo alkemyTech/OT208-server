@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
+	
 	private final SendGrid sendGrid;
 
 	@Value("${email-sendgrid}")
