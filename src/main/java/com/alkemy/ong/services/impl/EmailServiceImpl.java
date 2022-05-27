@@ -37,12 +37,12 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public Response sendEmailContactForm(String userEmail) throws IOException {
+	public Response sendEmailContactForm(String emailUser) throws IOException {
 		String subject = "Thank you for contacting us.";
 		String emailContent = "Thank you for contacting us. We will be reading your request and we will contact you";
 		String emailType = "text/html";
 
-		return sendEmail(userEmail, subject, emailContent, emailType, null);
+		return sendEmail(emailUser, subject, emailContent, emailType, null);
 	}
 
 	private Response sendEmail(String emailUser, String emailSubject, String emailContent, String emailType,
