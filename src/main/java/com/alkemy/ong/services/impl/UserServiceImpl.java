@@ -1,10 +1,24 @@
 package com.alkemy.ong.services.impl;
 
+import java.util.Arrays;
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.exceptions.ArgumentRequiredException;
 import com.alkemy.ong.exceptions.EmailExistsException;
 import com.alkemy.ong.exceptions.RoleExistException;
+import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.exceptions.ArgumentRequiredException;
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.payload.UserForm;
@@ -12,17 +26,6 @@ import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

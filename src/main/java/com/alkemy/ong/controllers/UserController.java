@@ -3,6 +3,7 @@ package com.alkemy.ong.controllers;
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.models.UserEntity;
+import com.alkemy.ong.payload.UserForm;
 import com.alkemy.ong.services.UserService;
 import com.alkemy.ong.services.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
