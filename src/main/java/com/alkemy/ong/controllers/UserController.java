@@ -1,10 +1,9 @@
 package com.alkemy.ong.controllers;
 
-import com.alkemy.ong.dto.request.user.UserRegisterDto;
-
 import java.io.IOException;
 
 import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,11 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.alkemy.ong.dto.request.user.UserLoginDto;
+import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.exeptions.EmailNotSendException;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.services.EmailService;
 import com.alkemy.ong.services.UserService;
 import com.alkemy.ong.services.impl.UserServiceImpl;
+import com.sendgrid.Response;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,7 +58,7 @@ public class UserController {
         try {
 			emailService.sendEmailRegister(user.getEmail());
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new EmailNotSendException(e.getMessage());
 		}
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
