@@ -19,7 +19,6 @@ import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.services.EmailService;
 import com.alkemy.ong.services.UserService;
 import com.alkemy.ong.services.impl.UserServiceImpl;
-import com.sendgrid.Response;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,37 +28,35 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserServiceImpl userServiceImpl;
-    private final UserService userService;
-    private final EmailService emailService;
+	private final UserService userService;
+	private final EmailService emailService;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) {
-        try {
-            if (userServiceImpl.findByEmail(userLoginDto.getEmail()).isPresent()) {
-                userServiceImpl.login(userLoginDto);
-                // return token
-            }else
-            	return ResponseEntity.notFound().build();
-        } catch (BadCredentialsException e) {
-        	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("false");
-        }
-        return ResponseEntity.ok("ok"); 
-    }
-    
-    @PostMapping("/register")
-    public ResponseEntity<UserEntity> signup(@RequestBody @Valid UserRegisterDto userDTO) {
+	@PostMapping("/login")
+	public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) {
+		try {
+			if (userServiceImpl.findByEmail(userLoginDto.getEmail()).isPresent()) {
+				userServiceImpl.login(userLoginDto);
+				// return token
+			} else
+				return ResponseEntity.notFound().build();
+		} catch (BadCredentialsException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("false");
+		}
+		return ResponseEntity.ok("ok");
+	}
+
+	@PostMapping("/register")
+	public ResponseEntity<UserEntity> signup(@RequestBody @Valid UserRegisterDto userDTO)
+			throws EmailNotSendException, IOException {
 //        userService.saveUser(userDTO);
 //        Authentication auth;
 //        auth = authenticationManager.authenticate(
 //                new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
 //        final String jwt = jwtTokenUtil.generateToken(auth);
-//        return ResponseEntity.ok(new AuthResponseDTO(jwt));
-        UserEntity user = userService.saveUser(userDTO);
-        try {
-			emailService.sendEmailRegister(user.getEmail());
-		} catch (IOException e) {
-			throw new EmailNotSendException(e.getMessage());
-		}
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    }
+//        return ResponseEntity.ok(new AuthResponseDTO(jwt));ww	
+		UserEntity user = userService.saveUser(userDTO);
+		emailService.sendEmailRegister(user.getEmail());
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(user);
+	}
 }
