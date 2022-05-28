@@ -5,61 +5,44 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import com.alkemy.ong.repositories.IBasicRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BasicServiceImpl<T, ID, R extends IBasicRepository<T, ID>> {
+public class BasicServiceImpl<T, ID, R extends JpaRepository<T, ID>> {
 
-	protected final R repositorio;
+	protected final R repository;
 
 	public T save(T t) {
-		return repositorio.save(t);
+		return repository.save(t);
 	}
 
 	public Optional<T> findById(ID id) {
-		return repositorio.findById(id);
-	}
-
-	public Optional<T> findByIdActive(ID id) {
-		return repositorio.findByIdAndSoftDeleteFalse(id);
+		return repository.findById(id);
 	}
 
 	public List<T> findAll() {
-		return repositorio.findAll();
-	}
-
-	public List<T> findAllActive() {
-		return repositorio.findAllAndSoftDeleteFalse();
+		return repository.findAll();
 	}
 
 	public Page<T> findAll(Pageable pageable) {
-		return repositorio.findAll(pageable);
-	}
-
-	public Page<T> findAllActive(Pageable pageable) {
-		return repositorio.findAllAndSoftDeleteFalse(pageable);
+		return repository.findAll(pageable);
 	}
 
 	public T edit(T t) {
-		return repositorio.save(t);
+		return repository.save(t);
 	}
 
 	public void delete(T t) {
-		repositorio.delete(t);
+		repository.delete(t);
 	}
 
 	public void deleteById(ID id) {
-		repositorio.deleteById(id);
+		repository.deleteById(id);
 	}
 
 	public boolean existById(ID id) {
-		return repositorio.existsById(id);
-	}
-
-	public boolean existByIdActive(ID id) {
-		return this.repositorio.existByIdAndSoftDeleteFalse(id);
+		return repository.existsById(id);
 	}
 }
