@@ -19,11 +19,11 @@ public class BasicServiceImpl<T, ID, R extends IBasicRepository<T, ID>> {
 		return repositorio.save(t);
 	}
 
-	public Optional<T> findByIdTrue(ID id) {
+	public Optional<T> findById(ID id) {
 		return repositorio.findById(id);
 	}
 
-	public Optional<T> findByIdDeleteFalse(ID id) {
+	public Optional<T> findByIdActive(ID id) {
 		return repositorio.findByIdAndSoftDeleteFalse(id);
 	}
 
@@ -39,7 +39,7 @@ public class BasicServiceImpl<T, ID, R extends IBasicRepository<T, ID>> {
 		return repositorio.findAll(pageable);
 	}
 
-	public Page<T> findAllSoftDeleteFalse(Pageable pageable) {
+	public Page<T> findAllActive(Pageable pageable) {
 		return repositorio.findAllAndSoftDeleteFalse(pageable);
 	}
 
@@ -59,7 +59,7 @@ public class BasicServiceImpl<T, ID, R extends IBasicRepository<T, ID>> {
 		return repositorio.existsById(id);
 	}
 
-	public boolean existByIdWhereSoftDeleteIsFalse(ID id) {
+	public boolean existByIdActive(ID id) {
 		return this.repositorio.existByIdAndSoftDeleteFalse(id);
 	}
 }
