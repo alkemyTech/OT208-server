@@ -34,7 +34,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
 
     private AmazonS3 amazonS3;
 
-    @Value("${aws.s3.bucket}")
+    @Value("${aws.bucketName}")
     private String bucketName;
 
     @Override
