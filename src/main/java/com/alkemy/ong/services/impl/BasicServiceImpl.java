@@ -7,10 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.alkemy.ong.services.BasicService;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BasicServiceImpl<T, ID, R extends JpaRepository<T, ID>> {
+public class BasicServiceImpl<T, ID, R extends JpaRepository<T, ID>> implements BasicService<T, ID>{
 
 	protected final R repository;
 
