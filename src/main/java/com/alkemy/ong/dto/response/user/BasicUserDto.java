@@ -1,9 +1,6 @@
 package com.alkemy.ong.dto.response.user;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import com.alkemy.ong.models.RoleEntity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +19,12 @@ public class BasicUserDto {
 
 	private String photo;
 
-	private List<RoleEntity> roleIds;
-
-	private LocalDateTime timestamps;
-
-	private Boolean softDelete;
+	private List<RoleNameDto> roleIdsRoleEntityName;
+	
+	@Setter
+	@Getter
+	public static class RoleNameDto {
+		
+		private String name;
+	}
 }
