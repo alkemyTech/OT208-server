@@ -67,7 +67,7 @@ public class AuthenticationController {
     public ResponseEntity<BasicUserDto> getMe(HttpServletRequest request) {
     	String token = request.getHeader("Authorization");
     	String idUser = jwtUtils.extractId(token);
-    	UserEntity user = userServiceImpl.findById(idUser);
+    	UserEntity user = userService.findById(idUser);
     	
     	return ResponseEntity.ok(userMapper.mapperUserEntityToBasicUserDto(user));
     }
