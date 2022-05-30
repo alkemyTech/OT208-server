@@ -9,4 +9,7 @@ public interface UserService {
     UserEntity saveUser(UserRegisterDto userDTO);
 
     UserRegisterDto updateUser(UserForm userForm, String id);
+
+    boolean deleteUser(String id);
+
 }

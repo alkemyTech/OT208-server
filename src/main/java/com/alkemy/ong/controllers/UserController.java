@@ -19,6 +19,8 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
 
+    public static final String DELETE_USER = "Usuario eliminado";
+    public static final String NO_DELETE_USER = "Usuario no eliminado";
     private final UserServiceImpl userServiceImpl;
     private final UserService userService;
 
@@ -64,4 +66,14 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping("user/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+        try {
+            return new ResponseEntity<>(this.userService.deleteUser(id) ? DELETE_USER : NO_DELETE_USER, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
