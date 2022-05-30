@@ -1,7 +1,4 @@
-/*
- * 
- */
-package com.alkemy.ong.exceptions;
+package com.alkemy.ong.exeptions;
 
 public class RoleExistException extends RuntimeException {
 

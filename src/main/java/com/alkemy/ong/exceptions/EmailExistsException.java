@@ -1,12 +1,5 @@
-/*
- * 
- */
-package com.alkemy.ong.exceptions;
+package com.alkemy.ong.exeptions;
 
-/**
- *
- * @author Adrian E. Camus <https://acamus79.github.io/>
- */
 public class EmailExistsException extends RuntimeException {
 
 	private static final long serialVersionUID = -1577718358695273022L;
