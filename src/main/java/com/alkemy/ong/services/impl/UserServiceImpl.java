@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -110,6 +111,14 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         }
 
         return false;
+    }
+
+    @Override
+    public List<UserRegisterDto> getAll() {
+        List<UserEntity> userEntityList = this.findAll();
+        List<UserRegisterDto> userRegisterDtoList = (List<UserRegisterDto>) modelMapper.map(userEntityList, UserRegisterDto.class);
+
+        return userRegisterDtoList;
     }
 
     /**
