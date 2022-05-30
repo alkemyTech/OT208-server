@@ -4,8 +4,8 @@ package com.alkemy.ong.services.impl;
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.exceptions.ArgumentRequiredException;
-import com.alkemy.ong.exeptions.EmailExistsException;
-import com.alkemy.ong.exeptions.RoleExistException;
+import com.alkemy.ong.exceptions.EmailExistsException;
+import com.alkemy.ong.exceptions.RoleExistException;
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.payload.UserForm;
@@ -27,8 +27,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class UserServiceImpl implements UserService { 
+public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService {
 
     public static final String IS_REQUIRED_OR_DOESNT_EXIST = "El id del usuario es requerido o no existe";
     private final AuthenticationManager authenticationManager;
@@ -36,6 +35,17 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
     private final ModelMapper modelMapper;
+
+    public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
+                           IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository,
+                           ModelMapper modelMapper) {
+        super(repository);
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public UserDetails login(UserLoginDto userLoginDto) throws BadCredentialsException {
 
@@ -81,14 +91,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRegisterDto updateUser(UserForm userForm, String id) {
-        if (id != null || !this.userRepository.findById(id).isPresent()) {
+        if (this.findById(id).isPresent()) {
             UserEntity userEntity = modelMapper.map(userForm, UserEntity.class);
 
-            userEntity = this.userRepository.save(userEntity);
+            userEntity = this.save(userEntity);
             return modelMapper.map(userEntity, UserRegisterDto.class);
         } else {
             throw new ArgumentRequiredException(IS_REQUIRED_OR_DOESNT_EXIST);
         }
+    }
+
+    @Override
+    public boolean deleteUser(String id) {
+        if (this.findById(id).isPresent()) {
+            this.deleteById(id);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.alkemy.ong.exeptions;
+package com.alkemy.ong.exceptions;
 
 public class EmailExistsException extends RuntimeException {
 

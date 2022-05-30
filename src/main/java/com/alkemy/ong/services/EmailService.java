@@ -2,7 +2,7 @@ package com.alkemy.ong.services;
 
 import java.io.IOException;
 
-import com.alkemy.ong.exeptions.EmailNotSendException;
+import com.alkemy.ong.exceptions.EmailNotSendException;
 import com.sendgrid.Response;
 
 public interface EmailService {
