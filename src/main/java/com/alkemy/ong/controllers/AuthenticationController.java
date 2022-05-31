@@ -1,5 +1,7 @@
 package com.alkemy.ong.controllers;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -14,9 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.dto.response.user.BasicUserDto;
+import com.alkemy.ong.exeptions.EmailNotSendException;
 import com.alkemy.ong.models.UserEntity;
+import com.alkemy.ong.services.EmailService;
 import com.alkemy.ong.services.UserService;
 import com.alkemy.ong.services.impl.UserServiceImpl;
+import com.alkemy.ong.services.mappers.UserMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,19 +31,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final UserServiceImpl userServiceImpl;
     private final UserService userService;
+    private final EmailService emailService;
     private final UserMapper userMapper;
     private final JwtUtils	jwtUtils;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) {
         try {
-            if (userServiceImpl.findByEmail(userLoginDto.getEmail()).isPresent()) {
-                userServiceImpl.login(userLoginDto);
+            if (userService.findByEmail(userLoginDto.getEmail()).isPresent()) {
+            	userService.login(userLoginDto);
                 // return token
             }else
-            	return ResponseEntity.notFound().build();
+                return ResponseEntity.notFound().build();
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("false");
         }
@@ -49,9 +55,11 @@ public class AuthenticationController {
      *
      * @param userDTO
      * @return String jwt Token
+     * @throws IOException 
+     * @throws EmailNotSendException 
      */
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> signup(@RequestBody @Valid UserRegisterDto userDTO) {
+    public ResponseEntity<UserEntity> signup(@RequestBody @Valid UserRegisterDto userDTO) throws EmailNotSendException, IOException {
 //        userService.saveUser(userDTO);
 //        Authentication auth;
 //        auth = authenticationManager.authenticate(
@@ -59,8 +67,9 @@ public class AuthenticationController {
 //        final String jwt = jwtTokenUtil.generateToken(auth);
 //        return ResponseEntity.ok(new AuthResponseDTO(jwt));
         UserEntity user = userService.saveUser(userDTO);
+        emailService.sendEmailRegister(user.getEmail());
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    }
     
     @GetMapping("/me")
     public ResponseEntity<BasicUserDto> getMe(HttpServletRequest request) {
