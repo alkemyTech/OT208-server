@@ -7,4 +7,5 @@ public interface UserService {
 
     UserEntity saveUser(UserRegisterDto userDTO);
 
+    boolean deleteUser(String id);
 }

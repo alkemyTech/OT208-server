@@ -18,7 +18,6 @@ import com.alkemy.ong.exeptions.EmailNotSendException;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.services.EmailService;
 import com.alkemy.ong.services.UserService;
-import com.alkemy.ong.services.impl.UserServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,15 +26,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-	private final UserServiceImpl userServiceImpl;
 	private final UserService userService;
 	private final EmailService emailService;
 
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) {
 		try {
-			if (userServiceImpl.findByEmail(userLoginDto.getEmail()).isPresent()) {
-				userServiceImpl.login(userLoginDto);
+			if (userService.findByEmail(userLoginDto.getEmail()).isPresent()) {
+				userService.login(userLoginDto);
 				// return token
 			} else
 				return ResponseEntity.notFound().build();
@@ -52,7 +50,7 @@ public class UserController {
 //        Authentication auth;
 //        auth = authenticationManager.authenticate(
 //                new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
-//        final String jwt = jwtTokenUtil.generateToken(auth);
+//        final String jwt = jwtTokenUtil.generateToken(auth);	
 //        return ResponseEntity.ok(new AuthResponseDTO(jwt));ww	
 		UserEntity user = userService.saveUser(userDTO);
 		emailService.sendEmailRegister(user.getEmail());
