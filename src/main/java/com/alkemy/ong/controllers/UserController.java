@@ -1,8 +1,10 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
-import com.alkemy.ong.exeptions.EmailNotSendException;
+import com.alkemy.ong.dto.response.user.BasicUserDto;
 
+import javax.servlet.http.HttpServletRequest;
+import com.alkemy.ong.exeptions.EmailNotSendException;
 import java.io.IOException;
 
 import javax.validation.Valid;
@@ -15,6 +17,7 @@ import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.services.EmailService;
 import com.alkemy.ong.services.UserService;
 import com.alkemy.ong.services.impl.UserServiceImpl;
+import com.alkemy.ong.services.mappers.UserMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +30,8 @@ public class UserController {
     public static final String NO_DELETE_USER = "Usuario no eliminado";
     private final UserServiceImpl userServiceImpl;
     private final UserService userService;
+    private final UserMapper userMapper;
+    private final JwtUtils jwtUtils;
     private final EmailService emailService;
 
     @PostMapping("/login")
@@ -72,6 +77,15 @@ public class UserController {
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+    
+    @GetMapping("/me")
+    public ResponseEntity<BasicUserDto> getMe(HttpServletRequest request) {
+    	String token = request.getHeader("Authorization");
+    	String idUser = jwtUtils.extractId(token);
+    	UserEntity user = userService.findById(idUser).get();
+    	
+    	return ResponseEntity.ok(userMapper.mapperUserEntityToBasicUserDto(user));
     }
 
 }
