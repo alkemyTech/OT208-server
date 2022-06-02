@@ -20,7 +20,7 @@ public class SlideController {
         return ResponseEntity.ok().body(slideService.getAll());
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SlideDto> getSlide(@PathVariable String id) {
         return ResponseEntity.ok().body(slideService.getSlide(id));
     }
