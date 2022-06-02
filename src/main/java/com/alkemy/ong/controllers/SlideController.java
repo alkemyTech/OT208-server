@@ -22,7 +22,9 @@ public class SlideController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SlideDto> getSlide(@PathVariable String id) {
-        return ResponseEntity.ok().body(slideService.getSlide(id));
+        if(slideService.findById(id).isPresent()) {
+            return new ResponseEntity<SlideDto>(slideService.getSlide(id), HttpStatus.OK);
+        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
