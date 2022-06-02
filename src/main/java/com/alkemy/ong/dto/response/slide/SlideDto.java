@@ -1,4 +1,4 @@
-package com.alkemy.ong.dto;
+package com.alkemy.ong.dto.response.slide;
 
 import com.alkemy.ong.models.OrganizationEntity;
 import lombok.AllArgsConstructor;

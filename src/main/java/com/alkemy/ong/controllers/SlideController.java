@@ -1,6 +1,6 @@
 package com.alkemy.ong.controllers;
 
-import com.alkemy.ong.dto.SlideDto;
+import com.alkemy.ong.dto.response.slide.SlideDto;
 import com.alkemy.ong.services.SlideService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,5 @@ public class SlideController {
     public ResponseEntity<List<SlideDto>> getAll() {
         return ResponseEntity.ok().body(slideService.getAll());
     }
-
 
 }

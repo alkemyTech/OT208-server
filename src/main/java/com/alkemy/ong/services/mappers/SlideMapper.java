@@ -1,6 +1,6 @@
 package com.alkemy.ong.services.mappers;
 
-import com.alkemy.ong.dto.SlideDto;
+import com.alkemy.ong.dto.response.slide.SlideDto;
 import com.alkemy.ong.models.SlideEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -24,10 +24,9 @@ public class SlideMapper {
         return mapper.map(dto, SlideEntity.class);
     }
 
-    public List<SlideDto> entityList2DtoList1(List<SlideEntity> slides){
+    public List<SlideDto> entityList2DtoList(List<SlideEntity> slides) {
         return slides.stream().map(this::entity2Dto).collect(Collectors.toList());
     }
-
 
     public List<SlideEntity> dtoList2EntityList(List<SlideDto> dtos) {
         List<SlideEntity> slides = new ArrayList<>();
