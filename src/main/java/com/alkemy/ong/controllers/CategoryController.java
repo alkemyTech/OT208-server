@@ -23,14 +23,14 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryBasicDto>> getCategories(){
-        List<CategoryBasicDto> categoryBasicDtos = categoryService.getCategories();
+        List<CategoryBasicDto> categoryBasicDtos = categoryService.getCategoriesDto();
         return ResponseEntity.ok(categoryBasicDtos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDetailDto>getCategory(@PathVariable final String id){
 
-        Optional<CategoryDetailDto>categoryDetailDto= categoryService.getCategoryById(id);
+        Optional<CategoryDetailDto>categoryDetailDto= categoryService.getCategoryByIdDto(id);
         if(categoryDetailDto.isPresent()){
             return ResponseEntity.ok(categoryDetailDto.get());
         }else {

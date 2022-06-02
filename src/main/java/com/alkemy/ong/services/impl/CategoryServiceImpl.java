@@ -22,18 +22,15 @@ public class CategoryServiceImpl extends BasicServiceImpl<CategoryEntity,String,
     }
 
     @Override
-    public List<CategoryBasicDto> getCategories() {
-        List<CategoryEntity> categoryEntityList = findAll();
-        return categoryMapper.listCategories(categoryEntityList);
+    public List<CategoryBasicDto> getCategoriesDto() {
+        return categoryMapper.listCategories(findAll());
     }
 
     @Override
-    public Optional<CategoryDetailDto> getCategoryById(String id) {
+    public Optional<CategoryDetailDto> getCategoryByIdDto(String id) {
+        if (existById(id)){
+            return   Optional.of(categoryMapper.categoryDetail(findById(id).get()));
 
-        Optional<CategoryEntity>categoryEntity = findById(id);
-        if (categoryEntity.isPresent()){
-            Optional<CategoryDetailDto>categoryDetailDto = Optional.of(categoryMapper.categoryDetail(categoryEntity.get()));
-            return categoryDetailDto;
         }
         return Optional.empty();
     }
