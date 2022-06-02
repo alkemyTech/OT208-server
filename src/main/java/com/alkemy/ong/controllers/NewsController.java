@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alkemy.ong.dto.request.news.EntryNewsDto;
 import com.alkemy.ong.models.NewsEntity;
 import com.alkemy.ong.services.AWSS3Service;
+import com.alkemy.ong.services.mappers.NewsMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,13 +30,14 @@ public class NewsController {
 	private final AWSS3Service aWSS3Service;
 
 	@PutMapping("/{id}")
-	public ResponseEntity<NewsEntity> editNews(
+	public ResponseEntity<BasicNewsEntity> editNews(
 			@PathVariable String id, 
-			@Valid @RequestPart(name = "news", required = true) EditNewsDto editNewsDto,
+			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
 			Errors errors,
-			@RequestPart(name = "image", required = false) MultipartFile image) {
+			@RequestPart(name = "imageNews", required = false) MultipartFile image) {
 		if (errors.hasErrors()) {
-			throw new RuntimeException("");
+			throw new RuntimeException("Has error in: "  + errors.getFieldError().getField() + ". " 
+										+ errors.getFieldError().getDefaultMessage());
 		}
 		Optional<NewsEntity> newsEntityOp = newsService.findById(id);
 		
@@ -42,13 +45,14 @@ public class NewsController {
 			return ResponseEntity.notFound().build();
 		}
 		NewsEntity newsEntity = newsEntityOp.get();
-		newsEntity = newsMapper.mapperEditNewsDtoToNewsEntity(editNewsDto, newsEntity);
+		newsEntity = newsMapper.mapperEntryNewsDtoToNewsEntity(entryNewsDto, newsEntity);
 
 		if (!image.isEmpty()) {
 			String pathImage = aWSS3Service.uploadFile(image);
 			newsEntity.setImage(pathImage);
 		}
-
-		return ResponseEntity.ok(newsService.edit(newsEntity));
+		newsService.edit(newsEntity);
+		
+		return ResponseEntity.ok(newsMapper.mapperNewsEntityToBasicNewsDto(newsEntity));
 	}
 }
