@@ -2,6 +2,7 @@ package com.alkemy.ong.services.impl;
 
 import java.util.Arrays;
 import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,8 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.alkemy.ong.dto.request.user.UserRegisterDto;
+
 import com.alkemy.ong.dto.request.user.UserLoginDto;
+import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.exeptions.EmailExistsException;
 import com.alkemy.ong.exeptions.RoleExistException;
 import com.alkemy.ong.models.RoleEntity;
@@ -19,18 +21,25 @@ import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
-public class UserServiceImpl implements UserService { 
+public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService { 
 
     private final AuthenticationManager authenticationManager;
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
+    
+    public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
+			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository) {
+		super(repository);
+		this.authenticationManager = authenticationManager;
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.roleRepository = roleRepository;
+	}
 
-    public UserDetails login(UserLoginDto userLoginDto) throws BadCredentialsException{
+	public UserDetails login(UserLoginDto userLoginDto) throws BadCredentialsException{
         UserDetails userDetails;
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
