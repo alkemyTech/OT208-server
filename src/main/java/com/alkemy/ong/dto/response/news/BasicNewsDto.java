@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BasicNewsEntity {
+public class BasicNewsDto {
 
 	private String id;
 	private String name;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alkemy.ong.dto.response.news.BasicNewsEntity;
+import com.alkemy.ong.dto.response.news.BasicNewsDto;
 import com.alkemy.ong.models.NewsEntity;
 import com.alkemy.ong.services.NewsService;
 import com.alkemy.ong.services.mappers.NewsMapper;
@@ -24,13 +24,13 @@ public class NewsController {
 	private final NewsMapper newsMapper;
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<BasicNewsEntity> getNews(@PathVariable String id){
+	public ResponseEntity<BasicNewsDto> getNews(@PathVariable String id){
 		Optional<NewsEntity> newsEntity = newsService.findById(id);
 		
 		if(!newsEntity.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		return ResponseEntity.ok(newsMapper.mapperBasicNewsEntityToNewsEntity(newsEntity.get()));
+		return ResponseEntity.ok(newsMapper.mapperNewsEntityToBasicNewsDto(newsEntity.get()));
 	}
 }
