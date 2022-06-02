@@ -31,7 +31,7 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
     private final UserService userService;
     private final UserMapper userMapper;
-    private final JwtUtils jwtUtils;
+    //private final JwtUtils jwtUtils;
     private final EmailService emailService;
 
     @PostMapping("/login")
@@ -82,8 +82,8 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<BasicUserDto> getMe(HttpServletRequest request) {
     	String token = request.getHeader("Authorization");
-    	String idUser = jwtUtils.extractId(token);
-    	UserEntity user = userService.findById(idUser).get();
+    	//String idUser = jwtUtils.extractId(token);
+    	UserEntity user = userService.findById("1").get();
     	
     	return ResponseEntity.ok(userMapper.mapperUserEntityToBasicUserDto(user));
     }
