@@ -1,6 +1,7 @@
 package com.alkemy.ong.services.mappers;
 
 import com.alkemy.ong.dto.response.category.CategoryBasicDto;
+import com.alkemy.ong.dto.response.category.CategoryDetailDto;
 import com.alkemy.ong.models.CategoryEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,5 +23,9 @@ public class CategoryMapper {
             categoryBasicDtos.add(categoryBasicDto);
         }
         return categoryBasicDtos;
+    }
+
+    public CategoryDetailDto categoryDetail(CategoryEntity categoryEntity){
+        return categoryMaper.map(categoryEntity,CategoryDetailDto.class);
     }
 }
