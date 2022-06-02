@@ -22,8 +22,7 @@ import com.alkemy.ong.services.AWSS3Service;
 @RequiredArgsConstructor
 public class UploadFileController {
 
-
-    private AWSS3Service awss3Service;
+    private final AWSS3Service awss3Service;
 
     @PostMapping(value = "/upload")
     public ResponseEntity<String> uploadFile(@RequestPart(value="file") MultipartFile file) {

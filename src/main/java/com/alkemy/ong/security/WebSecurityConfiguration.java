@@ -28,7 +28,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.ignoringAntMatchers("/h2-console/**").and().headers().frameOptions().sameOrigin();
 
 		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/auth/**").permitAll()
-				.antMatchers("/api/**").permitAll().anyRequest().authenticated()
+				.antMatchers("/api/**").permitAll().anyRequest().permitAll()
 				// .and()
 				// .exceptionHandling().authenticationEntryPoint(jwtEntryPoint)
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

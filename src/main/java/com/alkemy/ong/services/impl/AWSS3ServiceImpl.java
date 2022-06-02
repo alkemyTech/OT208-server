@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
+
+import com.amazonaws.services.s3.model.*;
 import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
@@ -19,10 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import com.alkemy.ong.services.AWSS3Service;
 
@@ -32,7 +30,7 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(AWSS3ServiceImpl.class);
 
-    private AmazonS3 amazonS3;
+    private final AmazonS3 amazonS3;
 
     @Value("${aws.bucketName}")
     private String bucketName;
@@ -60,6 +58,10 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     @Override
     public InputStream downloadFile(String key) {
         S3Object s3Object = amazonS3.getObject(bucketName, key);
-        return s3Object.getObjectContent();
+        try {
+            return s3Object.getObjectContent();
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error downloading file from S3", e);
+        }
     }
 }
