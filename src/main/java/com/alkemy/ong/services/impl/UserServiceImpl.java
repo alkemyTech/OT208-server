@@ -128,9 +128,9 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     @Override
-    public UserRegisterDto updateUser(UserForm userForm, String id) {
+    public UserRegisterDto updateUser(UserRegisterDto userRegisterDto, String id) {
         if (this.findById(id).isPresent()) {
-            UserEntity userEntity = modelMapper.map(userForm, UserEntity.class);
+            UserEntity userEntity = modelMapper.map(userRegisterDto, UserEntity.class);
 
             userEntity = this.save(userEntity);
             return modelMapper.map(userEntity, UserRegisterDto.class);
