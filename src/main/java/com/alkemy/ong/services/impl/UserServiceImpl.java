@@ -3,6 +3,7 @@ package com.alkemy.ong.services.impl;
 import java.util.Arrays;
 import java.util.Optional;
 
+import com.alkemy.ong.jwt.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,27 +30,26 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
+    private final JwtUtils jwtUtils;
     
     public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
-			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository) {
+			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository, JwtUtils jwtUtils) {
 		super(repository);
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.roleRepository = roleRepository;
+        this.jwtUtils = jwtUtils;
 	}
 
-	public UserDetails login(UserLoginDto userLoginDto) throws BadCredentialsException{
-        UserDetails userDetails;
+    public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDto.getEmail(), userLoginDto.getPassword()));
-        //userDetails necesario para implementar JWT en este mismo metodo.
-        userDetails = (UserDetails) authentication.getPrincipal();
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        //retornar el token
-        return userDetails;
+        return jwtUtils.generateToken(findByEmail(userLoginDto.getEmail()).get());
     }
 
     public Optional<UserEntity> findByEmail(String email) {
