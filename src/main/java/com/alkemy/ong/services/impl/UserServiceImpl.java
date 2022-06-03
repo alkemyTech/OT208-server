@@ -12,6 +12,7 @@ import com.alkemy.ong.payloads.UserForm;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
+import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,20 +36,20 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     private final IRoleRepository roleRepository;
     private final JwtUtils jwtUtils;
     private final ModelMapper modelMapper;
-    
+
     public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
-			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository,
+                           IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository,
                            JwtUtils jwtUtils, ModelMapper modelMapper) {
-		super(repository);
-		this.authenticationManager = authenticationManager;
-		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.roleRepository = roleRepository;
+        super(repository);
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
         this.jwtUtils = jwtUtils;
         this.modelMapper = modelMapper;
-	}
+    }
 
-    public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
+    public String login(UserLoginDto userLoginDto) throws BadCredentialsException {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDto.getEmail(), userLoginDto.getPassword()));
@@ -63,10 +64,9 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     /**
-     * 
      * @param userDTO
      * @return UserEntity Object
-     * @throws EmailExistsException 
+     * @throws EmailExistsException
      */
     @Override
     public UserEntity saveUser(UserRegisterDto userDTO) throws EmailExistsException {
@@ -89,6 +89,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
     /**
      * Method to delete user
+     *
      * @param id
      * @return
      */
@@ -104,27 +105,25 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     /**
-     * 
      * @param email
      * @return true/false
      */
     private boolean emailExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
-    
+
     /**
-     * 
      * @param role
      * @return RoleEntity Object
-     * @throws RoleExistException 
+     * @throws RoleExistException
      */
     private RoleEntity roleExist(String role) throws RoleExistException {
 
-        if (roleRepository.findByName(role).isPresent())  {
+        if (roleRepository.findByName(role).isPresent()) {
             return roleRepository.findByName("USER").get();
         } else {
             throw new RoleExistException(
-                "Rol dont's exist:" + role);
+                    "Rol dont's exist:" + role);
         }
     }
 
@@ -142,10 +141,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
     @Override
     public List<UserRegisterDto> getAll() {
-        List<UserEntity> userEntityList = this.findAll();
-        List<UserRegisterDto> userRegisterDtoList = (List<UserRegisterDto>) modelMapper.map(userEntityList, UserRegisterDto.class);
-
-        return userRegisterDtoList;
+        return ObjectMapperUtils.mapAll(this.findAll(), UserRegisterDto.class);
     }
 
 }

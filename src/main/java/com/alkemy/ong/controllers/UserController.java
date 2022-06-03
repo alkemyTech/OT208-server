@@ -20,7 +20,7 @@ public class UserController {
     public static final String NO_DELETE_USER = "Usuario no eliminado";
     private final UserService userService;
 
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
         try {
             return new ResponseEntity<>(this.userService.deleteUser(id) ? DELETE_USER : NO_DELETE_USER, HttpStatus.OK);
