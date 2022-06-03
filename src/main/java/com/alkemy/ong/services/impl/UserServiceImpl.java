@@ -1,45 +1,50 @@
 package com.alkemy.ong.services.impl;
 
-import java.util.Arrays;
-import java.util.Optional;
-
+import com.alkemy.ong.dto.request.user.UserLoginDto;
+import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.exeptions.ArgumentRequiredException;
+import com.alkemy.ong.exeptions.EmailExistsException;
+import com.alkemy.ong.exeptions.RoleExistException;
 import com.alkemy.ong.jwt.JwtUtils;
+import com.alkemy.ong.models.RoleEntity;
+import com.alkemy.ong.models.UserEntity;
+import com.alkemy.ong.payloads.UserForm;
+import com.alkemy.ong.repositories.IRoleRepository;
+import com.alkemy.ong.repositories.IUserRepository;
+import com.alkemy.ong.services.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.alkemy.ong.dto.request.user.UserLoginDto;
-import com.alkemy.ong.dto.request.user.UserRegisterDto;
-import com.alkemy.ong.exeptions.EmailExistsException;
-import com.alkemy.ong.exeptions.RoleExistException;
-import com.alkemy.ong.models.RoleEntity;
-import com.alkemy.ong.models.UserEntity;
-import com.alkemy.ong.repositories.IRoleRepository;
-import com.alkemy.ong.repositories.IUserRepository;
-import com.alkemy.ong.services.UserService;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Service
-public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService { 
+public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService {
 
+    public static final String IS_REQUIRED_OR_DOESNT_EXIST = "El id del usuario es requerido o no existe";
     private final AuthenticationManager authenticationManager;
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
     private final JwtUtils jwtUtils;
+    private final ModelMapper modelMapper;
     
     public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
-			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository, JwtUtils jwtUtils) {
+			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository,
+                           JwtUtils jwtUtils, ModelMapper modelMapper) {
 		super(repository);
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.roleRepository = roleRepository;
         this.jwtUtils = jwtUtils;
+        this.modelMapper = modelMapper;
 	}
 
     public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
@@ -121,4 +126,17 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
                 "Rol dont's exist:" + role);
         }
     }
+
+    @Override
+    public UserRegisterDto updateUser(UserForm userForm, String id) {
+        if (this.findById(id).isPresent()) {
+            UserEntity userEntity = modelMapper.map(userForm, UserEntity.class);
+
+            userEntity = this.save(userEntity);
+            return modelMapper.map(userEntity, UserRegisterDto.class);
+        } else {
+            throw new ArgumentRequiredException(IS_REQUIRED_OR_DOESNT_EXIST);
+        }
+    }
+
 }

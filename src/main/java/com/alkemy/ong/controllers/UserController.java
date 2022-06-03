@@ -1,13 +1,14 @@
 package com.alkemy.ong.controllers;
 
+import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.payloads.UserForm;
 import com.alkemy.ong.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -24,6 +25,17 @@ public class UserController {
             return new ResponseEntity<>(this.userService.deleteUser(id) ? DELETE_USER : NO_DELETE_USER, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserRegisterDto> update(@Valid @RequestBody UserForm userForm, @PathVariable String id) {
+        try {
+            UserRegisterDto userDTO = this.userService.updateUser(userForm, id);
+
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     
