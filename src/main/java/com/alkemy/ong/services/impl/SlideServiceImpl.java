@@ -1,14 +1,12 @@
 package com.alkemy.ong.services.Impl;
 
-import com.alkemy.ong.services.impl.BasicServiceImpl;
 import com.alkemy.ong.dto.response.slide.SlideDto;
 import com.alkemy.ong.models.SlideEntity;
 import com.alkemy.ong.repositories.ISlideRepository;
 import com.alkemy.ong.services.SlideService;
+import com.alkemy.ong.services.impl.BasicServiceImpl;
 import com.alkemy.ong.services.mappers.SlideMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -32,5 +30,9 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
         return result;
     }
 
+    @Override
+    public SlideDto getSlide(String id) {
+        return slideMapper.entity2Dto(repository.getById(id));
+    }
 
 }

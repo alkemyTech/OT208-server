@@ -4,9 +4,7 @@ import com.alkemy.ong.dto.response.slide.SlideDto;
 import com.alkemy.ong.services.SlideService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +19,13 @@ public class SlideController {
     public ResponseEntity<List<SlideDto>> getAll() {
         return ResponseEntity.ok().body(slideService.getAll());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SlideDto> getSlide(@PathVariable String id) {
+        if(slideService.findById(id).isPresent()) {
+            return new ResponseEntity<SlideDto>(slideService.getSlide(id), HttpStatus.OK);
+        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 
 }
