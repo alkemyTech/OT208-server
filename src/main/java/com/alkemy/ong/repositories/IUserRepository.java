@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IUserRepository extends JpaRepository<UserEntity, String> {
 
-    @Query("SELECT u FROM UserEntity u where u.email = :email AND u.softDelete = false")
-    Optional<UserEntity> findByEmail(@Param("email") String email);
+    Optional<UserEntity> findByEmail(String email);
 
 }

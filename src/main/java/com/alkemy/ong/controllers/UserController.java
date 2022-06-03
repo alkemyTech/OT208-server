@@ -8,6 +8,8 @@ import com.alkemy.ong.exeptions.EmailNotSendException;
 import java.io.IOException;
 
 import javax.validation.Valid;
+
+import com.alkemy.ong.jwt.JwtUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -35,17 +37,17 @@ public class UserController {
     private final EmailService emailService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) {
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) throws Exception {
         try {
             if (userServiceImpl.findByEmail(userLoginDto.getEmail()).isPresent()) {
-                userServiceImpl.login(userLoginDto);
-                // return token
-            }else
-            	return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(userServiceImpl.login(userLoginDto));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("false");
         }
-        return ResponseEntity.ok("ok");
+
     }
 
     /**
