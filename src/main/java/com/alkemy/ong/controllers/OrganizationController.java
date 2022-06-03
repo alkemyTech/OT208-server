@@ -1,13 +1,10 @@
 package com.alkemy.ong.controllers;
 
-import com.alkemy.ong.dto.OrganizationPublicDataDto;
+import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import com.alkemy.ong.services.OrganizationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/organization")
@@ -17,8 +14,14 @@ public class OrganizationController {
     private final OrganizationService organizationService;
 
     @GetMapping("/public")
-    public ResponseEntity<OrganizationPublicDataDto> publicData(@RequestParam String id) {
-        OrganizationPublicDataDto publicDataDTO = organizationService.getPublicOrganizationData(id);
+    public ResponseEntity<OrganizationPublicDto> publicData(@RequestParam String id) {
+        OrganizationPublicDto publicDataDTO = organizationService.getPublicOrganizationData(id);
+        return ResponseEntity.ok().body(publicDataDTO);
+    }
+
+    @PostMapping("/public/{id}")
+    public ResponseEntity<OrganizationPublicDto> updateOrganization(@PathVariable String id, @RequestBody OrganizationPublicDto dto) {
+        OrganizationPublicDto publicDataDTO = organizationService.updateOrganization(id,dto);
         return ResponseEntity.ok().body(publicDataDTO);
     }
 }
