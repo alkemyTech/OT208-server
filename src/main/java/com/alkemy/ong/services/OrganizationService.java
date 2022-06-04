@@ -7,6 +7,4 @@ public interface OrganizationService {
     OrganizationPublicDto getPublicOrganizationData(String id);
 
     OrganizationPublicDto updateOrganization(String id, OrganizationPublicDto organizationPublicDto);
-
-    boolean existById(String id);
 }
