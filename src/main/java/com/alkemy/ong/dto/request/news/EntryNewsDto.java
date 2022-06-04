@@ -1,4 +1,4 @@
-package com.alkemy.ong.dto.response.news;
+package com.alkemy.ong.dto.request.news;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

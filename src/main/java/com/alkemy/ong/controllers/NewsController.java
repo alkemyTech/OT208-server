@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alkemy.ong.dto.request.news.EntryNewsDto;
 import com.alkemy.ong.dto.response.news.BasicNewsDto;
-import com.alkemy.ong.dto.response.news.EntryNewsDto;
 import com.alkemy.ong.exeptions.ValidationException;
 import com.alkemy.ong.models.NewsEntity;
 import com.alkemy.ong.services.AWSS3Service;
