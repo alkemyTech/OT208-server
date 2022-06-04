@@ -37,9 +37,5 @@ public class OrganizationServiceImpl extends BasicServiceImpl<OrganizationEntity
         return organizationMapper.publicDataOrganization(ong);
     }
 
-    @Override
-    public boolean existById(String id) {
-        return super.findById(id).isPresent();
-    }
 
 }
