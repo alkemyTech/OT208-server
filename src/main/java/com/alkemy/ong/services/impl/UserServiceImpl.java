@@ -2,18 +2,17 @@ package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.dto.response.user.BasicUserDto;
 import com.alkemy.ong.exeptions.ArgumentRequiredException;
 import com.alkemy.ong.exeptions.EmailExistsException;
 import com.alkemy.ong.exeptions.RoleExistException;
 import com.alkemy.ong.jwt.JwtUtils;
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
-import com.alkemy.ong.payloads.UserForm;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,18 +34,16 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
     private final JwtUtils jwtUtils;
-    private final ModelMapper modelMapper;
 
     public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
                            IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository,
-                           JwtUtils jwtUtils, ModelMapper modelMapper) {
+                           JwtUtils jwtUtils) {
         super(repository);
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.jwtUtils = jwtUtils;
-        this.modelMapper = modelMapper;
     }
 
     public String login(UserLoginDto userLoginDto) throws BadCredentialsException {
@@ -128,12 +125,12 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     @Override
-    public UserRegisterDto updateUser(UserRegisterDto userRegisterDto, String id) {
+    public BasicUserDto updateUser(UserRegisterDto userRegisterDto, String id) {
         if (this.findById(id).isPresent()) {
-            UserEntity userEntity = modelMapper.map(userRegisterDto, UserEntity.class);
+            UserEntity userEntity = ObjectMapperUtils.map(userRegisterDto, UserEntity.class);
 
             userEntity = this.save(userEntity);
-            return modelMapper.map(userEntity, UserRegisterDto.class);
+            return ObjectMapperUtils.map(userEntity, BasicUserDto.class);
         } else {
             throw new ArgumentRequiredException(IS_REQUIRED_OR_DOESNT_EXIST);
         }

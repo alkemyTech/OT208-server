@@ -2,6 +2,7 @@ package com.alkemy.ong.services;
 
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.dto.response.user.BasicUserDto;
 import com.alkemy.ong.models.UserEntity;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface UserService extends BasicService<UserEntity, String> {
 
     String login(UserLoginDto userLoginDto);
 
-    UserRegisterDto updateUser(UserRegisterDto userRegisterDto, String id);
+    BasicUserDto updateUser(UserRegisterDto userRegisterDto, String id);
 
     List<UserRegisterDto> getAll();
 
