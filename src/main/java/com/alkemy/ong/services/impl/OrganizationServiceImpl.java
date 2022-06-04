@@ -1,5 +1,7 @@
 package com.alkemy.ong.services.impl;
 
+import com.alkemy.ong.models.UserEntity;
+import com.alkemy.ong.repositories.IUserRepository;
 import org.springframework.stereotype.Service;
 import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import com.alkemy.ong.models.OrganizationEntity;
@@ -9,28 +11,35 @@ import lombok.AllArgsConstructor;
 import com.alkemy.ong.repositories.IOrganizationRepository;
 
 @Service
-@AllArgsConstructor
-public class OrganizationServiceImpl implements OrganizationService {
+public class OrganizationServiceImpl extends BasicServiceImpl<OrganizationEntity, String, IOrganizationRepository> implements OrganizationService {
 
-    private final IOrganizationRepository organizationRepository;
     private final OrganizationMapper organizationMapper;
+
+    public OrganizationServiceImpl(IOrganizationRepository repository, OrganizationMapper organizationMapper) {
+        super(repository);
+        this.organizationMapper = organizationMapper;
+    }
 
     @Override
     public OrganizationPublicDto getPublicOrganizationData(String id) {
-        OrganizationEntity organization = organizationRepository.findById(id).orElseThrow();
+        OrganizationEntity organization = super.findById(id).orElseThrow();
         return organizationMapper.publicDataOrganization(organization);
     }
 
-
     @Override
     public OrganizationPublicDto updateOrganization(String id, OrganizationPublicDto organizationPublicDto) {
-        OrganizationEntity ong = organizationRepository.findById(id).orElseThrow();
+        OrganizationEntity ong = super.findById(id).orElseThrow();
         ong.setPhone(organizationPublicDto.getPhone());
         ong.setImage(organizationPublicDto.getImage());
         ong.setName(organizationPublicDto.getName());
         ong.setAddress(organizationPublicDto.getAddress());
-        organizationRepository.save(ong);
+        super.save(ong);
         return organizationMapper.publicDataOrganization(ong);
+    }
+
+    @Override
+    public boolean existById(String id) {
+        return super.findById(id).isPresent();
     }
 
 }

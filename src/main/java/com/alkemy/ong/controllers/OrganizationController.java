@@ -20,8 +20,13 @@ public class OrganizationController {
     }
 
     @PostMapping("/public/{id}")
-    public ResponseEntity<OrganizationPublicDto> updateOrganization(@PathVariable String id, @RequestBody OrganizationPublicDto dto) {
-        OrganizationPublicDto publicDataDTO = organizationService.updateOrganization(id,dto);
-        return ResponseEntity.ok().body(publicDataDTO);
+    public ResponseEntity<OrganizationPublicDto> updateOrganization(@PathVariable String id,
+                                                                    @RequestBody OrganizationPublicDto dto) {
+        if (organizationService.existById(id)) {
+            OrganizationPublicDto publicDataDTO = organizationService.updateOrganization(id, dto);
+            return ResponseEntity.ok().body(publicDataDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
