@@ -1,4 +1,4 @@
-package com.alkemy.ong.dto.response.slide;
+package com.alkemy.ong.dto.request.slide;
 
 import com.alkemy.ong.models.OrganizationEntity;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SlideDto {
+public class SlideRequestDto {
 
-    private String id;
     private String imageUrl;
     private String text;
     private Integer order;
-    private OrganizationEntity organizationEntityId;
-
+    private String organizationId;
 }

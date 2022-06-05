@@ -1,5 +1,6 @@
 package com.alkemy.ong.services;
 
+import com.alkemy.ong.dto.request.slide.SlideRequestDto;
 import com.alkemy.ong.dto.response.slide.SlideDto;
 import com.alkemy.ong.models.SlideEntity;
 
@@ -10,5 +11,7 @@ public interface SlideService extends BasicService<SlideEntity, String> {
     public List<SlideDto> getAll();
 
     public SlideDto getSlide(String id);
+
+    SlideDto createSlide(SlideRequestDto dto);
 
 }
