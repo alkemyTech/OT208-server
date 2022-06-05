@@ -35,8 +35,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE organizations SET softDelete = true WHERE id=?")
-@Where(clause = "softDelete = false")
+@SQLDelete(sql = "UPDATE organizations SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
 @EntityListeners(AuditingEntityListener.class)
 public class OrganizationEntity implements Serializable {
 
@@ -50,7 +50,7 @@ public class OrganizationEntity implements Serializable {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 150)
     private String image;
 
     @Column(nullable = true, length = 150)

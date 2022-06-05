@@ -2,16 +2,19 @@ package com.alkemy.ong.services.impl;
 
 import java.util.Arrays;
 import java.util.Optional;
+
+import com.alkemy.ong.jwt.JwtUtils;
+import com.alkemy.ong.security.enums.RolName;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.alkemy.ong.dto.request.user.UserRegisterDto;
+
 import com.alkemy.ong.dto.request.user.UserLoginDto;
+import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.exeptions.EmailExistsException;
 import com.alkemy.ong.exeptions.RoleExistException;
 import com.alkemy.ong.models.RoleEntity;
@@ -19,28 +22,64 @@ import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
-public class UserServiceImpl implements UserService { 
+public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService { 
 
     private final AuthenticationManager authenticationManager;
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
+    private final JwtUtils jwtUtils;
+    
+    public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
+			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository, JwtUtils jwtUtils) {
+		super(repository);
+		this.authenticationManager = authenticationManager;
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.roleRepository = roleRepository;
+        this.jwtUtils = jwtUtils;
+	}
 
-    public UserDetails login(UserLoginDto userLoginDto) throws BadCredentialsException{
-        UserDetails userDetails;
+    @Override
+    public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDto.getEmail(), userLoginDto.getPassword()));
-        //userDetails necesario para implementar JWT en este mismo metodo.
-        userDetails = (UserDetails) authentication.getPrincipal();
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        //retornar el token
-        return userDetails;
+        return this.getToken(authentication);
+    }
+
+    @Override
+    public String singup(UserRegisterDto userRegisterDto) throws BadCredentialsException{
+
+        this.saveUser(userRegisterDto);
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                userRegisterDto.getEmail(), userRegisterDto.getPassword()));
+
+        return this.getToken(authentication);
+    }
+
+    private String getToken(Authentication authentication) {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return jwtUtils.generateToken(authentication);
+    }
+
+    @Override
+    public Optional<UserEntity> getByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean existByFirstName(String firstName){
+        return userRepository.existsByFirstName(firstName);
+    }
+
+    @Override
+    public boolean existsByEmail(String email){
+        return userRepository.existsByEmail(email);
     }
 
     public Optional<UserEntity> findByEmail(String email) {
@@ -65,8 +104,8 @@ public class UserServiceImpl implements UserService {
         userEntity.setFirstName(userDTO.getFirstName());
         userEntity.setLastName(userDTO.getLastName());
         userEntity.setEmail(userDTO.getEmail());
+        userEntity.setRoleIds(Arrays.asList(roleRepository.findByRolName(RolName.ROLE_USER).get()));
         userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userEntity.setRoleIds(Arrays.asList(roleExist("USER")));
         userEntity = this.userRepository.save(userEntity);
 
         return userEntity;
@@ -99,17 +138,17 @@ public class UserServiceImpl implements UserService {
     
     /**
      * 
-     * @param role
+     * @param rolName
      * @return RoleEntity Object
      * @throws RoleExistException 
      */
-    private RoleEntity roleExist(String role) throws RoleExistException {
+    private RoleEntity roleExist(RolName rolName) throws RoleExistException {
 
-        if (roleRepository.findByName(role).isPresent())  {
-            return roleRepository.findByName("USER").get();
+        if (roleRepository.findByRolName(rolName).isPresent())  {
+            return roleRepository.findByRolName(rolName).get();
         } else {
             throw new RoleExistException(
-                "Rol dont's exist:" + role);
+                "Rol dont's exist:" + rolName);
         }
     }
 }
