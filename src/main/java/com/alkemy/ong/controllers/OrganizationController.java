@@ -1,5 +1,6 @@
 package com.alkemy.ong.controllers;
 
+import com.alkemy.ong.dto.request.organization.OrganizationRequestDto;
 import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import com.alkemy.ong.services.OrganizationService;
 import lombok.AllArgsConstructor;
@@ -19,11 +20,10 @@ public class OrganizationController {
         return ResponseEntity.ok().body(publicDataDTO);
     }
 
-    @PostMapping("/public/{id}")
-    public ResponseEntity<OrganizationPublicDto> updateOrganization(@PathVariable String id,
-                                                                    @RequestBody OrganizationPublicDto dto) {
-        if (organizationService.existById(id)) {
-            OrganizationPublicDto publicDataDTO = organizationService.updateOrganization(id, dto);
+    @PostMapping("/public")
+    public ResponseEntity<OrganizationPublicDto> updateOrganization(@RequestBody OrganizationRequestDto dto) {
+        if (organizationService.existById(dto.getId())) {
+            OrganizationPublicDto publicDataDTO = organizationService.updateOrganization(dto);
             return ResponseEntity.ok().body(publicDataDTO);
         } else {
             return ResponseEntity.notFound().build();
