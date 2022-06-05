@@ -1,8 +1,7 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.slide.SlideRequestDto;
-import com.alkemy.ong.dto.request.slide.SlideUpdateDto;
-import com.alkemy.ong.dto.response.slide.SlideDto;
+import com.alkemy.ong.dto.response.slide.SlideResponseDto;
 import com.alkemy.ong.services.SlideService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,27 +19,27 @@ public class SlideController {
     private SlideService slideService;
 
     @GetMapping
-    public ResponseEntity<List<SlideDto>> getAll() {
+    public ResponseEntity<List<SlideResponseDto>> getAll() {
         return ResponseEntity.ok().body(slideService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SlideDto> getSlide(@PathVariable String id) {
+    public ResponseEntity<SlideResponseDto> getSlide(@PathVariable String id) {
         if(slideService.findById(id).isPresent()) {
-            return new ResponseEntity<SlideDto>(slideService.getSlide(id), HttpStatus.OK);
+            return new ResponseEntity<SlideResponseDto>(slideService.getSlide(id), HttpStatus.OK);
         }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
-    public ResponseEntity<SlideDto> createSlide(@RequestBody SlideRequestDto slideDto) {
-        return new ResponseEntity<SlideDto>(slideService.createSlide(slideDto), HttpStatus.CREATED);
+    public ResponseEntity<SlideResponseDto> createSlide(@RequestBody SlideRequestDto slideDto) {
+        return new ResponseEntity<SlideResponseDto>(slideService.createSlide(slideDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SlideDto> updateSlide(@PathVariable String id,
-                                                @RequestPart(value = "file") MultipartFile file) {
+    public ResponseEntity<SlideResponseDto> updateSlide(@PathVariable String id,
+                                                        @RequestPart(value = "file") MultipartFile file) {
         if(slideService.findById(id).isPresent()) {
-            return new ResponseEntity<SlideDto>(slideService.updateSlide(id, file), HttpStatus.OK);
+            return new ResponseEntity<SlideResponseDto>(slideService.updateSlide(id, file), HttpStatus.OK);
         }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 

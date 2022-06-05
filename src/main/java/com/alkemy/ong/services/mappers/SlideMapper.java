@@ -1,7 +1,7 @@
 package com.alkemy.ong.services.mappers;
 
 import com.alkemy.ong.dto.request.slide.SlideRequestDto;
-import com.alkemy.ong.dto.response.slide.SlideDto;
+import com.alkemy.ong.dto.response.slide.SlideResponseDto;
 import com.alkemy.ong.models.SlideEntity;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,8 +17,8 @@ public class SlideMapper {
 
     private final ModelMapper mapper;
 
-    public SlideDto entity2Dto(SlideEntity slide) {
-        return mapper.map(slide, SlideDto.class);
+    public SlideResponseDto entity2Dto(SlideEntity slide) {
+        return mapper.map(slide, SlideResponseDto.class);
     }
 
     public SlideRequestDto entity2DtoRequest(SlideEntity slide) {
@@ -29,23 +29,23 @@ public class SlideMapper {
         return mapper.map(requestDto, SlideEntity.class);
     }
 
-    public SlideEntity dto2Entity(SlideDto dto) {
+    public SlideEntity dto2Entity(SlideResponseDto dto) {
         return mapper.map(dto, SlideEntity.class);
     }
 
-    public List<SlideDto> entityList2DtoList(List<SlideEntity> slides) {
+    public List<SlideResponseDto> entityList2DtoList(List<SlideEntity> slides) {
         return slides.stream().map(this::entity2Dto).collect(Collectors.toList());
     }
 
-    public List<SlideEntity> dtoList2EntityList(List<SlideDto> dtos) {
+    public List<SlideEntity> dtoList2EntityList(List<SlideResponseDto> dtos) {
         List<SlideEntity> slides = new ArrayList<>();
-        for (SlideDto dto : dtos) slides.add(this.dto2Entity(dto));
+        for (SlideResponseDto dto : dtos) slides.add(this.dto2Entity(dto));
         return slides;
     }
 
 
    /* SlideDtoFull slideEntityToSlideDtoFull(SlideEntity slideEntity);
-    SlideDto slideEntityToSlideDto(SlideDtoFull SlideDtoFull);
+    SlideResponseDto slideEntityToSlideDto(SlideDtoFull SlideDtoFull);
     SlideEntity slideDtoFullToSlideEntity(SlideDtoFull slideDtoFull);*/
 
 }

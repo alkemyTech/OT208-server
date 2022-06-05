@@ -1,8 +1,7 @@
 package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.dto.request.slide.SlideRequestDto;
-import com.alkemy.ong.dto.request.slide.SlideUpdateDto;
-import com.alkemy.ong.dto.response.slide.SlideDto;
+import com.alkemy.ong.dto.response.slide.SlideResponseDto;
 import com.alkemy.ong.models.OrganizationEntity;
 import com.alkemy.ong.models.SlideEntity;
 import com.alkemy.ong.repositories.IOrganizationRepository;
@@ -37,19 +36,19 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
     }
 
     @Override
-    public List<SlideDto> getAll() {
+    public List<SlideResponseDto> getAll() {
         List<SlideEntity> slides = repository.findAll();
         return slideMapper.entityList2DtoList(slides);
     }
 
     @Override
-    public SlideDto getSlide(String id) {
+    public SlideResponseDto getSlide(String id) {
         return slideMapper.entity2Dto(repository.getById(id));
     }
 
     @Transactional
     @Override
-    public SlideDto createSlide(SlideRequestDto dto) {
+    public SlideResponseDto createSlide(SlideRequestDto dto) {
         SlideEntity slideEntity = new SlideEntity();
 
         Optional<OrganizationEntity> op = organizationRepository.findById(dto.getOrganizationId());
@@ -78,7 +77,7 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
 
     @Transactional
     @Override
-    public SlideDto updateSlide(String id, MultipartFile file) {
+    public SlideResponseDto updateSlide(String id, MultipartFile file) {
 
         Optional<SlideEntity> op = repository.findById(id);
 

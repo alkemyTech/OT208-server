@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SlideDto {
+public class SlideResponseDto {
 
     private String id;
     private String imageUrl;
