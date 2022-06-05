@@ -35,8 +35,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE categories SET softDelete = true WHERE id=?")
-@Where(clause = "softDelete = false")
+@SQLDelete(sql = "UPDATE categories SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
 @EntityListeners(AuditingEntityListener.class)
 public class CategoryEntity implements Serializable {
 
