@@ -88,8 +88,7 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
 
         SlideEntity slideEntity = op.get();
 
-        MultipartFile decodedImage = base64Image2MultipartFile(dto.getImageUrl());
-        slideEntity.setImageUrl(awss3Service.uploadFile(decodedImage));
+        slideEntity.setImageUrl(awss3Service.uploadFile(file));
         return slideMapper.entity2Dto(repository.save(slideEntity));
     }
 
