@@ -3,15 +3,8 @@ package com.alkemy.ong.models;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -55,7 +48,7 @@ public class UserEntity implements Serializable {
     private String photo;
 
     @Column(nullable = false)
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "roles_users",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -66,4 +59,14 @@ public class UserEntity implements Serializable {
 
     @Column(nullable = false)
     private Boolean softDelete = Boolean.FALSE;
+
+    public UserEntity(String firstName, String lastName, String email, String password, String photo, LocalDateTime timestamps, Boolean softDelete) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.photo = photo;
+        this.timestamps = timestamps;
+        this.softDelete = softDelete;
+    }
 }

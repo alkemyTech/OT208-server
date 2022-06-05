@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import com.alkemy.ong.jwt.JwtUtils;
+import com.alkemy.ong.security.enums.RolName;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +49,22 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwtUtils.generateToken(findByEmail(userLoginDto.getEmail()).get());
+        return jwtUtils.generateToken(authentication);
+    }
+
+    @Override
+    public Optional<UserEntity> getByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean existByFirstName(String firstName){
+        return userRepository.existsByFirstName(firstName);
+    }
+
+    @Override
+    public boolean existsByEmail(String email){
+        return userRepository.existsByEmail(email);
     }
 
     public Optional<UserEntity> findByEmail(String email) {
@@ -74,8 +89,8 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         userEntity.setFirstName(userDTO.getFirstName());
         userEntity.setLastName(userDTO.getLastName());
         userEntity.setEmail(userDTO.getEmail());
+        userEntity.setRoleIds(Arrays.asList(roleRepository.findByRolName(RolName.ROLE_USER).get()));
         userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userEntity.setRoleIds(Arrays.asList(roleExist("USER")));
         userEntity = this.userRepository.save(userEntity);
 
         return userEntity;
@@ -108,17 +123,17 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     
     /**
      * 
-     * @param role
+     * @param rolName
      * @return RoleEntity Object
      * @throws RoleExistException 
      */
-    private RoleEntity roleExist(String role) throws RoleExistException {
+    private RoleEntity roleExist(RolName rolName) throws RoleExistException {
 
-        if (roleRepository.findByName(role).isPresent())  {
-            return roleRepository.findByName("USER").get();
+        if (roleRepository.findByRolName(rolName).isPresent())  {
+            return roleRepository.findByRolName(rolName).get();
         } else {
             throw new RoleExistException(
-                "Rol dont's exist:" + role);
+                "Rol dont's exist:" + rolName);
         }
     }
 }
