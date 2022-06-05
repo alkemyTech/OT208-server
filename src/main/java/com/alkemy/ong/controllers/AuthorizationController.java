@@ -57,13 +57,8 @@ public class AuthorizationController {
      */
     @PostMapping("/register")
     public ResponseEntity<String> signup(@RequestBody @Valid UserRegisterDto userRegisterDto) throws EmailNotSendException, IOException {
-
-        try {
-            emailService.sendEmailRegister(userRegisterDto.getEmail());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(userServiceImpl.singup(userRegisterDto));
-        } catch (EmailNotSendException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("false");
-        }
+        emailService.sendEmailRegister(userRegisterDto.getEmail());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userServiceImpl.singup(userRegisterDto));
 
     }
 
