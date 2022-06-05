@@ -56,17 +56,15 @@ public class AuthorizationController {
      * @throws EmailNotSendException
      */
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> signup(@RequestBody @Valid UserRegisterDto userDTO) throws EmailNotSendException, IOException {
-//        userService.saveUser(userDTO);
-//        Authentication auth;
-//        auth = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword()));
-//        final String jwt = jwtTokenUtil.generateToken(auth);
-//        return ResponseEntity.ok(new AuthResponseDTO(jwt));
-        UserEntity user = userService.saveUser(userDTO);
-        emailService.sendEmailRegister(user.getEmail());
+    public ResponseEntity<String> signup(@RequestBody @Valid UserRegisterDto userRegisterDto) throws EmailNotSendException, IOException {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        try {
+            emailService.sendEmailRegister(userRegisterDto.getEmail());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(userServiceImpl.singup(userRegisterDto));
+        } catch (EmailNotSendException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("false");
+        }
+
     }
 
     @GetMapping("/me")
