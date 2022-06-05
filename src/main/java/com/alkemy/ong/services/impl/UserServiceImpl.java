@@ -42,13 +42,28 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         this.jwtUtils = jwtUtils;
 	}
 
+    @Override
     public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDto.getEmail(), userLoginDto.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return this.getToken(authentication);
+    }
 
+    @Override
+    public String singup(UserRegisterDto userRegisterDto) throws BadCredentialsException{
+
+        this.saveUser(userRegisterDto);
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                userRegisterDto.getEmail(), userRegisterDto.getPassword()));
+
+        return this.getToken(authentication);
+    }
+
+    private String getToken(Authentication authentication) {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtUtils.generateToken(authentication);
     }
 
