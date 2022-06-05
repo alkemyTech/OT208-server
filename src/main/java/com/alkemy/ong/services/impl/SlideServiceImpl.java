@@ -1,6 +1,7 @@
 package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.dto.request.slide.SlideRequestDto;
+import com.alkemy.ong.dto.request.slide.SlideUpdateDto;
 import com.alkemy.ong.dto.response.slide.SlideDto;
 import com.alkemy.ong.models.OrganizationEntity;
 import com.alkemy.ong.models.SlideEntity;
@@ -62,7 +63,7 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
             slideEntity.setOrder(1 + slideListMax);
         } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {
             slideEntity.setOrder(dto.getOrder());
-        } else if (dto.getOrder() == slideListMax) {
+        } else if (slideListMax == dto.getOrder()) {
             slideEntity.setOrder(slideListMax + 1);
         }
 
@@ -73,6 +74,23 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
 
         SlideEntity entityUpdated = repository.save(slideEntity);
         return slideMapper.entity2Dto(entityUpdated);
+    }
+
+    @Transactional
+    @Override
+    public SlideDto updateSlide(String id, MultipartFile file) {
+
+        Optional<SlideEntity> op = repository.findById(id);
+
+        if (op.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad slide ID or null parameter" + id));
+        }
+
+        SlideEntity slideEntity = op.get();
+
+        MultipartFile decodedImage = base64Image2MultipartFile(dto.getImageUrl());
+        slideEntity.setImageUrl(awss3Service.uploadFile(decodedImage));
+        return slideMapper.entity2Dto(repository.save(slideEntity));
     }
 
     //Base64 Decoded
