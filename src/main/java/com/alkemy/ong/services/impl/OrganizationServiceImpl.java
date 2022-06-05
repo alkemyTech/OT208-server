@@ -1,14 +1,12 @@
 package com.alkemy.ong.services.impl;
 
-import com.alkemy.ong.models.UserEntity;
-import com.alkemy.ong.repositories.IUserRepository;
-import org.springframework.stereotype.Service;
+import com.alkemy.ong.dto.request.organization.OrganizationRequestDto;
 import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import com.alkemy.ong.models.OrganizationEntity;
+import com.alkemy.ong.repositories.IOrganizationRepository;
 import com.alkemy.ong.services.OrganizationService;
 import com.alkemy.ong.services.mappers.OrganizationMapper;
-import lombok.AllArgsConstructor;
-import com.alkemy.ong.repositories.IOrganizationRepository;
+import org.springframework.stereotype.Service;
 
 @Service
 public class OrganizationServiceImpl extends BasicServiceImpl<OrganizationEntity, String, IOrganizationRepository> implements OrganizationService {
@@ -22,17 +20,17 @@ public class OrganizationServiceImpl extends BasicServiceImpl<OrganizationEntity
 
     @Override
     public OrganizationPublicDto getPublicOrganizationData(String id) {
-        OrganizationEntity organization = super.findById(id).orElseThrow();
+        OrganizationEntity organization = repository.findById(id).orElseThrow();
         return organizationMapper.publicDataOrganization(organization);
     }
 
     @Override
-    public OrganizationPublicDto updateOrganization(String id, OrganizationPublicDto organizationPublicDto) {
-        OrganizationEntity ong = super.findById(id).orElseThrow();
-        ong.setPhone(organizationPublicDto.getPhone());
-        ong.setImage(organizationPublicDto.getImage());
-        ong.setName(organizationPublicDto.getName());
-        ong.setAddress(organizationPublicDto.getAddress());
+    public OrganizationPublicDto updateOrganization(OrganizationRequestDto dto) {
+        OrganizationEntity ong = repository.findById(dto.getId()).orElseThrow();
+        ong.setPhone(dto.getPhone());
+        ong.setImage(dto.getImage());
+        ong.setName(dto.getName());
+        ong.setAddress(dto.getAddress());
         super.save(ong);
         return organizationMapper.publicDataOrganization(ong);
     }
