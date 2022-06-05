@@ -52,19 +52,19 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
         SlideEntity slideEntity = new SlideEntity();
 
         Optional<OrganizationEntity> op = organizationRepository.findById(dto.getOrganizationId());
-            if (op.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter" + slideEntity.getOrganizationEntityId().getId()));
-            }
+        if (op.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter" + slideEntity.getOrganizationEntityId().getId()));
+        }
         slideEntity.setOrganizationEntityId(op.get());
 
         Integer slideListMax = repository.getMaxOrder();
-            if (dto.getOrder() == null) {
-                slideEntity.setOrder(1 + slideListMax);
-            } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {
-                slideEntity.setOrder(dto.getOrder());
-            } else if (dto.getOrder() == slideListMax) {
-                slideEntity.setOrder(slideListMax + 1);
-            }
+        if (dto.getOrder() == null) {
+            slideEntity.setOrder(1 + slideListMax);
+        } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {
+            slideEntity.setOrder(dto.getOrder());
+        } else if (dto.getOrder() == slideListMax) {
+            slideEntity.setOrder(slideListMax + 1);
+        }
 
         MultipartFile decodedImage = base64Image2MultipartFile(dto.getImageUrl());
         slideEntity.setImageUrl(awss3Service.uploadFile(decodedImage));
@@ -87,6 +87,5 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
         }
         return new Base64Decode2Multipart(byteArray, baseString[0]);
     }
-
 
 }

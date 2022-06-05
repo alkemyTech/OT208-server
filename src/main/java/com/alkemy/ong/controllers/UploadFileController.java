@@ -21,7 +21,8 @@ public class UploadFileController {
 
     @PostMapping(value = "/upload")
     public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
-        String response = awss3Service.uploadFile(file) + " File was successfully uploaded";
+        awss3Service.uploadFile(file);
+        String response = "File " + file.getOriginalFilename() + " was successfully uploaded";
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

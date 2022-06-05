@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface SlideService extends BasicService<SlideEntity, String> {
 
-    public List<SlideDto> getAll();
+    List<SlideDto> getAll();
 
-    public SlideDto getSlide(String id);
+    SlideDto getSlide(String id);
 
     SlideDto createSlide(SlideRequestDto dto);
 

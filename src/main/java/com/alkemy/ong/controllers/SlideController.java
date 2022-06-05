@@ -24,14 +24,14 @@ public class SlideController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SlideDto> getSlide(@PathVariable String id) {
-        if(slideService.findById(id).isPresent()) {
-            return new ResponseEntity<SlideDto>(slideService.getSlide(id), HttpStatus.OK);
-        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (slideService.findById(id).isPresent()) {
+            return new ResponseEntity<>(slideService.getSlide(id), HttpStatus.OK);
+        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
     public ResponseEntity<SlideDto> createSlide(@RequestBody SlideRequestDto slideDto) {
-        return new ResponseEntity<SlideDto>(slideService.createSlide(slideDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(slideService.createSlide(slideDto), HttpStatus.CREATED);
     }
 
 }

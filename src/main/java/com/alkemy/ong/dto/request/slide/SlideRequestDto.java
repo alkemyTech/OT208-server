@@ -1,6 +1,5 @@
 package com.alkemy.ong.dto.request.slide;
 
-import com.alkemy.ong.models.OrganizationEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

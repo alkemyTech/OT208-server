@@ -2,7 +2,6 @@ package com.alkemy.ong.services;
 
 import java.io.InputStream;
 import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 
 public interface AWSS3Service {
@@ -14,6 +13,5 @@ public interface AWSS3Service {
     InputStream downloadFile(String key);
 
     String getUrl(String key);
-
 }
 
