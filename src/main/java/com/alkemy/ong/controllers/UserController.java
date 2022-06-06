@@ -1,6 +1,7 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.dto.response.user.BasicUserDto;
 import com.alkemy.ong.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,11 +30,11 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserRegisterDto> update(@Valid @RequestBody UserRegisterDto ususerRegisterDtorForm, @PathVariable String id) {
+    public ResponseEntity<BasicUserDto> update(@Valid @RequestBody UserRegisterDto ususerRegisterDtorForm, @PathVariable String id) {
         try {
-            UserRegisterDto userDTO = this.userService.updateUser(ususerRegisterDtorForm, id);
+            BasicUserDto basicUserDto = this.userService.updateUser(ususerRegisterDtorForm, id);
 
-            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+            return new ResponseEntity<>(basicUserDto, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
