@@ -2,6 +2,7 @@ package com.alkemy.ong.dto.response.user;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,8 @@ public class BasicUserDto {
 	private String email;
 	private String password;
 	private String photo;
-	private List<RoleEntityName> roleIdsRoleEntityName;
+	@JsonProperty(value = "roles")
+	private List<RoleEntityName> roleIdsRoleEntity;
 
 	@Getter
 	@Setter

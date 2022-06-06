@@ -19,7 +19,7 @@ public class ValidationServiceImpl implements ValidationService {
 
         for (RoleEntity roleEntity : role) {
 
-            if (roleEntity.getName().equals("USER") || roleEntity.getName().equals("ADMIN")) {
+            if (roleEntity.getRolName().equals("USER") || roleEntity.getRolName().equals("ADMIN")) {
                 flag = true;
             }
         }

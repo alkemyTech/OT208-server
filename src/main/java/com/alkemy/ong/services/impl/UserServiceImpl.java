@@ -1,55 +1,92 @@
 package com.alkemy.ong.services.impl;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import com.alkemy.ong.security.enums.RolName;
 
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.dto.response.user.BasicUserDto;
+import com.alkemy.ong.exeptions.ArgumentRequiredException;
 import com.alkemy.ong.exeptions.EmailExistsException;
 import com.alkemy.ong.exeptions.RoleExistException;
+import com.alkemy.ong.jwt.JwtUtils;
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
+import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @Service
-public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService { 
+public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService {
 
+    public static final String IS_REQUIRED_OR_DOESNT_EXIST = "El id del usuario es requerido o no existe";
     private final AuthenticationManager authenticationManager;
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
-    
-    public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
-			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository) {
-		super(repository);
-		this.authenticationManager = authenticationManager;
-		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.roleRepository = roleRepository;
-	}
+    private final JwtUtils jwtUtils;
 
-	public UserDetails login(UserLoginDto userLoginDto) throws BadCredentialsException{
-        UserDetails userDetails;
+    public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
+                           IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository,
+                           JwtUtils jwtUtils) {
+        super(repository);
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        this.jwtUtils = jwtUtils;
+    }
+
+
+    @Override
+    public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDto.getEmail(), userLoginDto.getPassword()));
-        //userDetails necesario para implementar JWT en este mismo metodo.
-        userDetails = (UserDetails) authentication.getPrincipal();
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        //retornar el token
-        return userDetails;
+        return this.getToken(authentication);
+    }
+
+    @Override
+    public String singup(UserRegisterDto userRegisterDto) throws BadCredentialsException{
+
+        this.saveUser(userRegisterDto);
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                userRegisterDto.getEmail(), userRegisterDto.getPassword()));
+
+        return this.getToken(authentication);
+    }
+
+    private String getToken(Authentication authentication) {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return jwtUtils.generateToken(authentication);
+    }
+
+    @Override
+    public Optional<UserEntity> getByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean existByFirstName(String firstName){
+        return userRepository.existsByFirstName(firstName);
+    }
+
+    @Override
+    public boolean existsByEmail(String email){
+        return userRepository.existsByEmail(email);
     }
 
     public Optional<UserEntity> findByEmail(String email) {
@@ -57,10 +94,9 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     /**
-     * 
      * @param userDTO
      * @return UserEntity Object
-     * @throws EmailExistsException 
+     * @throws EmailExistsException
      */
     @Override
     public UserEntity saveUser(UserRegisterDto userDTO) throws EmailExistsException {
@@ -74,8 +110,8 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         userEntity.setFirstName(userDTO.getFirstName());
         userEntity.setLastName(userDTO.getLastName());
         userEntity.setEmail(userDTO.getEmail());
+        userEntity.setRoleIds(Arrays.asList(roleRepository.findByRolName(RolName.ROLE_USER).get()));
         userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userEntity.setRoleIds(Arrays.asList(roleExist("USER")));
         userEntity = this.userRepository.save(userEntity);
 
         return userEntity;
@@ -83,6 +119,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
     /**
      * Method to delete user
+     *
      * @param id
      * @return
      */
@@ -98,27 +135,43 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     /**
-     * 
      * @param email
      * @return true/false
      */
     private boolean emailExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
-    
+
     /**
      * 
-     * @param role
+     * @param rolName
      * @return RoleEntity Object
-     * @throws RoleExistException 
+     * @throws RoleExistException
      */
-    private RoleEntity roleExist(String role) throws RoleExistException {
-
-        if (roleRepository.findByName(role).isPresent())  {
-            return roleRepository.findByName("USER").get();
+    private RoleEntity roleExist(RolName rolName) throws RoleExistException {
+        if (roleRepository.findByRolName(rolName).isPresent())  {
+            return roleRepository.findByRolName(rolName).get();
         } else {
             throw new RoleExistException(
-                "Rol dont's exist:" + role);
+                "Rol dont's exist:" + rolName);
         }
     }
+
+    @Override
+    public BasicUserDto updateUser(UserRegisterDto userRegisterDto, String id) {
+        if (this.findById(id).isPresent()) {
+            UserEntity userEntity = ObjectMapperUtils.map(userRegisterDto, UserEntity.class);
+
+            userEntity = this.save(userEntity);
+            return ObjectMapperUtils.map(userEntity, BasicUserDto.class);
+        } else {
+            throw new ArgumentRequiredException(IS_REQUIRED_OR_DOESNT_EXIST);
+        }
+    }
+
+    @Override
+    public List<UserRegisterDto> getAll() {
+        return ObjectMapperUtils.mapAll(this.findAll(), UserRegisterDto.class);
+    }
+
 }
