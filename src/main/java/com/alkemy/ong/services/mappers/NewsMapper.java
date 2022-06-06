@@ -23,4 +23,8 @@ public class NewsMapper {
 		return mapper.map(entryNewsDto, NewsEntity.class);
 	}
 	
+	public NewsEntity entryNewsDtoToEntity(EntryNewsDto entryNewsDto, NewsEntity newsEntity) {
+		mapper.map(entryNewsDto, newsEntity);
+		return newsEntity;
+	}
 }

@@ -11,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,9 +50,9 @@ public class NewsController {
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<BasicNewsDto> createNews(
-			@Valid @RequestPart("news") EntryNewsDto entryNewsDto,
+			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
 			Errors errors,
-			@RequestPart("newsImage") MultipartFile image){
+			@RequestPart(name = "newsImage", required = false) MultipartFile image){
 		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
@@ -67,5 +68,30 @@ public class NewsController {
 		
 		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsEntity));
 	}
-}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<BasicNewsDto> editNews(
+			@PathVariable String id, 
+			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
+			Errors errors,
+			@RequestPart(name = "newsImage", required = false) MultipartFile image) {
+		if (errors.hasErrors()) {
+			throw new ValidationException(errors.getFieldErrors());
+		}
+		Optional<NewsEntity> newsEntityOp = newsService.findById(id);
+		
+		if (!newsEntityOp.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		NewsEntity newsEntity = newsEntityOp.get();
+		newsEntity = newsMapper.entryNewsDtoToEntity(entryNewsDto, newsEntity);
 
+		if (!image.isEmpty()) {
+			String pathImage = awss3Service.uploadFile(image);
+			newsEntity.setImage(pathImage);
+		}
+		newsService.edit(newsEntity);
+		
+		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsEntity));
+	}
+}
