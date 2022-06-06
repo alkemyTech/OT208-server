@@ -5,10 +5,7 @@ import com.alkemy.ong.services.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -36,4 +33,15 @@ public class ActivityController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<ActivityDto> update(@Valid @RequestBody ActivityDto activityDto) {
+        try {
+            if (!activityDto.getId().isEmpty() && activityDto.getId() != null)
+                return new ResponseEntity<>(this.service.updateActivity(activityDto), HttpStatus.OK);
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
