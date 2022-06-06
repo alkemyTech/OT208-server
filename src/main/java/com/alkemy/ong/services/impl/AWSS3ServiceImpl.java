@@ -1,33 +1,30 @@
 package com.alkemy.ong.services.impl;
 
+import com.alkemy.ong.services.AWSS3Service;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.*;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
-
-import javax.validation.constraints.NotNull;
-
-import com.amazonaws.services.s3.model.*;
-import lombok.RequiredArgsConstructor;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.amazonaws.services.s3.AmazonS3;
-
-import com.alkemy.ong.services.AWSS3Service;
 
 @Service
 @RequiredArgsConstructor
 public class AWSS3ServiceImpl implements AWSS3Service {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(AWSS3ServiceImpl.class);
 
     private final AmazonS3 amazonS3;
@@ -36,21 +33,25 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     private String bucketName;
 
     @Override
-    public void uploadFile(@NotNull MultipartFile file) {
-        File myFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+    public String uploadFile(@NotNull MultipartFile mFile) {
+        String extension = StringUtils.getFilenameExtension(mFile.getOriginalFilename());
+        String key = String.format("%s.%s", UUID.randomUUID().toString().replace("-", ""), extension);
+        File myFile = new File(Objects.requireNonNull(mFile.getOriginalFilename()));
+
         try (FileOutputStream fos = new FileOutputStream(myFile)) {
-            fos.write(file.getBytes());
-            String newFileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            LOGGER.info("Uploading file to S3 bucket: {}", newFileName);
-            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newFileName, myFile);
+            fos.write(mFile.getBytes());
+            LOGGER.info("Uploading file to S3 bucket: {}", key);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, myFile);
             amazonS3.putObject(putObjectRequest);
-        }catch (IOException e){
+            return this.getUrl(key);
+        } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException("Error uploading file to S3", e);
         }
     }
 
     @Override
-    public List<String> getObjectsFromS3() {
+    public List<String> getAllObjectsFromS3() {
         ListObjectsV2Result result = amazonS3.listObjectsV2(bucketName);
         return result.getObjectSummaries().stream().map(S3ObjectSummary::getKey).collect(Collectors.toList());
     }
@@ -64,4 +65,10 @@ public class AWSS3ServiceImpl implements AWSS3Service {
             throw new RuntimeException("Error downloading file from S3", e);
         }
     }
+
+    @Override
+    public String getUrl(String key) {
+        return amazonS3.getUrl(bucketName, key).toString();
+    }
+
 }

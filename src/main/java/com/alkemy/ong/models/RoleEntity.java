@@ -1,15 +1,12 @@
 package com.alkemy.ong.models;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
+import com.alkemy.ong.security.enums.RolName;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,13 +31,14 @@ public class RoleEntity implements Serializable {
     @Column(length = 36)
     private String id;
 
-    @Column(nullable = false, length = 50)
-    private String name;
-
     @Column(length = 50)
     private String description;
 
     @CreatedDate
     @Column(length = 50)
-    private Timestamp timestamps;
+    private LocalDateTime timestamps;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private RolName rolName;
 }
