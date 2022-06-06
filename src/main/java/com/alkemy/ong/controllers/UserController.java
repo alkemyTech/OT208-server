@@ -1,7 +1,6 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
-import com.alkemy.ong.payloads.UserForm;
 import com.alkemy.ong.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -19,7 +19,7 @@ public class UserController {
     public static final String NO_DELETE_USER = "Usuario no eliminado";
     private final UserService userService;
 
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
         try {
             return new ResponseEntity<>(this.userService.deleteUser(id) ? DELETE_USER : NO_DELETE_USER, HttpStatus.OK);
@@ -29,13 +29,22 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserRegisterDto> update(@Valid @RequestBody UserForm userForm, @PathVariable String id) {
+    public ResponseEntity<UserRegisterDto> update(@Valid @RequestBody UserRegisterDto ususerRegisterDtorForm, @PathVariable String id) {
         try {
-            UserRegisterDto userDTO = this.userService.updateUser(userForm, id);
+            UserRegisterDto userDTO = this.userService.updateUser(ususerRegisterDtorForm, id);
 
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserRegisterDto>> getAll(){
+        try {
+            return new ResponseEntity<>(this.userService.getAll(), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
     

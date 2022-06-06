@@ -4,17 +4,17 @@ import com.alkemy.ong.security.enums.RolName;
 
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.dto.response.user.BasicUserDto;
 import com.alkemy.ong.exeptions.ArgumentRequiredException;
 import com.alkemy.ong.exeptions.EmailExistsException;
 import com.alkemy.ong.exeptions.RoleExistException;
 import com.alkemy.ong.jwt.JwtUtils;
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
-import com.alkemy.ong.payloads.UserForm;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.UserService;
-import org.modelmapper.ModelMapper;
+import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,19 +36,18 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     private final PasswordEncoder passwordEncoder;
     private final IRoleRepository roleRepository;
     private final JwtUtils jwtUtils;
-    private final ModelMapper modelMapper;
-    
+
     public UserServiceImpl(IUserRepository repository, AuthenticationManager authenticationManager,
-			IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository,
-                           JwtUtils jwtUtils, ModelMapper modelMapper) {
-		super(repository);
-		this.authenticationManager = authenticationManager;
-		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.roleRepository = roleRepository;
+                           IUserRepository userRepository, PasswordEncoder passwordEncoder, IRoleRepository roleRepository,
+                           JwtUtils jwtUtils) {
+        super(repository);
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
         this.jwtUtils = jwtUtils;
-        this.modelMapper = modelMapper;
-	}
+    }
+
 
     @Override
     public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
@@ -94,10 +94,9 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     /**
-     * 
      * @param userDTO
      * @return UserEntity Object
-     * @throws EmailExistsException 
+     * @throws EmailExistsException
      */
     @Override
     public UserEntity saveUser(UserRegisterDto userDTO) throws EmailExistsException {
@@ -120,6 +119,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
     /**
      * Method to delete user
+     *
      * @param id
      * @return
      */
@@ -135,22 +135,20 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     /**
-     * 
      * @param email
      * @return true/false
      */
     private boolean emailExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
-    
+
     /**
      * 
      * @param rolName
      * @return RoleEntity Object
-     * @throws RoleExistException 
+     * @throws RoleExistException
      */
     private RoleEntity roleExist(RolName rolName) throws RoleExistException {
-
         if (roleRepository.findByRolName(rolName).isPresent())  {
             return roleRepository.findByRolName(rolName).get();
         } else {
@@ -160,15 +158,20 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     @Override
-    public UserRegisterDto updateUser(UserForm userForm, String id) {
+    public BasicUserDto updateUser(UserRegisterDto userRegisterDto, String id) {
         if (this.findById(id).isPresent()) {
-            UserEntity userEntity = modelMapper.map(userForm, UserEntity.class);
+            UserEntity userEntity = ObjectMapperUtils.map(userRegisterDto, UserEntity.class);
 
             userEntity = this.save(userEntity);
-            return modelMapper.map(userEntity, UserRegisterDto.class);
+            return ObjectMapperUtils.map(userEntity, BasicUserDto.class);
         } else {
             throw new ArgumentRequiredException(IS_REQUIRED_OR_DOESNT_EXIST);
         }
+    }
+
+    @Override
+    public List<UserRegisterDto> getAll() {
+        return ObjectMapperUtils.mapAll(this.findAll(), UserRegisterDto.class);
     }
 
 }
