@@ -1,6 +1,7 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.ActivityDto;
+import com.alkemy.ong.services.ActivityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,13 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class ActivityController {
 
+    private final ActivityService service;
+
     @PostMapping
     public ResponseEntity<ActivityDto> create(@Valid @RequestBody ActivityDto activityDto) {
         try {
             if (!activityDto.getName().isEmpty() || !activityDto.getContent().isEmpty())
-                return new ResponseEntity<>(activityDto, HttpStatus.OK);
+                return new ResponseEntity<>(this.service.saveActivity(activityDto), HttpStatus.OK);
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
