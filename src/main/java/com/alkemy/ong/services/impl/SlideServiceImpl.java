@@ -10,6 +10,8 @@ import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.SlideService;
 import com.alkemy.ong.services.mappers.SlideMapper;
 import com.alkemy.ong.utils.Base64Decode2Multipart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +25,8 @@ import java.util.Optional;
 
 @Service
 public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISlideRepository> implements SlideService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SlideServiceImpl.class);
 
     private final IOrganizationRepository organizationRepository;
     private final SlideMapper slideMapper;
@@ -50,29 +54,25 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
     @Override
     public SlideResponseDto createSlide(SlideRequestDto dto) {
         SlideEntity slideEntity = new SlideEntity();
-
         Optional<OrganizationEntity> op = organizationRepository.findById(dto.getOrganizationId());
-        if (op.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter" + slideEntity.getOrganizationEntityId().getId()));
-        }
+            if (op.isEmpty()) {
+                LOG.error("Failure to create a slide, Organization with id {} not found", dto.getOrganizationId());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter" + slideEntity.getOrganizationEntityId().getId()));
+            }
         slideEntity.setOrganizationEntityId(op.get());
-
         Integer slideListMax = repository.getMaxOrder();
-        if (dto.getOrder() == null) {
-            slideEntity.setOrder(1 + slideListMax);
-        } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {
-            slideEntity.setOrder(dto.getOrder());
-        } else if (slideListMax == dto.getOrder()) {
-            slideEntity.setOrder(slideListMax + 1);
-        }
-
+            if (dto.getOrder() == null) {
+                slideEntity.setOrder(1 + slideListMax);
+            } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {
+                slideEntity.setOrder(dto.getOrder());
+            } else if (slideListMax == dto.getOrder()) {
+                slideEntity.setOrder(slideListMax + 1);
+            }
         MultipartFile decodedImage = base64Image2MultipartFile(dto.getImageUrl());
         slideEntity.setImageUrl(awss3Service.uploadFile(decodedImage));
-
         slideEntity.setText(dto.getText());
-
-        SlideEntity entityUpdated = repository.save(slideEntity);
-        return slideMapper.entity2Dto(entityUpdated);
+        LOG.info("Create Slide: {}", slideEntity.getId());
+        return slideMapper.entity2Dto(repository.save(slideEntity));
     }
 
     @Transactional
@@ -80,15 +80,27 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
     public SlideResponseDto updateSlide(String id, MultipartFile file) {
 
         Optional<SlideEntity> op = repository.findById(id);
-
         if (op.isEmpty()) {
+            LOG.error("Failure to update a slide, Slide with id {} not found", id);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad slide ID or null parameter" + id));
         }
-
         SlideEntity slideEntity = op.get();
-
         slideEntity.setImageUrl(awss3Service.uploadFile(file));
+        LOG.info("Update Slide: {}", slideEntity.getId());
         return slideMapper.entity2Dto(repository.save(slideEntity));
+    }
+
+    @Transactional
+    @Override
+    public Boolean deleteSlide(String id){
+        if(repository.findById(id).isEmpty()){
+            LOG.error("Failure to delete a slide, Slide with id {} not found", id);
+            return false;
+        }else{
+            repository.deleteById(id);
+            LOG.info("Delete Slide: {}", id);
+            return true;
+        }
     }
 
     //Base64 Decoded
