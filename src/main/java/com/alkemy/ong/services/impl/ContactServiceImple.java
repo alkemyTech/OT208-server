@@ -7,6 +7,8 @@ import com.alkemy.ong.services.ContactService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author nagredo
  * @project OT208-server
@@ -25,5 +27,10 @@ public class ContactServiceImple extends BasicServiceImpl<ContactEntity, String,
 
         contactEntity = this.save(contactEntity);
         return ObjectMapperUtils.map(contactEntity, ContactDto.class);
+    }
+
+    @Override
+    public List<ContactDto> getAllContacts() {
+        return ObjectMapperUtils.mapAll(this.findAll(), ContactDto.class);
     }
 }
