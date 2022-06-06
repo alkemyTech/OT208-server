@@ -5,6 +5,7 @@ import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import com.alkemy.ong.models.OrganizationEntity;
 import com.alkemy.ong.repositories.IOrganizationRepository;
 import com.alkemy.ong.services.OrganizationService;
+import com.alkemy.ong.services.SlideService;
 import com.alkemy.ong.services.mappers.OrganizationMapper;
 import org.springframework.stereotype.Service;
 

@@ -46,6 +46,12 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
     }
 
     @Override
+    public List<SlideResponseDto> getAllByOrganizationId(String id) {
+        List<SlideEntity> listEntity = repository.findByOrganizationId(id);
+        return slideMapper.entityList2DtoList(listEntity);
+    }
+
+    @Override
     public SlideResponseDto getSlide(String id) {
         return slideMapper.entity2Dto(repository.getById(id));
     }
