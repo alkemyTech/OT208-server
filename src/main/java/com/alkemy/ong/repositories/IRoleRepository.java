@@ -1,5 +1,6 @@
 package com.alkemy.ong.repositories;
 
+import com.alkemy.ong.security.enums.RolName;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.alkemy.ong.models.RoleEntity;
@@ -9,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IRoleRepository extends JpaRepository<RoleEntity, String> {
 
-    Optional<RoleEntity> findByName(String name);
+    Optional<RoleEntity> findByRolName(RolName rolName);
 
 }

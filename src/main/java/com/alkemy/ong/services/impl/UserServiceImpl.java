@@ -1,5 +1,7 @@
 package com.alkemy.ong.services.impl;
 
+import com.alkemy.ong.security.enums.RolName;
+
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.dto.response.user.BasicUserDto;
@@ -46,14 +48,45 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         this.jwtUtils = jwtUtils;
     }
 
-    public String login(UserLoginDto userLoginDto) throws BadCredentialsException {
+
+    @Override
+    public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDto.getEmail(), userLoginDto.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return this.getToken(authentication);
+    }
 
-        return jwtUtils.generateToken(findByEmail(userLoginDto.getEmail()).get());
+    @Override
+    public String singup(UserRegisterDto userRegisterDto) throws BadCredentialsException{
+
+        this.saveUser(userRegisterDto);
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                userRegisterDto.getEmail(), userRegisterDto.getPassword()));
+
+        return this.getToken(authentication);
+    }
+
+    private String getToken(Authentication authentication) {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return jwtUtils.generateToken(authentication);
+    }
+
+    @Override
+    public Optional<UserEntity> getByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean existByFirstName(String firstName){
+        return userRepository.existsByFirstName(firstName);
+    }
+
+    @Override
+    public boolean existsByEmail(String email){
+        return userRepository.existsByEmail(email);
     }
 
     public Optional<UserEntity> findByEmail(String email) {
@@ -77,8 +110,8 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         userEntity.setFirstName(userDTO.getFirstName());
         userEntity.setLastName(userDTO.getLastName());
         userEntity.setEmail(userDTO.getEmail());
+        userEntity.setRoleIds(Arrays.asList(roleRepository.findByRolName(RolName.ROLE_USER).get()));
         userEntity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        userEntity.setRoleIds(Arrays.asList(roleExist("USER")));
         userEntity = this.userRepository.save(userEntity);
 
         return userEntity;
@@ -110,17 +143,17 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     /**
-     * @param role
+     * 
+     * @param rolName
      * @return RoleEntity Object
      * @throws RoleExistException
      */
-    private RoleEntity roleExist(String role) throws RoleExistException {
-
-        if (roleRepository.findByName(role).isPresent()) {
-            return roleRepository.findByName("USER").get();
+    private RoleEntity roleExist(RolName rolName) throws RoleExistException {
+        if (roleRepository.findByRolName(rolName).isPresent())  {
+            return roleRepository.findByRolName(rolName).get();
         } else {
             throw new RoleExistException(
-                    "Rol dont's exist:" + role);
+                "Rol dont's exist:" + rolName);
         }
     }
 

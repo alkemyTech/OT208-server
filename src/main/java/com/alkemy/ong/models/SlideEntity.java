@@ -32,7 +32,7 @@ public class SlideEntity implements Serializable {
     @Column(length = 36)
     private String id;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 150)
     private String imageUrl;
 
     @Column(columnDefinition = "TEXT", nullable = false)
