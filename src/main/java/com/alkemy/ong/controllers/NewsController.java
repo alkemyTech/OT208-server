@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,7 +53,7 @@ public class NewsController {
 	public ResponseEntity<BasicNewsDto> createNews(
 			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
 			Errors errors,
-			@RequestPart(name = "newsImage", required = false) MultipartFile image){
+			@RequestPart(name = "newsImage", required = true) MultipartFile image){
 		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
@@ -64,9 +65,8 @@ public class NewsController {
 			String pathImage = awss3Service.uploadFile(image);
 			newsEntity.setImage(pathImage);
 		}
-		newsService.save(newsEntity);
 		
-		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsEntity));
+		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsService.save(newsEntity)));
 	}
 	
 	@PutMapping("/{id}")
@@ -75,6 +75,7 @@ public class NewsController {
 			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
 			Errors errors,
 			@RequestPart(name = "newsImage", required = false) MultipartFile image) {
+		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
 		}
@@ -90,8 +91,19 @@ public class NewsController {
 			String pathImage = awss3Service.uploadFile(image);
 			newsEntity.setImage(pathImage);
 		}
-		newsService.edit(newsEntity);
 		
-		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsEntity));
+		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsService.edit(newsEntity)));
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<BasicNewsDto> deleteNews(@PathVariable String id){
+		Optional<NewsEntity> newsEntity = newsService.findById(id);
+	
+		if(!newsEntity.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		newsService.save(newsEntity.get());
+	
+		return ResponseEntity.noContent().build();
 	}
 }
