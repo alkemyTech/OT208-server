@@ -11,6 +11,8 @@ public interface SlideService extends BasicService<SlideEntity, String> {
 
     List<SlideResponseDto> getAll();
 
+    List<SlideResponseDto> getAllByOrganizationId(String id);
+
     SlideResponseDto getSlide(String id);
 
     SlideResponseDto createSlide(SlideRequestDto dto);

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ISlideRepository extends JpaRepository<SlideEntity, String> {
-    @Query(nativeQuery = true, value = "SELECT * FROM slides WHERE organization = ?1 ORDER BY orders DESC")
+    @Query(nativeQuery = true, value = "SELECT * FROM slides WHERE organizations = ?1 ORDER BY orders")
     List<SlideEntity> findByOrganizationId(String organizationId);
 
     @Query(nativeQuery = true, value = "SELECT max(orders) FROM slides s")

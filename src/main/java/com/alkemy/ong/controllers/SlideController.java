@@ -45,8 +45,7 @@ public class SlideController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSlide(@PathVariable String id) {
-        if (slideService.findById(id).isPresent()) {
-            slideService.deleteSlide(id);
+        if (slideService.deleteSlide(id)) {
             return new ResponseEntity<>("It was deleted on: " + id, HttpStatus.OK);
         } else return new ResponseEntity<>("ID not found or null: " + id, HttpStatus.NOT_FOUND);
     }
