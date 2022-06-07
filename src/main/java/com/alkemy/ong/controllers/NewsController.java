@@ -53,7 +53,7 @@ public class NewsController {
 	public ResponseEntity<BasicNewsDto> createNews(
 			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
 			Errors errors,
-			@RequestPart(name = "newsImage", required = false) MultipartFile image){
+			@RequestPart(name = "newsImage", required = true) MultipartFile image){
 		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
