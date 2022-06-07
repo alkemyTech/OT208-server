@@ -14,6 +14,5 @@ public class SlideResponseDto {
     private String imageUrl;
     private String text;
     private Integer order;
-    private OrganizationPublicDto organizationEntityId;
 
 }

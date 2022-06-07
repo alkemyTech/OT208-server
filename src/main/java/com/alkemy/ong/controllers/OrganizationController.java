@@ -17,17 +17,11 @@ import java.util.List;
 public class OrganizationController {
 
     private final OrganizationService organizationService;
-    private final SlideService slideService;
 
-/*    @GetMapping("/public")
-    public ResponseEntity<OrganizationPublicDto> publicData(@RequestParam String id) {
-        OrganizationPublicDto publicDataDTO = organizationService.getPublicOrganizationData(id);
-        return ResponseEntity.ok().body(publicDataDTO);
-    }*/
 @GetMapping("/public")
-public ResponseEntity<List<SlideResponseDto>> publicData(@RequestParam String id) {
+public ResponseEntity<OrganizationPublicDto> publicData(@RequestParam String id) {
     if (organizationService.existById(id)) {
-        List<SlideResponseDto> publicDataDTO = slideService.getAllByOrganizationId(id);
+        OrganizationPublicDto publicDataDTO = organizationService.getPublicOrganizationData(id);
         return ResponseEntity.ok().body(publicDataDTO);
     }else return ResponseEntity.notFound().build();
 }
@@ -35,8 +29,7 @@ public ResponseEntity<List<SlideResponseDto>> publicData(@RequestParam String id
     @PostMapping("/public")
     public ResponseEntity<OrganizationPublicDto> updateOrganization(@RequestBody OrganizationRequestDto dto) {
         if (organizationService.existById(dto.getId())) {
-            OrganizationPublicDto publicDataDTO = organizationService.updateOrganization(dto);
-            return ResponseEntity.ok().body(publicDataDTO);
+            return ResponseEntity.ok().body(organizationService.updateOrganization(dto));
         } else return ResponseEntity.notFound().build();
     }
 
