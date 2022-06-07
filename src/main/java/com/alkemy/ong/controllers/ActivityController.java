@@ -33,10 +33,10 @@ public class ActivityController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<ActivityDto> update(@Valid @RequestBody ActivityDto activityDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<ActivityDto> update(@Valid @RequestBody ActivityDto activityDto, @PathVariable String id) {
         try {
-            if (!activityDto.getId().isEmpty() && activityDto.getId() != null)
+            if (!id.isEmpty() && id != null)
                 return new ResponseEntity<>(this.service.updateActivity(activityDto), HttpStatus.OK);
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
