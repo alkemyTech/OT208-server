@@ -65,9 +65,8 @@ public class NewsController {
 			String pathImage = awss3Service.uploadFile(image);
 			newsEntity.setImage(pathImage);
 		}
-		newsService.save(newsEntity);
 		
-		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsEntity));
+		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsService.save(newsEntity)));
 	}
 	
 	@PutMapping("/{id}")
@@ -76,6 +75,7 @@ public class NewsController {
 			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
 			Errors errors,
 			@RequestPart(name = "newsImage", required = false) MultipartFile image) {
+		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
 		}
@@ -91,9 +91,8 @@ public class NewsController {
 			String pathImage = awss3Service.uploadFile(image);
 			newsEntity.setImage(pathImage);
 		}
-		newsService.edit(newsEntity);
 		
-		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsEntity));
+		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsService.edit(newsEntity)));
 	}
 	
 	@DeleteMapping("/{id}")
