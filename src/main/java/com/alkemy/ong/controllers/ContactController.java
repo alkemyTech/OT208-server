@@ -17,7 +17,7 @@ public class ContactController {
 
     private final ContactService service;
 
-    @PostMapping(value = "/list")
+    @PostMapping(value = "/create")
     public ResponseEntity<ContactDto> create(@Valid @RequestBody ContactDto contactDto) {
         try {
             if (!contactDto.getName().isEmpty() || !contactDto.getEmail().isEmpty())
@@ -29,7 +29,7 @@ public class ContactController {
         }
     }
 
-    @GetMapping
+    @GetMapping(value = "/list")
     public ResponseEntity<List<ContactDto>> getAll() {
         try {
             return new ResponseEntity<>(this.service.getAllContacts(), HttpStatus.OK);
