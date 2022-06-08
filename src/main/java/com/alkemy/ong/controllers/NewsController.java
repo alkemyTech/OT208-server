@@ -98,6 +98,7 @@ public class NewsController {
 		}
 		NewsEntity newsEntity = newsEntityOp.get();
 		newsEntity = newsMapper.entryNewsDtoToEntity(entryNewsDto, newsEntity);
+		newsEntity.setCategoryId(categoryService.findById(newsEntity.getCategoryId().getId()).get());
 
 		if (!image.isEmpty()) {
 			String pathImage = awss3Service.uploadFile(image);
