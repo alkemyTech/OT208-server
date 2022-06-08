@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -20,9 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alkemy.ong.dto.request.news.EntryNewsDto;
 import com.alkemy.ong.dto.response.news.BasicNewsDto;
+import com.alkemy.ong.exeptions.CategoryNotExistException;
 import com.alkemy.ong.exeptions.ValidationException;
 import com.alkemy.ong.models.NewsEntity;
 import com.alkemy.ong.services.AWSS3Service;
+import com.alkemy.ong.services.CategoryService;
 import com.alkemy.ong.services.NewsService;
 import com.alkemy.ong.services.mappers.NewsMapper;
 
@@ -37,6 +40,7 @@ public class NewsController {
 	private final NewsService newsService;
 	private final NewsMapper newsMapper;
 	private final AWSS3Service awss3Service;
+	private final CategoryService categoryService;
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<BasicNewsDto> getNews(@PathVariable String id){
@@ -58,6 +62,10 @@ public class NewsController {
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
 		}
+		if (!categoryService.existById(entryNewsDto.getCategoryIdId())) {
+			throw new CategoryNotExistException(entryNewsDto.getCategoryIdId());
+		}
+		
 		NewsEntity newsEntity  = newsMapper.entryNewsDtoToEntity(entryNewsDto);
 		newsEntity.setType("news");
 		
@@ -66,7 +74,8 @@ public class NewsController {
 			newsEntity.setImage(pathImage);
 		}
 		
-		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsService.save(newsEntity)));
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.body(newsMapper.entityToBasicNewsDto(newsService.save(newsEntity)));
 	}
 	
 	@PutMapping("/{id}")
@@ -78,6 +87,9 @@ public class NewsController {
 		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
+		}
+		if (!categoryService.existById(entryNewsDto.getCategoryIdId())) {
+			throw new CategoryNotExistException(entryNewsDto.getCategoryIdId());
 		}
 		Optional<NewsEntity> newsEntityOp = newsService.findById(id);
 		
