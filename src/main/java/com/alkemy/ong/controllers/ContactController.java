@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class ContactController
- */
 @RestController
 @RequestMapping("/contacts")
 @RequiredArgsConstructor
@@ -22,7 +17,7 @@ public class ContactController {
 
     private final ContactService service;
 
-    @PostMapping
+    @PostMapping(value = "/list")
     public ResponseEntity<ContactDto> create(@Valid @RequestBody ContactDto contactDto) {
         try {
             if (!contactDto.getName().isEmpty() || !contactDto.getEmail().isEmpty())

@@ -52,6 +52,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// Categories
 				.antMatchers(HttpMethod.GET,"/categories").hasRole("ADMIN")
 				.antMatchers(HttpMethod.GET,"/categories/{id}").hasRole("ADMIN")
+				// Contact
+				.antMatchers(HttpMethod.GET,"/contacts/list").hasRole("ADMIN")
 				// Organization
 				.antMatchers(HttpMethod.GET,"/organization/public").hasRole("ADMIN") // error 400
 				// UploadFileController

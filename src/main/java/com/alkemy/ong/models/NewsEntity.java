@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE news SET softDelete = true WHERE id=?")
-@Where(clause = "softDelete = false")
+@SQLDelete(sql = "UPDATE news SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
 @EntityListeners(AuditingEntityListener.class)
 public class NewsEntity implements Serializable {
 

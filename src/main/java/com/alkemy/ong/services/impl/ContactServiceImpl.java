@@ -9,15 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class ContactServiceImple
- */
 @Service
-public class ContactServiceImple extends BasicServiceImpl<ContactEntity, String, IContactRepository> implements ContactService {
+public class ContactServiceImpl extends BasicServiceImpl<ContactEntity, String, IContactRepository> implements ContactService {
 
-    public ContactServiceImple(IContactRepository repository) {
+    public ContactServiceImpl(IContactRepository repository) {
         super(repository);
     }
 
