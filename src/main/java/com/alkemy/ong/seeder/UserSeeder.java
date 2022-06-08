@@ -28,7 +28,7 @@ public class UserSeeder implements CommandLineRunner {
         List<RoleEntity> roles = new ArrayList<>();
         RoleEntity rolAdmin;
         RoleEntity rolUser;
-        String password = passwordEncoder.encode("123456");
+        String password = passwordEncoder.encode("12345678");
 
         if (roleRepository.count() < 2) {
             rolAdmin = new RoleEntity(null, "User with full privileges", LocalDateTime.now(), RolName.ROLE_ADMIN);
