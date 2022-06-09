@@ -30,7 +30,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] USER_POST = {};
 	private static final String[] USER_PUT = {};
 	private static final String[] USER_PATCH_DELETE = {};
-	private static final String[] ANY_USER_GET = {"/auth/me/{id}"};
+	private static final String[] ANY_USER_GET = {"/auth/me/{id}", "/organization/public" };
 	private static final String[] ANY_USER_POST = {};
 	private static final String[] ANY_USER_PUT_DELETE = {"/comments/{id}"};
 
@@ -78,11 +78,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.PUT, ANY_USER_PUT_DELETE).hasAnyRole("ADMIN", "USER")
 				.antMatchers(HttpMethod.DELETE, ANY_USER_PUT_DELETE).hasAnyRole("ADMIN", "USER")
 				// USER
-				.antMatchers(HttpMethod.GET, USER_GET).hasRole( "USER")
+				.antMatchers(HttpMethod.GET, USER_GET).hasRole("USER")
 				.antMatchers(HttpMethod.POST, USER_POST).hasRole("USER")
 				.antMatchers(HttpMethod.PUT, USER_PUT).hasRole("USER")
 				.antMatchers(HttpMethod.PATCH, USER_PATCH_DELETE).hasRole("USER")
 				.antMatchers(HttpMethod.DELETE, USER_PATCH_DELETE).hasRole("USER")
+
 				// ADMIN
 				.antMatchers(HttpMethod.GET, "/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.POST, "/**").hasRole("ADMIN")
