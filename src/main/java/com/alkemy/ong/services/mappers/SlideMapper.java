@@ -43,9 +43,4 @@ public class SlideMapper {
         return slides;
     }
 
-
-   /* SlideDtoFull slideEntityToSlideDtoFull(SlideEntity slideEntity);
-    SlideResponseDto slideEntityToSlideDto(SlideDtoFull SlideDtoFull);
-    SlideEntity slideDtoFullToSlideEntity(SlideDtoFull slideDtoFull);*/
-
 }
