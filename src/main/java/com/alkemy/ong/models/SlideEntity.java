@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -41,6 +42,7 @@ public class SlideEntity implements Serializable {
     @Column(name = "orders", nullable = false)
     private Integer order;
 
+    @JoinColumn(name = "organizations", nullable = false)
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private OrganizationEntity organizationEntityId;
 

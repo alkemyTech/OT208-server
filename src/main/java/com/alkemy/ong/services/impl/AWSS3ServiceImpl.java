@@ -2,7 +2,10 @@ package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.services.AWSS3Service;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +39,15 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     public String uploadFile(@NotNull MultipartFile mFile) {
         String extension = StringUtils.getFilenameExtension(mFile.getOriginalFilename());
         String key = String.format("%s.%s", UUID.randomUUID().toString().replace("-", ""), extension);
-        File myFile = new File(Objects.requireNonNull(mFile.getOriginalFilename()));
-
-        try (FileOutputStream fos = new FileOutputStream(myFile)) {
+        try {
+            File myFile = new File(Objects.requireNonNull(mFile.getOriginalFilename()));
+            FileOutputStream fos = new FileOutputStream(myFile);
             fos.write(mFile.getBytes());
+            fos.close();
             LOGGER.info("Uploading file to S3 bucket: {}", key);
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, myFile);
             amazonS3.putObject(putObjectRequest);
+            myFile.delete();
             return this.getUrl(key);
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);

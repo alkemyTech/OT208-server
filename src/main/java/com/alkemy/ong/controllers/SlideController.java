@@ -25,9 +25,9 @@ public class SlideController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SlideResponseDto> getSlide(@PathVariable String id) {
-        if(slideService.findById(id).isPresent()) {
+        if (slideService.findById(id).isPresent()) {
             return new ResponseEntity<SlideResponseDto>(slideService.getSlide(id), HttpStatus.OK);
-        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
@@ -38,9 +38,16 @@ public class SlideController {
     @PutMapping("/{id}")
     public ResponseEntity<SlideResponseDto> updateSlide(@PathVariable String id,
                                                         @RequestPart(value = "file") MultipartFile file) {
-        if(slideService.findById(id).isPresent()) {
+        if (slideService.findById(id).isPresent()) {
             return new ResponseEntity<SlideResponseDto>(slideService.updateSlide(id, file), HttpStatus.OK);
-        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteSlide(@PathVariable String id) {
+        if (slideService.deleteSlide(id)) {
+            return new ResponseEntity<>("It was deleted on: " + id, HttpStatus.OK);
+        } else return new ResponseEntity<>("ID not found or null: " + id, HttpStatus.NOT_FOUND);
     }
 
 }

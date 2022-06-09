@@ -9,12 +9,16 @@ import java.util.List;
 
 public interface SlideService extends BasicService<SlideEntity, String> {
 
-    public List<SlideResponseDto> getAll();
+    List<SlideResponseDto> getAll();
 
-    public SlideResponseDto getSlide(String id);
+    List<SlideResponseDto> getAllByOrganizationId(String id);
+
+    SlideResponseDto getSlide(String id);
 
     SlideResponseDto createSlide(SlideRequestDto dto);
 
     SlideResponseDto updateSlide(String id, MultipartFile file);
+
+    Boolean deleteSlide(String id);
 
 }

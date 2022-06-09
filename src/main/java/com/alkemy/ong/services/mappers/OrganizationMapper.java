@@ -12,7 +12,7 @@ public class OrganizationMapper {
 
     private final ModelMapper mapper;
 
-    public OrganizationPublicDto publicDataOrganization(OrganizationEntity organizationEntity) {
+    public OrganizationPublicDto entity2Dto(OrganizationEntity organizationEntity) {
         return mapper.map(organizationEntity, OrganizationPublicDto.class);
     }
     
