@@ -3,6 +3,7 @@ package com.alkemy.ong.services.mappers;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.alkemy.ong.dto.request.news.EntryEditNewsDto;
 import com.alkemy.ong.dto.request.news.EntryNewsDto;
 import com.alkemy.ong.dto.response.news.BasicNewsDto;
 import com.alkemy.ong.models.NewsEntity;
@@ -23,9 +24,9 @@ public class NewsMapper {
 		return mapper.map(entryNewsDto, NewsEntity.class);
 	}
 	
-	public NewsEntity entryNewsDtoToEntity(EntryNewsDto entryNewsDto, NewsEntity newsEntity) {
+	public NewsEntity entryEditNewsDtoToEntity(EntryEditNewsDto entryEditNewsDto, NewsEntity newsEntity) {
 		mapper.typeMap(EntryNewsDto.class, NewsEntity.class).addMappings(map -> map.skip(NewsEntity::setId));
-		mapper.map(entryNewsDto, newsEntity);
+		mapper.map(entryEditNewsDto, newsEntity);
 		return newsEntity;
 	}
 }

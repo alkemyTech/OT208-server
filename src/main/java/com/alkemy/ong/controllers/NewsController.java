@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alkemy.ong.dto.request.news.EntryEditNewsDto;
 import com.alkemy.ong.dto.request.news.EntryNewsDto;
 import com.alkemy.ong.dto.response.news.BasicNewsDto;
 import com.alkemy.ong.exeptions.CategoryNotExistException;
@@ -81,15 +82,15 @@ public class NewsController {
 	@PutMapping("/{id}")
 	public ResponseEntity<BasicNewsDto> editNews(
 			@PathVariable String id, 
-			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
+			@Valid @RequestPart(name = "news", required = true) EntryEditNewsDto entryEditNewsDto,
 			Errors errors,
 			@RequestPart(name = "newsImage", required = false) MultipartFile image) {
 		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
 		}
-		if (!categoryService.existById(entryNewsDto.getCategoryIdId())) {
-			throw new CategoryNotExistException(entryNewsDto.getCategoryIdId());
+		if (!categoryService.existById(entryEditNewsDto.getCategory())) {
+			throw new CategoryNotExistException(entryEditNewsDto.getCategory());
 		}
 		Optional<NewsEntity> newsEntityOp = newsService.findById(id);
 		
@@ -97,8 +98,8 @@ public class NewsController {
 			return ResponseEntity.notFound().build();
 		}
 		NewsEntity newsEntity = newsEntityOp.get();
-		newsEntity = newsMapper.entryNewsDtoToEntity(entryNewsDto, newsEntity);
-		newsEntity.setCategoryId(categoryService.findById(newsEntity.getCategoryId().getId()).get());
+		newsEntity = newsMapper.entryEditNewsDtoToEntity(entryEditNewsDto, newsEntity);
+		newsEntity.setCategoryId(categoryService.findById(entryEditNewsDto.getCategory()).get());
 
 		if (!image.isEmpty()) {
 			String pathImage = awss3Service.uploadFile(image);
@@ -115,7 +116,7 @@ public class NewsController {
 		if(!newsEntity.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		newsService.save(newsEntity.get());
+		newsService.delete(newsEntity.get());
 	
 		return ResponseEntity.noContent().build();
 	}
