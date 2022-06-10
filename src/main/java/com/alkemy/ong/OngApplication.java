@@ -12,17 +12,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableJpaAuditing
 public class OngApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(OngApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(OngApplication.class, args);
+	}
 
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder getPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public ModelMapper getModelMapper() {
-        return new ModelMapper();
-    }
+	@Bean
+	public ModelMapper getModelMapper() {
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration().setSkipNullEnabled(true);
+		return mapper;
+	}
 }

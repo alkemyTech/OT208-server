@@ -7,11 +7,7 @@ import com.alkemy.ong.services.ContactService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class ContactServiceImple
- */
+
 @Service
 public class ContactServiceImple extends BasicServiceImpl<ContactEntity, String, IContactRepository> implements ContactService {
 

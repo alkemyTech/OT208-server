@@ -1,13 +1,8 @@
 package com.alkemy.ong.services;
 
-import com.alkemy.ong.dto.ContactDto;
+import com.alkemy.ong.models.ContactEntity;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class ContactService
- */
-public interface ContactService {
-    ContactDto saveContact(ContactDto contactDto);
+public interface ContactService extends BasicService<ContactEntity, String> {
 
 }
+

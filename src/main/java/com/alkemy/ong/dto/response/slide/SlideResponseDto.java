@@ -1,6 +1,6 @@
 package com.alkemy.ong.dto.response.slide;
 
-import com.alkemy.ong.models.OrganizationEntity;
+import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,5 @@ public class SlideResponseDto {
     private String imageUrl;
     private String text;
     private Integer order;
-    private OrganizationEntity organizationEntityId;
 
 }

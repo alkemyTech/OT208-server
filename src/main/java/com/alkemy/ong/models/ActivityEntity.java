@@ -30,8 +30,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE activities SET softDelete = true WHERE id=?")
-@Where(clause = "softDelete = false")
+@SQLDelete(sql = "UPDATE activities SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
 @EntityListeners(AuditingEntityListener.class)
 public class ActivityEntity implements Serializable {
 
@@ -49,7 +49,7 @@ public class ActivityEntity implements Serializable {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 255)
     private String image;
 
     @Column(nullable = false)
