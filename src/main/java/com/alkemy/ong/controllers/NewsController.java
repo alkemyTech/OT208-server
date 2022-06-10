@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alkemy.ong.dto.request.news.EntryEditNewsDto;
 import com.alkemy.ong.dto.request.news.EntryNewsDto;
 import com.alkemy.ong.dto.response.news.BasicNewsDto;
 import com.alkemy.ong.exeptions.CategoryNotExistException;
@@ -27,7 +28,7 @@ import com.alkemy.ong.models.NewsEntity;
 import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.CategoryService;
 import com.alkemy.ong.services.NewsService;
-import com.alkemy.ong.services.mappers.NewsMapper;
+import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +39,6 @@ import lombok.RequiredArgsConstructor;
 public class NewsController {
 
 	private final NewsService newsService;
-	private final NewsMapper newsMapper;
 	private final AWSS3Service awss3Service;
 	private final CategoryService categoryService;
 	
@@ -50,7 +50,7 @@ public class NewsController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsEntity.get()));
+		return ResponseEntity.ok(ObjectMapperUtils.map(newsEntity, BasicNewsDto.class));
 	}
 	
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -66,7 +66,7 @@ public class NewsController {
 			throw new CategoryNotExistException(entryNewsDto.getCategoryIdId());
 		}
 		
-		NewsEntity newsEntity  = newsMapper.entryNewsDtoToEntity(entryNewsDto);
+		NewsEntity newsEntity  = ObjectMapperUtils.map(entryNewsDto, NewsEntity.class);
 		newsEntity.setType("news");
 		
 		if (!image.isEmpty()) {
@@ -75,21 +75,21 @@ public class NewsController {
 		}
 		
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(newsMapper.entityToBasicNewsDto(newsService.save(newsEntity)));
+				.body(ObjectMapperUtils.map(newsService.save(newsEntity), BasicNewsDto.class));
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<BasicNewsDto> editNews(
 			@PathVariable String id, 
-			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
+			@Valid @RequestPart(name = "news", required = true) EntryEditNewsDto entryEditNewsDto,
 			Errors errors,
 			@RequestPart(name = "newsImage", required = false) MultipartFile image) {
 		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
 		}
-		if (!categoryService.existById(entryNewsDto.getCategoryIdId())) {
-			throw new CategoryNotExistException(entryNewsDto.getCategoryIdId());
+		if (!categoryService.existById(entryEditNewsDto.getCategory())) {
+			throw new CategoryNotExistException(entryEditNewsDto.getCategory());
 		}
 		Optional<NewsEntity> newsEntityOp = newsService.findById(id);
 		
@@ -97,15 +97,15 @@ public class NewsController {
 			return ResponseEntity.notFound().build();
 		}
 		NewsEntity newsEntity = newsEntityOp.get();
-		newsEntity = newsMapper.entryNewsDtoToEntity(entryNewsDto, newsEntity);
-		newsEntity.setCategoryId(categoryService.findById(newsEntity.getCategoryId().getId()).get());
+		newsEntity = ObjectMapperUtils.map(entryEditNewsDto, newsEntity);
+		newsEntity.setCategoryId(categoryService.findById(entryEditNewsDto.getCategory()).get());
 
 		if (!image.isEmpty()) {
 			String pathImage = awss3Service.uploadFile(image);
 			newsEntity.setImage(pathImage);
 		}
 		
-		return ResponseEntity.ok(newsMapper.entityToBasicNewsDto(newsService.edit(newsEntity)));
+		return ResponseEntity.ok(ObjectMapperUtils.map(newsService.edit(newsEntity), BasicNewsDto.class));
 	}
 	
 	@DeleteMapping("/{id}")
@@ -115,7 +115,7 @@ public class NewsController {
 		if(!newsEntity.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		newsService.save(newsEntity.get());
+		newsService.delete(newsEntity.get());
 	
 		return ResponseEntity.noContent().build();
 	}
