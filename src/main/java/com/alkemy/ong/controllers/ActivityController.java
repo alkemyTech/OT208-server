@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("activities")
 @RequiredArgsConstructor
-@MultipartConfig(maxFileSize = 1024*1024*15)
+@MultipartConfig(maxFileSize = 1024 * 1024 * 15)
 public class ActivityController {
 
     private final ActivityService service;
@@ -27,14 +27,24 @@ public class ActivityController {
 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BasicActivityDto> create(@Valid @RequestPart(name = "activity") EntryActivityDto entryActivityDto, Errors errors,@RequestPart MultipartFile file) {
+    public ResponseEntity<BasicActivityDto> create(@Valid @RequestPart(name = "activity") EntryActivityDto entryActivityDto, Errors errors, @RequestPart MultipartFile file) {
 
-        if (errors.hasErrors()||file.isEmpty()) {
+        if (errors.hasErrors() || file.isEmpty()) {
             throw new ValidationException(errors.getFieldErrors());
         }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveActivity(entryActivityDto,awss3Service.uploadFile(file)));
-
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveActivity(entryActivityDto, awss3Service.uploadFile(file)));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<BasicActivityDto> update(@Valid @RequestPart EntryActivityDto dto,
+                                                   @PathVariable String id, Errors errors,
+                                                   @RequestPart(required = false) MultipartFile file) {
+        if (errors.hasErrors()) {
+            throw new ValidationException(errors.getFieldErrors());
+        }
+        if (file.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.OK).body(service.updateActivity(dto, "", id));
+        } else
+            return ResponseEntity.status(HttpStatus.OK).body(service.updateActivity(dto, awss3Service.uploadFile(file), id));
+    }
 }
