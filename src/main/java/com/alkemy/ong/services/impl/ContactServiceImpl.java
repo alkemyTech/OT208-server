@@ -8,11 +8,13 @@ import com.alkemy.ong.services.ContactService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
-public class ContactServiceImple extends BasicServiceImpl<ContactEntity, String, IContactRepository> implements ContactService {
+public class ContactServiceImpl extends BasicServiceImpl<ContactEntity, String, IContactRepository> implements ContactService {
 
-    public ContactServiceImple(IContactRepository repository) {
+    public ContactServiceImpl(IContactRepository repository) {
         super(repository);
     }
 
@@ -22,5 +24,10 @@ public class ContactServiceImple extends BasicServiceImpl<ContactEntity, String,
         ContactEntity contactEntity = ObjectMapperUtils.map(dto, ContactEntity.class);
         contactEntity = this.save(contactEntity);
         return ObjectMapperUtils.map(contactEntity, BasicContactDto.class);
+    }
+
+    @Override
+    public List<BasicContactDto> getAllContacts() {
+        return ObjectMapperUtils.mapAll(this.findAll(), BasicContactDto.class);
     }
 }
