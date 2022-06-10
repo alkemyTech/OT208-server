@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service
 @RequiredArgsConstructor
 public class JwtUtils {
@@ -66,6 +68,13 @@ public class JwtUtils {
 
     public String extractEmail(String token) {
         return (String) extractAllClaims(token).get("email");
+    }
+    
+    public String getToken(HttpServletRequest httpServletRequest){
+        String header = httpServletRequest.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer"))
+            return header.replace("Bearer","");
+        return null;
     }
 
     public Boolean validateToken(String token) {
