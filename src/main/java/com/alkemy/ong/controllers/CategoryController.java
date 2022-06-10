@@ -47,6 +47,31 @@ public class CategoryController {
         return ResponseEntity.ok(categoryMapper.categoryDetail(categoryEntity));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDetailDto>editCategory(
+            @PathVariable String id,
+            @Valid @RequestPart(value = "name",required = true) EntryCategoryDto entryCategoryDto,
+            Errors errors, @RequestPart(value = "img",required = false) MultipartFile image){
+        if (errors.hasErrors()){
+            throw new ValidationException(errors.getFieldErrors());
+        }
+        Optional<CategoryEntity> categoryEntityoOp = categoryService.findById(id);
+        if(!categoryEntityoOp.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        CategoryEntity categoryEntity = categoryEntityoOp.get();
+        categoryEntity = categoryMapper.entryCategoryDtoToEntityEdit(entryCategoryDto,categoryEntity);
+
+        if(!image.isEmpty()){
+            String pathImage = awss3Service.uploadFile(image);
+            categoryEntity.setImage(pathImage);
+        }
+        categoryService.edit(categoryEntity);
+
+        return ResponseEntity.ok(categoryMapper.categoryDetail(categoryEntity));
+    }
+
+
     @GetMapping
     public ResponseEntity<List<CategoryBasicDto>> getCategories(){
         List<CategoryBasicDto> categoryBasicDtos = categoryService.getCategoriesDto();
@@ -65,5 +90,15 @@ public class CategoryController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CategoryEntity> deleteCategory(@PathVariable String id){
+        Optional<CategoryEntity> categoryEntity = categoryService.findById(id);
+        if(categoryEntity.isPresent()){
+            categoryService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
