@@ -53,10 +53,10 @@ public class OrganizationEntity implements Serializable {
     @Column(nullable = false, length = 150)
     private String image;
 
-    @Column(nullable = true, length = 150)
+    @Column(length = 150)
     private String address;
 
-    @Column(nullable = true, length = 30)
+    @Column(length = 30)
     private Integer phone;
 
     @Column(nullable = false, length = 80)
