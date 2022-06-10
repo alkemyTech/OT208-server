@@ -25,6 +25,7 @@ public class ObjectMapperUtils {
     static {
         modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setSkipNullEnabled(true);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
     }
 
     /**

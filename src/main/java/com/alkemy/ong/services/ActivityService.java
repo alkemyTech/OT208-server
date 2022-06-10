@@ -8,5 +8,6 @@ import com.alkemy.ong.models.ActivityEntity;
 public interface ActivityService extends BasicService<ActivityEntity, String> {
 
     BasicActivityDto saveActivity(EntryActivityDto entryActivityDto, String image);
+    BasicActivityDto updateActivity(EntryActivityDto entryActivityDto, String image, String id);
 
 }

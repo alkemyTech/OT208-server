@@ -22,7 +22,6 @@ public class ActivityServiceImpl extends BasicServiceImpl<ActivityEntity, String
     @Override
     public BasicActivityDto saveActivity(EntryActivityDto entryActivityDto, String image) {
 
-
         ActivityEntity activityEntity = ObjectMapperUtils.map(entryActivityDto, ActivityEntity.class);
 
         if (StringUtils.hasText(image)) {
@@ -35,14 +34,19 @@ public class ActivityServiceImpl extends BasicServiceImpl<ActivityEntity, String
     }
 
     @Override
-    public ActivityDto updateActivity(ActivityDto activityDto) {
-        if (this.existById(activityDto.getId())) {
-            ActivityEntity activityEntity = ObjectMapperUtils.map(activityDto, ActivityEntity.class);
+    public BasicActivityDto updateActivity(EntryActivityDto dto, String image, String id) {
 
-            activityEntity = this.save(activityEntity);
-            return ObjectMapperUtils.map(activityEntity, ActivityDto.class);
+        if (this.existById(id)) {
+            ActivityEntity activityEntity = findById(id).get();
+            activityEntity = ObjectMapperUtils.map(dto, activityEntity);
+            if (StringUtils.hasText(image)) {
+                activityEntity.setImage(image);
+            }
+            activityEntity = this.edit(activityEntity);
+            return ObjectMapperUtils.map(activityEntity, BasicActivityDto.class);
         } else {
-            throw new ArgumentRequiredException(NO_EXIST);
+            throw new RuntimeException(NO_EXIST);
         }
+
     }
 }
