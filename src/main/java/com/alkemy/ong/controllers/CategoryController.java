@@ -90,5 +90,15 @@ public class CategoryController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CategoryEntity> deleteCategory(@PathVariable String id){
+        Optional<CategoryEntity> categoryEntity = categoryService.findById(id);
+        if(categoryEntity.isPresent()){
+            categoryService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

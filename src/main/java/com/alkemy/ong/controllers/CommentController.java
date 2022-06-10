@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alkemy.ong.dto.response.comment.BasicCommentDto;
 import com.alkemy.ong.models.CommentEntity;
 import com.alkemy.ong.services.CommentService;
-import com.alkemy.ong.services.mappers.CommentMapper;
+import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 
 	private final CommentService commentService;
-	private final CommentMapper commentMapper;
 
 	@GetMapping
 	public ResponseEntity<List<BasicCommentDto>> getComments() {
@@ -29,7 +28,7 @@ public class CommentController {
 		if (comments.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		List<BasicCommentDto> commentsDto = comments.stream().map(commentMapper::entityToBasicCommentDto).toList();
+		List<BasicCommentDto> commentsDto = ObjectMapperUtils.mapAll(comments, BasicCommentDto.class);
 
 		return ResponseEntity.ok(commentsDto);
 	}

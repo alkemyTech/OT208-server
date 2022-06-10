@@ -40,4 +40,5 @@ public class CommentEntity {
 	
 	@CreatedDate
 	private LocalDateTime timestamps;
+
 }

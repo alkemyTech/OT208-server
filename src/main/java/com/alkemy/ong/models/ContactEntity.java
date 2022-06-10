@@ -1,16 +1,3 @@
-/*
-* Ticket OT208-21
-* COMO desarollador
-* QUIERO agregar la entidad Activity
-* PARA representar en la implementacion la estructura de datos
-*
-* Criterios de Aceptacion:
-* Nombre de la tabla: activities, Campos:
-* name: VARCHAR NOT NULL
-* content: TEXT NOT NULL
-* image: VARCHAR NOT NULL
-* timestamps y softDelete
- */
 package com.alkemy.ong.models;
 
 import lombok.AllArgsConstructor;
@@ -21,19 +8,21 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "activities")
+
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE activities SET soft_delete = true WHERE id=?")
-@Where(clause = "soft_delete = false")
+@Table(name = "contacts")
 @EntityListeners(AuditingEntityListener.class)
-public class ActivityEntity implements Serializable {
+@SQLDelete(sql = "UPDATE contacts SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
+public class ContactEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,17 +35,18 @@ public class ActivityEntity implements Serializable {
     @Column(nullable = false, length = 60)
     private String name;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    @Column(length = 20)
+    private String phone;
 
-    @Column(nullable = false, length = 255)
-    private String image;
+    @Column(nullable = false, length = 30)
+    private String email;
 
-    @Column(nullable = false)
+    @Column(length = 150)
+    private String message;
+
     @CreatedDate
     private LocalDateTime timestamps;
 
-    @Column(nullable = false)
     private Boolean softDelete = Boolean.FALSE;
 
 }
