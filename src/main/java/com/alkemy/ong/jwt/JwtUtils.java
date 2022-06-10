@@ -28,7 +28,7 @@ public class JwtUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    public String extractId(String token) {
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -40,7 +40,7 @@ public class JwtUtils {
                 .setSubject(myUserDetails.getUsername())
                 .claim("firstName", myUserDetails.getFirstName())
                 .claim("lastName", myUserDetails.getLastName())
-                .claim("email", myUserDetails.getEmail())
+                .claim("id", myUserDetails.getId())
                 .claim("roles",roles)
                 .claim("photo", myUserDetails.getPhoto())
                 .setIssuedAt(new Date())
@@ -66,8 +66,8 @@ public class JwtUtils {
         return roleClaims;
     }
 
-    public String extractEmail(String token) {
-        return (String) extractAllClaims(token).get("email");
+    public String extractId(String token) {
+        return (String) extractAllClaims(token).get("id");
     }
     
     public String getToken(HttpServletRequest httpServletRequest){
