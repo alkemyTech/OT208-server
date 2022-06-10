@@ -8,6 +8,6 @@ import com.alkemy.ong.models.CommentEntity;
 
 public interface ICommentRepository extends JpaRepository<CommentEntity, String>{
 
-	List<CommentEntity> findAllByOrderByTimestamsAsc();
+	List<CommentEntity> findAllByOrderByTimestampsAsc();
 	
 }

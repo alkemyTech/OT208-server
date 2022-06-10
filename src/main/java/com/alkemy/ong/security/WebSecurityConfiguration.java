@@ -30,7 +30,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] USER_POST = {};
 	private static final String[] USER_PUT = {};
 	private static final String[] USER_PATCH_DELETE = {};
-	private static final String[] ANY_USER_GET = {"/auth/me/{id}", "/organization/public" };
+	private static final String[] ANY_USER_GET = {"/auth/me/**", "/organization/public" };
 	private static final String[] ANY_USER_POST = {};
 	private static final String[] ANY_USER_PUT_DELETE = {"/comments/{id}"};
 	private static final String[] PUBLIC = {"/contacts","/auth/register","/auth/login","/api"};
