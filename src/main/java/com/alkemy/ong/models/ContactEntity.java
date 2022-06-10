@@ -41,7 +41,7 @@ public class ContactEntity implements Serializable {
     @Column(nullable = false, length = 30)
     private String email;
 
-    @Column(nullable = false, length = 150)
+    @Column(length = 150)
     private String message;
 
     @Column(nullable = false)
