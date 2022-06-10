@@ -20,8 +20,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "contacts")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE contacts SET delete_At = true WHERE id=?")
-@Where(clause = "delete_At = false")
+@SQLDelete(sql = "UPDATE contacts SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
 public class ContactEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,11 +44,9 @@ public class ContactEntity implements Serializable {
     @Column(length = 150)
     private String message;
 
-    @Column(nullable = false)
     @CreatedDate
     private LocalDateTime timestamps;
 
-    @Column(nullable = false)
-    private Boolean deletedAt = Boolean.FALSE;
+    private Boolean softDelete = Boolean.FALSE;
 
 }
