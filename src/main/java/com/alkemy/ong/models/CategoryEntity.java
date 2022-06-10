@@ -53,7 +53,7 @@ public class CategoryEntity implements Serializable {
 
     private String description;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 255)
     private String image;
 
     @Column(nullable = false)

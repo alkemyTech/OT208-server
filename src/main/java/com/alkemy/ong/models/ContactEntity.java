@@ -13,19 +13,15 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-/**
- * @author nagredo
- * @project OT208-server
- * @class ContactEntity
- */
+
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "contacts")
-@Where(clause = "softDelete = false")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE contacts SET softDelete = true WHERE id=?")
+@SQLDelete(sql = "UPDATE contacts SET delete_At = true WHERE id=?")
+@Where(clause = "delete_At = false")
 public class ContactEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,13 +35,13 @@ public class ContactEntity implements Serializable {
     @Column(nullable = false, length = 60)
     private String name;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String phone;
 
     @Column(nullable = false, length = 30)
     private String email;
 
-    @Column(nullable = false, length = 80)
+    @Column(length = 150)
     private String message;
 
     @Column(nullable = false)
@@ -53,6 +49,6 @@ public class ContactEntity implements Serializable {
     private LocalDateTime timestamps;
 
     @Column(nullable = false)
-    private Boolean softDelete = Boolean.FALSE;
+    private Boolean deletedAt = Boolean.FALSE;
 
 }
