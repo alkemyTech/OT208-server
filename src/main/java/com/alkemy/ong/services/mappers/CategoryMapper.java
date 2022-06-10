@@ -1,5 +1,6 @@
 package com.alkemy.ong.services.mappers;
 
+import com.alkemy.ong.dto.request.category.EntryCategoryDto;
 import com.alkemy.ong.dto.response.category.CategoryBasicDto;
 import com.alkemy.ong.dto.response.category.CategoryDetailDto;
 import com.alkemy.ong.models.CategoryEntity;
@@ -15,6 +16,20 @@ import java.util.List;
 public class CategoryMapper {
 
     private final ModelMapper categoryMaper;
+
+    public CategoryEntity entryCategoryDtoToEntity(EntryCategoryDto entryCategoryDto){
+        return categoryMaper.map(entryCategoryDto,CategoryEntity.class);
+
+    }
+
+    public CategoryEntity entryCategoryDtoToEntityEdit(EntryCategoryDto entryCategoryDto, CategoryEntity categoryEntity){
+
+        categoryMaper.map(entryCategoryDto,categoryEntity);
+
+        return categoryEntity;
+
+    }
+
 
     public List<CategoryBasicDto> listCategories(List<CategoryEntity> categoryEntitys){
         List<CategoryBasicDto>categoryBasicDtos = new ArrayList<>();

@@ -23,4 +23,9 @@ public class NewsMapper {
 		return mapper.map(entryNewsDto, NewsEntity.class);
 	}
 	
+	public NewsEntity entryNewsDtoToEntity(EntryNewsDto entryNewsDto, NewsEntity newsEntity) {
+		mapper.typeMap(EntryNewsDto.class, NewsEntity.class).addMappings(map -> map.skip(NewsEntity::setId));
+		mapper.map(entryNewsDto, newsEntity);
+		return newsEntity;
+	}
 }

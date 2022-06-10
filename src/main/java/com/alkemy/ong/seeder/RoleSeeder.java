@@ -1,4 +1,4 @@
-package com.alkemy.ong.utils.create;
+package com.alkemy.ong.seeder;
 
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.repositories.IRoleRepository;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-public class CreateRoles implements CommandLineRunner {
+public class RoleSeeder implements CommandLineRunner {
     @Autowired
     IRoleRepository roleRepository;
     @Override
