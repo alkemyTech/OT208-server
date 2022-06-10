@@ -33,6 +33,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] ANY_USER_GET = {"/auth/me/{id}", "/organization/public" };
 	private static final String[] ANY_USER_POST = {};
 	private static final String[] ANY_USER_PUT_DELETE = {"/comments/{id}"};
+	private static final String[] PUBLIC = {"/contacts","/auth/register","/auth/login","/api"};
+	private static final String[] ADMIN_GET = {"/contacts"};
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -44,8 +46,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		// Endpoints
 		http.cors().and().csrf().disable().authorizeRequests()
-				.antMatchers("/auth/**").permitAll()
-				.antMatchers("/api/**").permitAll()
+				.antMatchers(PUBLIC).permitAll()
 
 				/*
 				I leave this commentary as an informative starting point
@@ -87,7 +88,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.DELETE, USER_PATCH_DELETE).hasRole("USER")
 
 				// ADMIN
-				.antMatchers(HttpMethod.GET, "/**").hasRole("ADMIN")
+				.antMatchers(HttpMethod.GET, ADMIN_GET).hasRole("ADMIN")
 				.antMatchers(HttpMethod.POST, "/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.PUT, "/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
