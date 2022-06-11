@@ -30,9 +30,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] USER_POST = {};
 	private static final String[] USER_PUT = {};
 	private static final String[] USER_PATCH_DELETE = {};
-	private static final String[] ANY_USER_GET = {"/auth/me/{id}"};
+	private static final String[] ANY_USER_GET = {"/auth/me/**", "/organization/public" };
 	private static final String[] ANY_USER_POST = {};
 	private static final String[] ANY_USER_PUT_DELETE = {"/comments/{id}"};
+	private static final String[] PUBLIC = {"/contacts","/auth/register","/auth/login","/api"};
+	private static final String[] ADMIN_GET = {"/contacts"};
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -44,14 +46,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		// Endpoints
 		http.cors().and().csrf().disable().authorizeRequests()
-				.antMatchers("/auth/**").permitAll()
-				.antMatchers("/api/**").permitAll()
+				.antMatchers(PUBLIC).permitAll()
 
 				/*
 				I leave this commentary as an informative starting point
 				// Categories
 				.antMatchers(HttpMethod.GET,"/categories").hasRole("ADMIN")
 				.antMatchers(HttpMethod.GET,"/categories/{id}").hasRole("ADMIN")
+				// Contact
+				.antMatchers(HttpMethod.GET,"/contacts/list").hasRole("ADMIN")
 				// Organization
 				.antMatchers(HttpMethod.GET,"/organization/public").hasRole("ADMIN") // error 400
 				// UploadFileController
@@ -78,13 +81,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.PUT, ANY_USER_PUT_DELETE).hasAnyRole("ADMIN", "USER")
 				.antMatchers(HttpMethod.DELETE, ANY_USER_PUT_DELETE).hasAnyRole("ADMIN", "USER")
 				// USER
-				.antMatchers(HttpMethod.GET, USER_GET).hasRole( "USER")
+				.antMatchers(HttpMethod.GET, USER_GET).hasRole("USER")
 				.antMatchers(HttpMethod.POST, USER_POST).hasRole("USER")
 				.antMatchers(HttpMethod.PUT, USER_PUT).hasRole("USER")
 				.antMatchers(HttpMethod.PATCH, USER_PATCH_DELETE).hasRole("USER")
 				.antMatchers(HttpMethod.DELETE, USER_PATCH_DELETE).hasRole("USER")
+
 				// ADMIN
-				.antMatchers(HttpMethod.GET, "/**").hasRole("ADMIN")
+				.antMatchers(HttpMethod.GET, ADMIN_GET).hasRole("ADMIN")
 				.antMatchers(HttpMethod.POST, "/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.PUT, "/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
