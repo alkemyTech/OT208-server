@@ -96,8 +96,7 @@ public class CommentController {
 		String token = jwtUtils.getToken(request);
 		String idUser = jwtUtils.extractId(token);
 		UserEntity user = userService.findById(idUser).get();
-		boolean isAdmin = user.getRoleIds().stream()
-				.anyMatch(rol -> rol.getRolName().equals(RolName.ROLE_ADMIN));
+		boolean isAdmin = userService.isAdmin(user);
 
 		if (!user.equals(comment.getUserId()) || !isAdmin) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
