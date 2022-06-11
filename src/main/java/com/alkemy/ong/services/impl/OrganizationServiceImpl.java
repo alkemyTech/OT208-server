@@ -32,11 +32,14 @@ public class OrganizationServiceImpl extends BasicServiceImpl<OrganizationEntity
     }
 
     @Override
-    public OrganizationPublicDto updateOrganization(EntryOrganizationDto dto) {
+    public OrganizationPublicDto updateOrganization(EntryOrganizationDto entryDto) {
         OrganizationEntity ong = repository.findAll().get(0);
-        ong = ObjectMapperUtils.map(dto, ong);
+        ong = ObjectMapperUtils.map(entryDto, ong);
         save(ong);
-        return ObjectMapperUtils.map(ong, OrganizationPublicDto.class);
+        List<SlideResponseDto> slides = slideService.getAllByOrganizationId(ong.getId());
+        OrganizationPublicDto dto = ObjectMapperUtils.map(ong, OrganizationPublicDto.class);
+        dto.setSlides(slides);
+        return dto;
     }
 
 }
