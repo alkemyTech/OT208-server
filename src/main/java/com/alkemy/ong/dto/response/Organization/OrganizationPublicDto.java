@@ -16,5 +16,9 @@ public class OrganizationPublicDto {
     private String image;
     private Integer phone;
     private String address;
+    private String email;
+    private String facebookUrl;
+    private String instagramUrl;
+    private String linkedinUrl;
     private List<SlideResponseDto> slides;
 }

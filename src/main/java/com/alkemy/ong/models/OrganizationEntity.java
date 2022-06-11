@@ -53,10 +53,10 @@ public class OrganizationEntity implements Serializable {
     @Column(nullable = false, length = 150)
     private String image;
 
-    @Column(nullable = true, length = 150)
+    @Column(length = 150)
     private String address;
 
-    @Column(nullable = true, length = 150)
+    @Column(length = 30)
     private Integer phone;
 
     @Column(nullable = false, length = 80)
@@ -68,7 +68,15 @@ public class OrganizationEntity implements Serializable {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String aboutUsText;
 
-    @Column(nullable = false)
+    @Column(length = 100)
+    private String facebookUrl;
+
+    @Column(length = 100)
+    private String linkedinUrl;
+
+    @Column(length = 100)
+    private String instagramUrl;
+
     @CreatedDate
     private LocalDateTime timestamps;
 

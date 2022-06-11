@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class EditCommentDto {
 	
-	@NotEmpty(message = "")
-	@Size(max = 255, message = "")
+	@NotEmpty(message = "The body cannot be empty or null")
+	@Size(max = 255, message = "The maximum size for the body is thirty six characters")
 	private String body;
 }

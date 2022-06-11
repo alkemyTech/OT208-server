@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/categories")
 @RequiredArgsConstructor
 @MultipartConfig(maxFileSize = 1024*1024*15)
 public class CategoryController {
@@ -90,5 +90,15 @@ public class CategoryController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CategoryEntity> deleteCategory(@PathVariable String id){
+        Optional<CategoryEntity> categoryEntity = categoryService.findById(id);
+        if(categoryEntity.isPresent()){
+            categoryService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
