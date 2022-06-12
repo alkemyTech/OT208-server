@@ -12,17 +12,17 @@ import lombok.Setter;
 @Setter
 public class EntryCommentDto {
 
-	@NotBlank
-	@Size(max = 36)
+	@NotBlank(message = "The userId cannot be empty or null")
+	@Size(max = 36, message = "The maximum size for the id is thirty six characters")
 	@JsonProperty(value = "userId")
 	private String userIdId;
 	
-	@NotBlank
-	@Size(max = 255)
+	@NotBlank(message = "The body cannot be empty or null")
+	@Size(max = 255, message = "The maximum size for the body is thirty six characters")
 	private String body;
 	
-	@NotBlank
-	@Size(max = 36)
-	@JsonProperty(value = "userId")
+	@NotBlank(message = "The newsId cannot be empty or null")
+	@Size(max = 36, message = "The maximum size for the id is thirty six characters")
+	@JsonProperty(value = "newsId")
 	private String newsIdId;
 }

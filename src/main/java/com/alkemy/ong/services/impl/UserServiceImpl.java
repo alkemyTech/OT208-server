@@ -174,4 +174,11 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         return ObjectMapperUtils.mapAll(this.findAll(), UserRegisterDto.class);
     }
 
+
+	@Override
+	public boolean isAdmin(UserEntity user) {
+		return user.getRoleIds().stream()
+				.anyMatch(rol -> rol.getRolName().equals(RolName.ROLE_ADMIN));
+	}
+
 }

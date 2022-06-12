@@ -28,5 +28,7 @@ public interface UserService extends BasicService<UserEntity, String> {
     public boolean existsByEmail(String email);
 
     String singup(UserRegisterDto userRegisterDto);
+    
+    boolean isAdmin(UserEntity user);
 
 }
