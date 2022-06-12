@@ -37,8 +37,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SQLDelete(sql = "UPDATE members SET softDelete = true WHERE id=?")
-@Where(clause = "softDelete = false")
+@SQLDelete(sql = "UPDATE members SET soft_delete = true WHERE id=?")
+@Where(clause = "soft_delete = false")
 @EntityListeners(AuditingEntityListener.class)
 public class MemberEntity implements Serializable {
 
