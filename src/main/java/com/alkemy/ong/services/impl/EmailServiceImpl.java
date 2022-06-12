@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
 	public Response sendEmailContactForm(String emailUser) throws IOException, EmailNotSendException {
 		String subject = "Thank you for contacting us.";
 		String emailContent = "Thank you for contacting us. We will be reading your request and we will contact you";
-		String emailType = "text/html";
+		String emailType = "text/plain";
 
 		return sendEmail(emailUser, subject, emailContent, emailType, null);
 	}

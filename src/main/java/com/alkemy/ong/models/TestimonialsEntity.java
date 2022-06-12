@@ -9,6 +9,7 @@ import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -29,17 +30,17 @@ public class TestimonialsEntity implements Serializable {
     @Column(length = 36)
     private String id;
 
+    @NotNull
     @Column(length = 100)
     private String name;
 
-    @Column(nullable = false, length = 150)
+    @Column(length = 255)
     private String image;
 
-    @Column(nullable = false, length = 150)
+    @Column(length = 150)
     private String content;
 
     @CreatedDate
-    @Column(nullable = false)
     private LocalDateTime timestamps;
 
     private Boolean softDelete = Boolean.FALSE;

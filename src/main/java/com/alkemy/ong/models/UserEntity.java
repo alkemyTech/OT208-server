@@ -60,13 +60,4 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)
     private Boolean softDelete = Boolean.FALSE;
 
-    public UserEntity(String firstName, String lastName, String email, String password, String photo, LocalDateTime timestamps, Boolean softDelete) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.photo = photo;
-        this.timestamps = timestamps;
-        this.softDelete = softDelete;
-    }
 }
