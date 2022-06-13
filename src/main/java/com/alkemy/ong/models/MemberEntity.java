@@ -52,19 +52,19 @@ public class MemberEntity implements Serializable {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = true, length = 150)
+    @Column(length = 150)
     private String facebookUrl;
 
-    @Column(nullable = true, length = 150)
+    @Column(length = 150)
     private String instagramUrl;
 
-    @Column(nullable = true, length = 150)
+    @Column(length = 150)
     private String linkedinUrl;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 150)
     private String image;
 
-    @Column(nullable = true, length = 255)
+    @Column(length = 255)
     private String description;
 
     @Column(nullable = false)
