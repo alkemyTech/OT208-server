@@ -20,7 +20,6 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final AWSS3Service awss3Service;
 
     @GetMapping("/list")
     public ResponseEntity<List<MemberResponseDto>> getMembers() {
@@ -29,10 +28,13 @@ public class MemberController {
 
     @PostMapping("/create")
     public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestPart(name="dto") EntryMemberDto entryMemberDto, @RequestPart(name="img") MultipartFile file, Errors errors) {
-        if (errors.hasErrors() || file.isEmpty()) {
+        if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
         }
-        return ResponseEntity.ok(memberService.createMember(entryMemberDto, awss3Service.uploadFile(file)));
+        if (!file.isEmpty()) {
+            return ResponseEntity.ok(memberService.createMember(entryMemberDto, file));
+        }
+        return ResponseEntity.ok(memberService.createMember(entryMemberDto));
     }
 
 }
