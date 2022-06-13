@@ -2,12 +2,13 @@ package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.request.testimonial.EntryTestimonialDto;
 import com.alkemy.ong.dto.response.testimonial.BasicTestimonialDTo;
-import com.alkemy.ong.exeptions.ValidationException;
 import com.alkemy.ong.services.TestimonialsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,13 +35,19 @@ public class TestimonialsController {
             return ResponseEntity.badRequest().build();
         }
 
-        if(file.isEmpty()){
+        if (file.isEmpty()) {
             testimonialsService.createTestimonial(entryTestimonialDto);
             return ResponseEntity.ok().build();
-        }else{
-            testimonialsService.createTestimonial(entryTestimonialDto,file);
+        } else {
+            testimonialsService.createTestimonial(entryTestimonialDto, file);
             return ResponseEntity.ok().build();
         }
 
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<BasicTestimonialDTo>> getMembers(@PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(testimonialsService.getTestimonials(pageable));
+    }
+
 }
