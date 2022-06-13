@@ -1,24 +1,5 @@
 package com.alkemy.ong.controllers;
 
-import java.util.Optional;
-
-import javax.servlet.annotation.MultipartConfig;
-import javax.validation.Valid;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.alkemy.ong.dto.request.news.EntryEditNewsDto;
 import com.alkemy.ong.dto.request.news.EntryNewsDto;
 import com.alkemy.ong.dto.response.news.BasicNewsDto;
@@ -29,8 +10,20 @@ import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.CategoryService;
 import com.alkemy.ong.services.NewsService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.annotation.MultipartConfig;
+import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,7 +45,7 @@ public class NewsController {
 		
 		return ResponseEntity.ok(ObjectMapperUtils.map(newsEntity, BasicNewsDto.class));
 	}
-	
+
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<BasicNewsDto> createNews(
 			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
@@ -109,14 +102,19 @@ public class NewsController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<BasicNewsDto> deleteNews(@PathVariable String id){
+	public ResponseEntity<BasicNewsDto> deleteNews(@PathVariable String id) {
 		Optional<NewsEntity> newsEntity = newsService.findById(id);
-	
-		if(!newsEntity.isPresent()) {
+
+		if (!newsEntity.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		newsService.delete(newsEntity.get());
-	
+
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/list")
+	public ResponseEntity<Page<BasicNewsDto>> getMembers(@PageableDefault(size = 10) Pageable pageable) {
+		return ResponseEntity.ok(newsService.getNews(pageable));
 	}
 }
