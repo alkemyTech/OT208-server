@@ -1,6 +1,7 @@
 package com.alkemy.ong.controllers;
 
 import com.alkemy.ong.dto.response.MemberResponseDto;
+import com.alkemy.ong.services.MemberService;
 import com.alkemy.ong.services.impl.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,11 @@ import java.util.List;
 @RequestMapping("/members")
 public class MemberController {
 
-    private final MemberServiceImpl memberServiceImpl;
+    private final MemberService memberService;
 
     @GetMapping("/list")
     public ResponseEntity<List<MemberResponseDto>> getMembers() {
-        if (memberServiceImpl.getMembers().isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(memberServiceImpl.getMembers());
+        return ResponseEntity.ok(memberService.getMembers());
     }
-
 
 }

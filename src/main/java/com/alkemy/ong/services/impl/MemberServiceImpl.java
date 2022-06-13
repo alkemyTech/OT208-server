@@ -5,23 +5,27 @@ import com.alkemy.ong.models.MemberEntity;
 import com.alkemy.ong.repositories.IMemberRepository;
 import com.alkemy.ong.services.MemberService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
 public class MemberServiceImpl extends BasicServiceImpl<MemberEntity, String, IMemberRepository> implements MemberService {
 
-    private final MemberService memberService;
-
-    public MemberServiceImpl(IMemberRepository repository, MemberService memberService) {
+    public MemberServiceImpl(IMemberRepository repository) {
         super(repository);
-        this.memberService = memberService;
     }
 
+    @Override
     public List<MemberResponseDto> getMembers() {
-        List<MemberEntity> memberEntities = memberService.findAll();
-        return ObjectMapperUtils.mapAll(memberEntities, MemberResponseDto.class);
+        List<MemberEntity> memberEntities = repository.findAll();
+        if (!memberEntities.isEmpty()) {
+            return ObjectMapperUtils.mapAll(memberEntities, MemberResponseDto.class);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("There's no members"));
+        }
     }
 
 }
