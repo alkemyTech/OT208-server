@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,6 @@ import com.alkemy.ong.exeptions.ValidationException;
 import com.alkemy.ong.jwt.JwtUtils;
 import com.alkemy.ong.models.CommentEntity;
 import com.alkemy.ong.models.UserEntity;
-import com.alkemy.ong.security.enums.RolName;
 import com.alkemy.ong.services.CommentService;
 import com.alkemy.ong.services.NewsService;
 import com.alkemy.ong.services.UserService;
@@ -96,9 +96,8 @@ public class CommentController {
 		String token = jwtUtils.getToken(request);
 		String idUser = jwtUtils.extractId(token);
 		UserEntity user = userService.findById(idUser).get();
-		boolean isAdmin = userService.isAdmin(user);
 
-		if (!user.equals(comment.getUserId()) || !isAdmin) {
+		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		comment = ObjectMapperUtils.map(editCommentDto, comment);
@@ -107,4 +106,23 @@ public class CommentController {
 		return ResponseEntity.ok(ObjectMapperUtils.map(comment, BasicCommentDto.class));
 	}
 
+	@DeleteMapping("/{id}")
+	public ResponseEntity<BasicCommentDto> deleteComment(@PathVariable String id, HttpServletRequest request){
+		Optional<CommentEntity> commentOp = commentService.findById(id);
+		
+		if(commentOp.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		CommentEntity comment = commentOp.get();
+		String token = jwtUtils.getToken(request);
+		String idUser = jwtUtils.extractId(token);
+		UserEntity user = userService.findById(idUser).get();
+		
+		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+		commentService.delete(comment);
+		
+		return ResponseEntity.noContent().build();
+	}
 }

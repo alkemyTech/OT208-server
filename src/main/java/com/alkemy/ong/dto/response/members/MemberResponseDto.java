@@ -1,4 +1,4 @@
-package com.alkemy.ong.dto.response;
+package com.alkemy.ong.dto.response.members;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
