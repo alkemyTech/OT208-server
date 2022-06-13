@@ -22,4 +22,9 @@ public class CommentServiceImpl extends BasicServiceImpl<CommentEntity, String, 
 		return this.repository.findAllByOrderByTimestampsAsc();
 	}
 
+	@Override
+	public List<CommentEntity> findAllByNewsId(String id) {
+		return this.repository.findAllByNewsId(id);
+	}
+
 }

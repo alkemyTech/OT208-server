@@ -8,4 +8,6 @@ public interface CommentService extends BasicService<CommentEntity, String> {
 
 	List<CommentEntity> findAllOrderByTimestamps();
 
+	List<CommentEntity> findAllByNewsId(String id);
+
 }

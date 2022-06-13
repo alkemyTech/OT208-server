@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alkemy.ong.dto.request.comment.EditCommentDto;
@@ -37,7 +36,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comments")
 public class CommentController {
 
 	private final CommentService commentService;
@@ -45,7 +43,7 @@ public class CommentController {
 	private final NewsService newsService;
 	private final JwtUtils jwtUtils;
 
-	@GetMapping
+	@GetMapping("/comments")
 	public ResponseEntity<List<BasicCommentDto>> getComments() {
 		List<CommentEntity> comments = commentService.findAllOrderByTimestamps();
 
@@ -57,7 +55,7 @@ public class CommentController {
 		return ResponseEntity.ok(commentsDto);
 	}
 
-	@PostMapping
+	@PostMapping("/comments")
 	public ResponseEntity<CompleteCommentDto> createComment(
 			@Valid @RequestBody EntryCommentDto entryCommentDto,
 			Errors errors) {
@@ -78,7 +76,7 @@ public class CommentController {
 				.body(ObjectMapperUtils.map(commentEntity, CompleteCommentDto.class));
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping("/comments/{id}")
 	public ResponseEntity<BasicCommentDto> editComment(
 			@PathVariable String id, 
 			@Valid @RequestBody EditCommentDto editCommentDto,
@@ -106,7 +104,7 @@ public class CommentController {
 		return ResponseEntity.ok(ObjectMapperUtils.map(comment, BasicCommentDto.class));
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/comments/{id}")
 	public ResponseEntity<BasicCommentDto> deleteComment(@PathVariable String id, HttpServletRequest request){
 		Optional<CommentEntity> commentOp = commentService.findById(id);
 		
@@ -124,5 +122,20 @@ public class CommentController {
 		commentService.delete(comment);
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/post/{id}/comments")
+	public ResponseEntity<List<BasicCommentDto>> getCommentsOfPost(@PathVariable String id){
+		
+		if(!newsService.existById(id)) {
+			throw new NewsNotExistException(id);
+		}
+		List<CommentEntity> comments = commentService.findAllByNewsId(id);
+
+		if (comments.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		return ResponseEntity.ok(ObjectMapperUtils.mapAll(comments, BasicCommentDto.class));
 	}
 }

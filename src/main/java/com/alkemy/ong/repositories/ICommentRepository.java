@@ -9,5 +9,7 @@ import com.alkemy.ong.models.CommentEntity;
 public interface ICommentRepository extends JpaRepository<CommentEntity, String>{
 
 	List<CommentEntity> findAllByOrderByTimestampsAsc();
+
+	List<CommentEntity> findAllByNewsId(String id);
 	
 }
