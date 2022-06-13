@@ -27,7 +27,7 @@ public class MemberController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestPart(name="dto") EntryMemberDto entryMemberDto, @RequestPart(name="img") MultipartFile file, Errors errors) {
+    public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestPart(name="dto") EntryMemberDto entryMemberDto, @RequestPart(name="img") Errors errors, MultipartFile file) {
         if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
         }
