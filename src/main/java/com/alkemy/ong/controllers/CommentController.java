@@ -30,7 +30,6 @@ import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.services.CommentService;
 import com.alkemy.ong.services.NewsService;
 import com.alkemy.ong.services.UserService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,9 +49,8 @@ public class CommentController {
 		if (comments.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		List<BasicCommentDto> commentsDto = ObjectMapperUtils.mapAll(comments, BasicCommentDto.class);
 
-		return ResponseEntity.ok(commentsDto);
+		return ResponseEntity.ok(commentService.mapAll(comments, BasicCommentDto.class));
 	}
 
 	@PostMapping("/comments")
@@ -69,11 +67,11 @@ public class CommentController {
 		if (!newsService.existById(entryCommentDto.getNewsIdId())) {
 			throw new NewsNotExistException(entryCommentDto.getNewsIdId());
 		}
-		CommentEntity commentEntity = ObjectMapperUtils.map(entryCommentDto, CommentEntity.class);
+		CommentEntity commentEntity = commentService.map(entryCommentDto, CommentEntity.class);
 		commentEntity = commentService.save(commentEntity);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ObjectMapperUtils.map(commentEntity, CompleteCommentDto.class));
+				.body(commentService.map(commentEntity, CompleteCommentDto.class));
 	}
 
 	@PutMapping("/comments/{id}")
@@ -98,10 +96,10 @@ public class CommentController {
 		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		comment = ObjectMapperUtils.map(editCommentDto, comment);
+		comment = commentService.map(editCommentDto, comment);
 		comment = commentService.edit(comment);
 		
-		return ResponseEntity.ok(ObjectMapperUtils.map(comment, BasicCommentDto.class));
+		return ResponseEntity.ok(commentService.map(comment, BasicCommentDto.class));
 	}
 
 	@DeleteMapping("/comments/{id}")
@@ -136,6 +134,6 @@ public class CommentController {
 			return ResponseEntity.notFound().build();
 		}
 
-		return ResponseEntity.ok(ObjectMapperUtils.mapAll(comments, BasicCommentDto.class));
+		return ResponseEntity.ok(commentService.mapAll(comments, BasicCommentDto.class));
 	}
 }
