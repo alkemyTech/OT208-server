@@ -1,20 +1,21 @@
 package com.alkemy.ong.services;
 
-import java.util.Collection;
 import java.util.List;
 
+import com.alkemy.ong.dto.request.comment.EditCommentDto;
+import com.alkemy.ong.dto.request.comment.EntryCommentDto;
+import com.alkemy.ong.dto.response.comment.BasicCommentDto;
+import com.alkemy.ong.dto.response.comment.CompleteCommentDto;
 import com.alkemy.ong.models.CommentEntity;
 
 public interface CommentService extends BasicService<CommentEntity, String> {
 
-	List<CommentEntity> findAllOrderByTimestamps();
+	List<BasicCommentDto> findAllOrderByTimestamps();
 
-	List<CommentEntity> findAllByNewsId(String id);
+	List<BasicCommentDto> findAllByNewsId(String id);
 
-	<D, T> D map(final T entity, Class<D> outClass);
-	
-	<S, D> D map(final S source, D destination);
-	
-	<D, T> List<D> mapAll(final Collection<T> entityList, Class<D> outCLass);
+	CompleteCommentDto saveEntity(EntryCommentDto entryCommentDto);
+
+	BasicCommentDto editEntity(EditCommentDto editCommentDto, CommentEntity comment);
 
 }

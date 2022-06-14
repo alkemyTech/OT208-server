@@ -44,13 +44,13 @@ public class CommentController {
 
 	@GetMapping("/comments")
 	public ResponseEntity<List<BasicCommentDto>> getComments() {
-		List<CommentEntity> comments = commentService.findAllOrderByTimestamps();
+		List<BasicCommentDto> comments = commentService.findAllOrderByTimestamps();
 
 		if (comments.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		return ResponseEntity.ok(commentService.mapAll(comments, BasicCommentDto.class));
+		return ResponseEntity.ok(comments);
 	}
 
 	@PostMapping("/comments")
@@ -67,11 +67,8 @@ public class CommentController {
 		if (!newsService.existById(entryCommentDto.getNewsIdId())) {
 			throw new NewsNotExistException(entryCommentDto.getNewsIdId());
 		}
-		CommentEntity commentEntity = commentService.map(entryCommentDto, CommentEntity.class);
-		commentEntity = commentService.save(commentEntity);
 
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(commentService.map(commentEntity, CompleteCommentDto.class));
+		return ResponseEntity.status(HttpStatus.CREATED).body(commentService.saveEntity(entryCommentDto));
 	}
 
 	@PutMapping("/comments/{id}")
@@ -89,17 +86,14 @@ public class CommentController {
 			return ResponseEntity.notFound().build();
 		}
 		CommentEntity comment = commentOp.get();
-		String token = jwtUtils.getToken(request);
-		String idUser = jwtUtils.extractId(token);
+		String idUser = jwtUtils.extractId(jwtUtils.getToken(request));
 		UserEntity user = userService.findById(idUser).get();
 
 		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		comment = commentService.map(editCommentDto, comment);
-		comment = commentService.edit(comment);
 		
-		return ResponseEntity.ok(commentService.map(comment, BasicCommentDto.class));
+		return ResponseEntity.ok(commentService.editEntity(editCommentDto, comment));
 	}
 
 	@DeleteMapping("/comments/{id}")
@@ -110,8 +104,7 @@ public class CommentController {
 			return ResponseEntity.notFound().build();
 		}
 		CommentEntity comment = commentOp.get();
-		String token = jwtUtils.getToken(request);
-		String idUser = jwtUtils.extractId(token);
+		String idUser = jwtUtils.extractId(jwtUtils.getToken(request));
 		UserEntity user = userService.findById(idUser).get();
 		
 		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
@@ -128,12 +121,12 @@ public class CommentController {
 		if(!newsService.existById(id)) {
 			throw new NewsNotExistException(id);
 		}
-		List<CommentEntity> comments = commentService.findAllByNewsId(id);
+		List<BasicCommentDto> comments = commentService.findAllByNewsId(id);
 
 		if (comments.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		return ResponseEntity.ok(commentService.mapAll(comments, BasicCommentDto.class));
+		return ResponseEntity.ok(comments);
 	}
 }

@@ -1,18 +1,22 @@
 package com.alkemy.ong.services.impl;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alkemy.ong.dto.request.comment.EditCommentDto;
+import com.alkemy.ong.dto.request.comment.EntryCommentDto;
+import com.alkemy.ong.dto.response.comment.BasicCommentDto;
+import com.alkemy.ong.dto.response.comment.CompleteCommentDto;
 import com.alkemy.ong.models.CommentEntity;
 import com.alkemy.ong.repositories.ICommentRepository;
 import com.alkemy.ong.services.CommentService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 
 @Service
-public class CommentServiceImpl extends BasicServiceImpl<CommentEntity, String, ICommentRepository> implements CommentService {
+public class CommentServiceImpl extends BasicServiceImpl<CommentEntity, String, ICommentRepository>
+		implements CommentService {
 
 	@Autowired
 	public CommentServiceImpl(ICommentRepository repository) {
@@ -20,28 +24,27 @@ public class CommentServiceImpl extends BasicServiceImpl<CommentEntity, String, 
 	}
 
 	@Override
-	public List<CommentEntity> findAllOrderByTimestamps() {
-		return this.repository.findAllByOrderByTimestampsAsc();
+	public List<BasicCommentDto> findAllOrderByTimestamps() {
+		return ObjectMapperUtils.mapAll(repository.findAllByOrderByTimestampsAsc(), BasicCommentDto.class);
 	}
 
 	@Override
-	public List<CommentEntity> findAllByNewsId(String id) {
-		return this.repository.findAllByNewsId(id);
+	public List<BasicCommentDto> findAllByNewsId(String id) {
+		return ObjectMapperUtils.mapAll( this.repository.findAllByNewsId(id), BasicCommentDto.class);
 	}
 
 	@Override
-	public <D, T> D map(T entity, Class<D> outClass) {
-		return ObjectMapperUtils.map(entity, outClass);
+	public CompleteCommentDto saveEntity(EntryCommentDto entryCommentDto) {
+		CommentEntity comment = save(ObjectMapperUtils.map(entryCommentDto, CommentEntity.class));
+
+		return ObjectMapperUtils.map(comment, CompleteCommentDto.class);
 	}
 
 	@Override
-	public <S, D> D map(S source, D destination) {
-		return ObjectMapperUtils.map(source, destination);
-	}
-
-	@Override
-	public <D, T> List<D> mapAll(Collection<T> entityList, Class<D> outCLass) {
-		return ObjectMapperUtils.mapAll(entityList, outCLass);
+	public BasicCommentDto editEntity(EditCommentDto editCommentDto, CommentEntity comment) {
+		CommentEntity commentEntity =  edit(ObjectMapperUtils.map(editCommentDto, comment));
+		
+		return ObjectMapperUtils.map(commentEntity, BasicCommentDto.class);
 	}
 
 }
