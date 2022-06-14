@@ -47,6 +47,15 @@ public class MemberServiceImpl extends BasicServiceImpl<MemberEntity, String, IM
     }
 
     @Override
+    public void deleteMember(String id) {
+        if (id.isEmpty() || !repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("Id is empty, or does not exist"));
+        }else {
+            repository.deleteById(id);
+        }
+    }
+
+    @Override
     public MemberResponseDto createMember(EntryMemberDto entryMemberDto, MultipartFile file) {
         MemberEntity memberEntity = new MemberEntity();
         if (!file.isEmpty()) {

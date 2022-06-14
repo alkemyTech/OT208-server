@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class MemberController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestPart(name="dto") EntryMemberDto entryMemberDto, @RequestPart(name="img") Errors errors, MultipartFile file) {
+    public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestPart(name="dto") EntryMemberDto entryMemberDto, Errors errors, @RequestPart(name="img") MultipartFile file) {
         if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
         }
@@ -38,6 +39,12 @@ public class MemberController {
             return ResponseEntity.ok(memberService.createMember(entryMemberDto, file));
         }
         return ResponseEntity.ok(memberService.createMember(entryMemberDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMember(@PathVariable String id) {
+        memberService.deleteMember(id);
+        return new ResponseEntity<>("Member was successfully deleted", HttpStatus.OK);
     }
 
 }
