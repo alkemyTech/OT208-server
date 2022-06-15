@@ -3,6 +3,7 @@ package com.alkemy.ong.controllers;
 import com.alkemy.ong.dto.request.testimonial.EntryTestimonialDto;
 import com.alkemy.ong.dto.response.testimonial.BasicTestimonialDTo;
 import com.alkemy.ong.exeptions.ValidationException;
+import com.alkemy.ong.models.TestimonialsEntity;
 import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.TestimonialsService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/testimonials")
@@ -71,4 +73,15 @@ public class TestimonialsController {
         return ResponseEntity.ok(testimonialsService.getTestimonials(pageable));
     }
 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TestimonialsEntity> deleteTestimonial(@PathVariable String id){
+        Optional<TestimonialsEntity> testimonialsEntity = testimonialsService.findById(id);
+        if(testimonialsEntity.isPresent()){
+            testimonialsService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
