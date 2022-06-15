@@ -12,5 +12,6 @@ public interface MemberService extends BasicService<MemberEntity, String> {
     MemberResponseDto createMember(EntryMemberDto entryMemberDto, MultipartFile file);
     MemberResponseDto createMember(EntryMemberDto entryMemberDto);
     Page<MemberResponseDto> getMembers(Pageable pageable);
+    void deleteMember(String id);
 
 }
