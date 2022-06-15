@@ -11,15 +11,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity,String, ITestimonialsRepository> implements TestimonialsService {
 
+    public static final String NO_EXIST = "Id Not Found";
 
     private final AWSS3Service awss3Service;
     public TestimonialsServiceImpl(ITestimonialsRepository repository, AWSS3Service awss3Service) {
@@ -50,6 +54,24 @@ public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity
     }
 
     @Override
+    public BasicTestimonialDTo updateTestimonial(String id, EntryTestimonialDto entryTestimonialDto, String image) {
+
+        if(this.existById(id)){
+
+            TestimonialsEntity testimonialsEntity = findById(id).get();
+            testimonialsEntity = ObjectMapperUtils.map(entryTestimonialDto,testimonialsEntity);
+            if(StringUtils.hasText(image)){
+                testimonialsEntity.setImage(image);
+            }
+            testimonialsEntity = this.edit(testimonialsEntity);
+            return ObjectMapperUtils.map(testimonialsEntity,BasicTestimonialDTo.class);
+        }else{
+            throw new RuntimeException(NO_EXIST);
+        }
+
+    }
+
+    @Override
     public Page<BasicTestimonialDTo> getTestimonials(Pageable pageable) {
         List<TestimonialsEntity> testimonialsEntities = repository.findAll();
         List<BasicTestimonialDTo> response;
@@ -65,4 +87,5 @@ public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("There's no testimonial"));
         }
     }
+
 }
