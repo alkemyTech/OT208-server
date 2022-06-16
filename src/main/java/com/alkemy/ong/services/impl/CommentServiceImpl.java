@@ -25,7 +25,7 @@ public class CommentServiceImpl extends BasicServiceImpl<CommentEntity, String, 
 
 	@Override
 	public List<BasicCommentDto> findAllOrderByTimestamps() {
-		return ObjectMapperUtils.mapAll(repository.findAllByOrderByTimestampsAsc(), BasicCommentDto.class);
+		return ObjectMapperUtils.mapAll(this.repository.findAllByOrderByTimestampsDesc(), BasicCommentDto.class);
 	}
 
 	@Override
