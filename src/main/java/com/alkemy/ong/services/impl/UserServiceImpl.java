@@ -1,6 +1,17 @@
 package com.alkemy.ong.services.impl;
 
-import com.alkemy.ong.security.enums.RolName;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
@@ -13,21 +24,10 @@ import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
+import com.alkemy.ong.security.enums.RolName;
 import com.alkemy.ong.services.UserService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-@Service
 public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService {
 
     public static final String IS_REQUIRED_OR_DOESNT_EXIST = "El id del usuario es requerido o no existe";
@@ -160,6 +160,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     @Override
     public BasicUserDto updateUser(UserRegisterDto userRegisterDto, String id) {
         if (this.findById(id).isPresent()) {
+        	userRegisterDto.setId(id);
             UserEntity userEntity = ObjectMapperUtils.map(userRegisterDto, UserEntity.class);
 
             userEntity = this.save(userEntity);
@@ -171,7 +172,13 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
     @Override
     public List<UserRegisterDto> getAll() {
-        return ObjectMapperUtils.mapAll(this.findAll(), UserRegisterDto.class);
+    	List<UserRegisterDto> usersDto =  ObjectMapperUtils.mapAll(this.findAll(), UserRegisterDto.class);
+       if(usersDto.isEmpty()) {
+    	   throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+       }
+       else {
+    	   return usersDto;
+       }
     }
 
 
