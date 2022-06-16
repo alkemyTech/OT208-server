@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,13 +31,15 @@ public class CommentEntity {
     @Column(length = 36)
 	private String id;
 	
-	@Column(nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "user_id")
 	private UserEntity userId;
 	
 	@Column(nullable = false, length = 255)
 	private String body;
 	
-	@Column(nullable = false)
+	@ManyToOne
+	@JoinColumn(name = "news_id")
 	private NewsEntity newsId;
 	
 	@CreatedDate

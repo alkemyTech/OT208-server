@@ -19,7 +19,7 @@ public class CommentServiceImpl extends BasicServiceImpl<CommentEntity, String, 
 
 	@Override
 	public List<CommentEntity> findAllOrderByTimestamps() {
-		return this.repository.findAllByOrderByTimestampsAsc();
+		return this.repository.findAllByOrderByTimestampsDesc();
 	}
 
 }

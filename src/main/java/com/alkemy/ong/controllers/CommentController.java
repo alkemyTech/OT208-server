@@ -65,11 +65,11 @@ public class CommentController {
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
 		}
-		if (!userService.existById(entryCommentDto.getUserIdId())) {
-			throw new UserNotExistException(entryCommentDto.getUserIdId());
+		if (!userService.existById(entryCommentDto.getUserId())) {
+			throw new UserNotExistException(entryCommentDto.getUserId());
 		}
-		if (!newsService.existById(entryCommentDto.getNewsIdId())) {
-			throw new NewsNotExistException(entryCommentDto.getNewsIdId());
+		if (!newsService.existById(entryCommentDto.getNewsId())) {
+			throw new NewsNotExistException(entryCommentDto.getNewsId());
 		}
 		CommentEntity commentEntity = ObjectMapperUtils.map(entryCommentDto, CommentEntity.class);
 		commentEntity = commentService.save(commentEntity);
@@ -96,8 +96,9 @@ public class CommentController {
 		String token = jwtUtils.getToken(request);
 		String idUser = jwtUtils.extractId(token);
 		UserEntity user = userService.findById(idUser).get();
+		UserEntity user2 = comment.getUserId();
 
-		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
+		if (!user.equals(user2) && !userService.isAdmin(user)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		comment = ObjectMapperUtils.map(editCommentDto, comment);
@@ -113,12 +114,12 @@ public class CommentController {
 		if(commentOp.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		CommentEntity comment = commentOp.get();
+		CommentEntity comment = commentOp.get(); 
 		String token = jwtUtils.getToken(request);
 		String idUser = jwtUtils.extractId(token);
 		UserEntity user = userService.findById(idUser).get();
 		
-		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
+		if (!user.equals(comment.getUserId()) && !userService.isAdmin(user)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		commentService.delete(comment);
