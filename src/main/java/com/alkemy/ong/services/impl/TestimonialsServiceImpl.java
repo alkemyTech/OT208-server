@@ -66,7 +66,7 @@ public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity
             testimonialsEntity = this.edit(testimonialsEntity);
             return ObjectMapperUtils.map(testimonialsEntity,BasicTestimonialDTo.class);
         }else{
-            throw new RuntimeException(NO_EXIST);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id no encontrado");
         }
 
     }

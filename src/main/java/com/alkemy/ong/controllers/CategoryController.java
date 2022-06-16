@@ -10,6 +10,9 @@ import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.CategoryService;
 import com.alkemy.ong.services.mappers.CategoryMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -100,5 +103,11 @@ public class CategoryController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<CategoryDetailDto>>getCategory(@PageableDefault(size = 10) Pageable pageable){
+        return ResponseEntity.ok(categoryService.getCategories(pageable));
+    }
+
 
 }
