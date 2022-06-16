@@ -99,7 +99,7 @@ class UserControllerTest {
 	}
 	
 	@Test
-	void update_existsById_returnedStatus200() throws Exception {
+	void update_existsById_returnedBasicUserDtoStatus200() throws Exception {
 		BasicUserDto userDto = ObjectMapperUtils.map(user, BasicUserDto.class);
 		UserRegisterDto userRegisterDto = ObjectMapperUtils.map(user, UserRegisterDto.class);
 		String jsonUserRegister = objectMapper.writeValueAsString(userRegisterDto);
@@ -129,7 +129,7 @@ class UserControllerTest {
 	}
 	
 	@Test
-	void getAll_withExistingUsers_returnedStatus200() throws JsonProcessingException, Exception {
+	void getAll_withExistingUsers_returnedListUserRegisterDtoStatus200() throws JsonProcessingException, Exception {
 		UserRegisterDto userDto = ObjectMapperUtils.map(user, UserRegisterDto.class);
 		
 		when(userService.getAll()).thenReturn(Arrays.asList(userDto));
