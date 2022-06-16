@@ -3,6 +3,7 @@ package com.alkemy.ong.security;
 import com.alkemy.ong.jwt.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableJpaAuditing
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private final JwtTokenFilter jwtTokenFilter;
