@@ -88,9 +88,8 @@ public class CommentController {
 		CommentEntity comment = commentOp.get();
 		String idUser = jwtUtils.extractId(jwtUtils.getToken(request));
 		UserEntity user = userService.findById(idUser).get();
-		UserEntity user2 = comment.getUserId();
 
-		if (!user.equals(user2) && !userService.isAdmin(user)) {
+		if (!user.equals(comment.getUserId()) && !userService.isAdmin(user)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		
