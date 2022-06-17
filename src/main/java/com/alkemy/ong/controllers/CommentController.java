@@ -89,7 +89,7 @@ public class CommentController {
 		String idUser = jwtUtils.extractId(jwtUtils.getToken(request));
 		UserEntity user = userService.findById(idUser).get();
 
-		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
+		if (!user.equals(comment.getUserId()) && !userService.isAdmin(user)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		
@@ -107,7 +107,7 @@ public class CommentController {
 		String idUser = jwtUtils.extractId(jwtUtils.getToken(request));
 		UserEntity user = userService.findById(idUser).get();
 		
-		if (!user.equals(comment.getUserId()) || !userService.isAdmin(user)) {
+		if (!user.equals(comment.getUserId()) && !userService.isAdmin(user)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		commentService.delete(comment);
