@@ -23,7 +23,11 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable String id) {
         try {
-            return new ResponseEntity<>(this.userService.deleteUser(id) ? DELETE_USER : NO_DELETE_USER, HttpStatus.OK);
+        	if(userService.deleteUser(id)) {
+        		return new ResponseEntity<>(DELETE_USER, HttpStatus.OK);
+        	}else {
+        		return new ResponseEntity<>(NO_DELETE_USER, HttpStatus.NOT_FOUND);
+        	}
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -43,9 +47,10 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserRegisterDto>> getAll(){
         try {
+        	
             return new ResponseEntity<>(this.userService.getAll(), HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     
