@@ -15,13 +15,13 @@ public interface UserService extends BasicService<UserEntity, String> {
 
     boolean deleteUser(String id);
 
-    String login(UserLoginDto userLoginDto);
+    String logIn(UserLoginDto userLoginDto);
 
     BasicUserDto updateUser(UserRegisterDto userRegisterDto, String id);
 
     List<UserRegisterDto> getAll();
 
-    String singup(UserRegisterDto userRegisterDto);
+    String singUp(UserRegisterDto userRegisterDto);
     
     boolean isAdmin(UserEntity user);
 

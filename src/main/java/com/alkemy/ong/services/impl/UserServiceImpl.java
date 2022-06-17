@@ -52,7 +52,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
 
     @Override
-    public String login(UserLoginDto userLoginDto) throws BadCredentialsException{
+    public String logIn(UserLoginDto userLoginDto) throws BadCredentialsException{
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 userLoginDto.getEmail(), userLoginDto.getPassword()));
@@ -61,7 +61,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     @Override
-    public String singup(UserRegisterDto userRegisterDto) throws BadCredentialsException{
+    public String singUp(UserRegisterDto userRegisterDto) throws BadCredentialsException{
 
         this.saveUser(userRegisterDto);
 
@@ -113,15 +113,6 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
     private boolean emailExist(String email) {
         return userRepository.findByEmail(email).isPresent();
-    }
-
-    private RoleEntity roleExist(RolName rolName) throws RoleExistException {
-        if (roleRepository.findByRolName(rolName).isPresent())  {
-            return roleRepository.findByRolName(rolName).get();
-        } else {
-            throw new RoleExistException(
-                "Rol dont's exist:" + rolName);
-        }
     }
 
     @Override

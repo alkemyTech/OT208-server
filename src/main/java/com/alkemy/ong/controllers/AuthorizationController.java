@@ -35,11 +35,11 @@ public class AuthorizationController {
     private final EmailService emailService;
     private final JwtUtils jwtUtils;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserLoginDto userLoginDto) throws Exception {
+    @PostMapping("/logIn")
+    public ResponseEntity<String> logIn(@Valid @RequestBody UserLoginDto userLoginDto) throws Exception {
         try {
             if (userService.findByEmail(userLoginDto.getEmail()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.login(userLoginDto));
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.logIn(userLoginDto));
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -49,10 +49,10 @@ public class AuthorizationController {
 
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> signup(@RequestBody @Valid UserRegisterDto userRegisterDto) throws EmailNotSendException, IOException {
+    @PostMapping("/signUp")
+    public ResponseEntity<String> signUp(@RequestBody @Valid UserRegisterDto userRegisterDto) throws EmailNotSendException, IOException {
         emailService.sendEmailRegister(userRegisterDto.getEmail());
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.singup(userRegisterDto));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(userService.singUp(userRegisterDto));
 
     }
 
