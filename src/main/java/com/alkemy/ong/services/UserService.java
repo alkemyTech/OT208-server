@@ -15,20 +15,16 @@ public interface UserService extends BasicService<UserEntity, String> {
 
     boolean deleteUser(String id);
 
-    String login(UserLoginDto userLoginDto);
+    String logIn(UserLoginDto userLoginDto);
 
     BasicUserDto updateUser(UserRegisterDto userRegisterDto, String id);
 
     List<UserRegisterDto> getAll();
 
-    public Optional<UserEntity> getByEmail(String email);
-
-    public boolean existByFirstName(String nombreUsuario);
-
-    public boolean existsByEmail(String email);
-
-    String singup(UserRegisterDto userRegisterDto);
+    String singUp(UserRegisterDto userRegisterDto);
     
     boolean isAdmin(UserEntity user);
+
+    Optional<UserEntity> findByEmail(String email);
 
 }
