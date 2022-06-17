@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.alkemy.ong.dto.request.user.UserLoginDto;
@@ -28,6 +29,7 @@ import com.alkemy.ong.security.enums.RolName;
 import com.alkemy.ong.services.UserService;
 import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 
+@Service
 public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService {
 
     public static final String IS_REQUIRED_OR_DOESNT_EXIST = "El id del usuario es requerido o no existe";
