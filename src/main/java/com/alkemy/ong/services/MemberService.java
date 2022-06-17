@@ -1,5 +1,6 @@
 package com.alkemy.ong.services;
 
+import com.alkemy.ong.dto.request.members.EditMemberDto;
 import com.alkemy.ong.dto.request.members.EntryMemberDto;
 import com.alkemy.ong.dto.response.members.MemberResponseDto;
 import com.alkemy.ong.models.MemberEntity;
@@ -13,5 +14,7 @@ public interface MemberService extends BasicService<MemberEntity, String> {
     MemberResponseDto createMember(EntryMemberDto entryMemberDto);
     Page<MemberResponseDto> getMembers(Pageable pageable);
     void deleteMember(String id);
+    MemberResponseDto updateMember(EditMemberDto editMemberDto, MemberEntity member, MultipartFile file);
+    MemberResponseDto updateMember(EditMemberDto editMemberDto, MemberEntity memberEntity);
 
 }
