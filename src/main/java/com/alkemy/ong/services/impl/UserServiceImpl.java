@@ -77,29 +77,10 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     @Override
-    public Optional<UserEntity> getByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public boolean existByFirstName(String firstName){
-        return userRepository.existsByFirstName(firstName);
-    }
-
-    @Override
-    public boolean existsByEmail(String email){
-        return userRepository.existsByEmail(email);
-    }
-
     public Optional<UserEntity> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    /**
-     * @param userDTO
-     * @return UserEntity Object
-     * @throws EmailExistsException
-     */
     @Override
     public UserEntity saveUser(UserRegisterDto userDTO) throws EmailExistsException {
 
@@ -119,12 +100,6 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         return userEntity;
     }
 
-    /**
-     * Method to delete user
-     *
-     * @param id
-     * @return
-     */
     @Override
     public boolean deleteUser(String id) {
         if (id != null) {
@@ -136,20 +111,10 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
         return false;
     }
 
-    /**
-     * @param email
-     * @return true/false
-     */
     private boolean emailExist(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    /**
-     * 
-     * @param rolName
-     * @return RoleEntity Object
-     * @throws RoleExistException
-     */
     private RoleEntity roleExist(RolName rolName) throws RoleExistException {
         if (roleRepository.findByRolName(rolName).isPresent())  {
             return roleRepository.findByRolName(rolName).get();
@@ -182,7 +147,6 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     	   return usersDto;
        }
     }
-
 
 	@Override
 	public boolean isAdmin(UserEntity user) {

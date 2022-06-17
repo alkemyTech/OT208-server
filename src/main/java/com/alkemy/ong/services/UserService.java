@@ -21,14 +21,10 @@ public interface UserService extends BasicService<UserEntity, String> {
 
     List<UserRegisterDto> getAll();
 
-    public Optional<UserEntity> getByEmail(String email);
-
-    public boolean existByFirstName(String nombreUsuario);
-
-    public boolean existsByEmail(String email);
-
     String singup(UserRegisterDto userRegisterDto);
     
     boolean isAdmin(UserEntity user);
+
+    Optional<UserEntity> findByEmail(String email);
 
 }
