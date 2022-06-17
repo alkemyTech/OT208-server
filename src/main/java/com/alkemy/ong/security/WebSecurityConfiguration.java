@@ -28,21 +28,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	private static final String[] USER_GET = {};
-	private static final String[] USER_POST = {};
-	private static final String[] USER_PUT = {};
-	private static final String[] USER_PATCH_DELETE = {};
-	private static final String[] ANY_USER_GET = {"/auth/me/**", };
-	private static final String[] ANY_USER_POST = {"/comments"};
-	private static final String[] ANY_USER_PUT_DELETE = {"/comments/**"};
-	private static final String[] PUBLIC = {"/contacts","/auth/register","/auth/login"};
+	private static final String[] ANY_USER_GET = {"/contacts", "/auth/me/**", "/post/{id}/comments"};
+	private static final String[] ANY_USER_POST = {"/comments", "/contacts", "/members/create"};
+	private static final String[] ANY_USER_PUT = {"/comments/{id}", "/members/{id}", "/users/{id}"};
+	private static final String[] ANY_USER_DELETE = {"/comments/{id}", "/users/{id}"};
+
+	private static final String[] PUBLIC = {"/auth/register", "/auth/login"};
 	private static final String[] PUBLIC_GET = {"/organization/public"};
-	private static final String[] ADMIN_GET = {"/contacts"};
-	private static final String[] ADMIN_POST = {"/organization/public"};
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// Configuracion para H2
+		// H2 Configuration
 		http.authorizeRequests()
 				.antMatchers("/h2-console/**").permitAll()
 				.and().csrf().ignoringAntMatchers("/h2-console/**")
@@ -53,48 +49,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(PUBLIC).permitAll()
 				.antMatchers(HttpMethod.GET, PUBLIC_GET).permitAll()
 
-				/*
-				I leave this commentary as an informative starting point
-				// Categories
-				.antMatchers(HttpMethod.GET,"/categories").hasRole("ADMIN")
-				.antMatchers(HttpMethod.GET,"/categories/{id}").hasRole("ADMIN")
-				// Contact
-				.antMatchers(HttpMethod.GET,"/contacts/list").hasRole("ADMIN")
-				// Organization
-				.antMatchers(HttpMethod.GET,"/organization/public").hasRole("ADMIN") // error 400
-				// UploadFileController
-				.antMatchers(HttpMethod.GET,"/storage/list").hasRole("ADMIN")
-				.antMatchers(HttpMethod.GET,"/storage/download").hasRole("ADMIN") // error 400
-				.antMatchers(HttpMethod.POST,"/storage/upload").hasRole("ADMIN") // error 500
-				// Users
-				.antMatchers(HttpMethod.DELETE,"/users/user/{id}").hasRole("ADMIN")
-				// Authorization
-				"/auth/login", "/auth/register" do not require rol
-				.antMatchers(HttpMethod.GET,"/auth/me/{id}").hasAnyRole("ADMIN","USER")
-				// Validation
-				.antMatchers(HttpMethod.POST,"/validation/{id}").hasRole("ADMIN")
-				// News
-				.antMatchers(HttpMethod.GET,"/news/{id}").hasRole("ADMIN") // error 500
-				//Slides
-				.antMatchers(HttpMethod.GET,"/slides").hasRole("ADMIN")
-				.antMatchers(HttpMethod.GET,"/slides/{id}").hasRole("ADMIN")
-				*/
-
 				// ANY USER
 				.antMatchers(HttpMethod.GET, ANY_USER_GET).hasAnyRole("ADMIN", "USER")
 				.antMatchers(HttpMethod.POST, ANY_USER_POST).hasAnyRole("ADMIN", "USER")
-				.antMatchers(HttpMethod.PUT, ANY_USER_PUT_DELETE).hasAnyRole("ADMIN", "USER")
-				.antMatchers(HttpMethod.DELETE, ANY_USER_PUT_DELETE).hasAnyRole("ADMIN", "USER")
-				// USER
-				.antMatchers(HttpMethod.GET, USER_GET).hasRole("USER")
-				.antMatchers(HttpMethod.POST, USER_POST).hasRole("USER")
-				.antMatchers(HttpMethod.PUT, USER_PUT).hasRole("USER")
-				.antMatchers(HttpMethod.PATCH, USER_PATCH_DELETE).hasRole("USER")
-				.antMatchers(HttpMethod.DELETE, USER_PATCH_DELETE).hasRole("USER")
+				.antMatchers(HttpMethod.PUT, ANY_USER_PUT).hasAnyRole("ADMIN", "USER")
+				.antMatchers(HttpMethod.DELETE, ANY_USER_DELETE).hasAnyRole("ADMIN", "USER")
 
 				// ADMIN
-				.antMatchers(HttpMethod.GET, ADMIN_GET).hasRole("ADMIN")
-				.antMatchers(HttpMethod.POST, ADMIN_POST).hasRole("ADMIN")
+				.antMatchers(HttpMethod.GET, "/**").hasRole("ADMIN")
+				.antMatchers(HttpMethod.POST, "/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.PUT, "/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
 
