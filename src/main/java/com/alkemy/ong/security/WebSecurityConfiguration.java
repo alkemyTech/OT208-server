@@ -28,13 +28,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	private static final String[] ANY_USER_GET = {"/contacts", "/auth/me/**", "/post/{id}/comments"};
-	private static final String[] ANY_USER_POST = {"/comments", "/contacts", "/members/create"};
+	private static final String[] ANY_USER_GET = {"/contacts", "/auth/me/**"};
+	private static final String[] ANY_USER_POST = {"/comments", "/contacts", "/members"};
 	private static final String[] ANY_USER_PUT = {"/comments/{id}", "/members/{id}", "/users/{id}"};
 	private static final String[] ANY_USER_DELETE = {"/comments/{id}", "/users/{id}"};
 
 	private static final String[] PUBLIC = {"/auth/register", "/auth/login"};
-	private static final String[] PUBLIC_GET = {"/organization/public"};
+	private static final String[] PUBLIC_GET = {"/organization/public", "/post/{id}/comments", "/news/list"};
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
