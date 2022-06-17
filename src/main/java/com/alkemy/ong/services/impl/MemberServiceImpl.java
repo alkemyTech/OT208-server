@@ -1,5 +1,6 @@
 package com.alkemy.ong.services.impl;
 
+import com.alkemy.ong.dto.request.members.EditMemberDto;
 import com.alkemy.ong.dto.request.members.EntryMemberDto;
 import com.alkemy.ong.dto.response.members.MemberResponseDto;
 import com.alkemy.ong.models.MemberEntity;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -58,11 +58,7 @@ public class MemberServiceImpl extends BasicServiceImpl<MemberEntity, String, IM
     @Override
     public MemberResponseDto createMember(EntryMemberDto entryMemberDto, MultipartFile file) {
         MemberEntity memberEntity = new MemberEntity();
-        if (!file.isEmpty()) {
-            memberEntity.setImage(awss3Service.uploadFile(file));
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Image has no content"));
-        }
+        memberEntity.setImage(awss3Service.uploadFile(file));
         ObjectMapperUtils.map(entryMemberDto, memberEntity);
         memberEntity = this.save(memberEntity);
         return ObjectMapperUtils.map(memberEntity, MemberResponseDto.class);
@@ -78,4 +74,18 @@ public class MemberServiceImpl extends BasicServiceImpl<MemberEntity, String, IM
         return ObjectMapperUtils.map(memberEntity, MemberResponseDto.class);
 
     }
+
+    @Override
+    public MemberResponseDto updateMember(EditMemberDto editMemberDto, MemberEntity memberEntity, MultipartFile file) {
+        memberEntity.setImage(awss3Service.uploadFile(file));
+        edit(ObjectMapperUtils.map(editMemberDto, memberEntity));
+        return ObjectMapperUtils.map(memberEntity, MemberResponseDto.class);
+    }
+
+    @Override
+    public MemberResponseDto updateMember(EditMemberDto editMemberDto, MemberEntity memberEntity) {
+        edit(ObjectMapperUtils.map(editMemberDto, memberEntity));
+        return ObjectMapperUtils.map(memberEntity, MemberResponseDto.class);
+    }
+
 }
