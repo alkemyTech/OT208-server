@@ -8,7 +8,7 @@ import com.alkemy.ong.repositories.IOrganizationRepository;
 import com.alkemy.ong.repositories.ISlideRepository;
 import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.SlideService;
-import com.alkemy.ong.services.mappers.SlideMapper;
+import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 import com.alkemy.ong.utils.Base64Decode2Multipart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +29,10 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
     private static final Logger LOG = LoggerFactory.getLogger(SlideServiceImpl.class);
 
     private final IOrganizationRepository organizationRepository;
-    private final SlideMapper slideMapper;
     private final AWSS3Service awss3Service;
 
-    public SlideServiceImpl(ISlideRepository repository, IOrganizationRepository organizationRepository, SlideMapper mapper, AWSS3Service awss3Service) {
+    public SlideServiceImpl(ISlideRepository repository, IOrganizationRepository organizationRepository, AWSS3Service awss3Service) {
         super(repository);
-        this.slideMapper = mapper;
         this.organizationRepository = organizationRepository;
         this.awss3Service = awss3Service;
     }
@@ -42,18 +40,25 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
     @Override
     public List<SlideResponseDto> getAll() {
         List<SlideEntity> slides = repository.findAll();
-        return slideMapper.entityList2DtoList(slides);
+        if (slides.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("No Slides found"));
+        }
+        return ObjectMapperUtils.mapAll(slides, SlideResponseDto.class);
     }
 
     @Override
     public List<SlideResponseDto> getAllByOrganizationId(String id) {
         List<SlideEntity> listEntity = repository.findByOrganizationId(id);
-        return slideMapper.entityList2DtoList(listEntity);
+        return ObjectMapperUtils.mapAll(listEntity, SlideResponseDto.class);
     }
 
     @Override
     public SlideResponseDto getSlide(String id) {
-        return slideMapper.entity2Dto(repository.getById(id));
+        Optional<SlideEntity> op = repository.findById(id);
+        if (op.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("Slide with id " + id + " not found"));
+        }
+        return ObjectMapperUtils.map(op.get(), SlideResponseDto.class);
     }
 
     @Transactional
@@ -61,24 +66,24 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
     public SlideResponseDto createSlide(SlideRequestDto dto) {
         SlideEntity slideEntity = new SlideEntity();
         Optional<OrganizationEntity> op = organizationRepository.findById(dto.getOrganizationId());
-            if (op.isEmpty()) {
-                LOG.error("Failure to create a slide, Organization with id {} not found", dto.getOrganizationId());
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter" + slideEntity.getOrganizationEntityId().getId()));
-            }
+        if (op.isEmpty()) {
+            LOG.error("Failure to create a slide, Organization with id {} not found", dto.getOrganizationId());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter" + slideEntity.getOrganizationEntityId().getId()));
+        }
         slideEntity.setOrganizationEntityId(op.get());
         Integer slideListMax = repository.getMaxOrder();
-            if (dto.getOrder() == null) {
-                slideEntity.setOrder(1 + slideListMax);
-            } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {
-                slideEntity.setOrder(dto.getOrder());
-            } else if (slideListMax == dto.getOrder()) {
-                slideEntity.setOrder(slideListMax + 1);
-            }
+        if (dto.getOrder() == null) {
+            slideEntity.setOrder(1 + slideListMax);
+        } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {
+            slideEntity.setOrder(dto.getOrder());
+        } else if (slideListMax == dto.getOrder()) {
+            slideEntity.setOrder(slideListMax + 1);
+        }
         MultipartFile decodedImage = base64Image2MultipartFile(dto.getImageUrl());
         slideEntity.setImageUrl(awss3Service.uploadFile(decodedImage));
         slideEntity.setText(dto.getText());
         LOG.info("Create Slide: {}", slideEntity.getId());
-        return slideMapper.entity2Dto(repository.save(slideEntity));
+        return ObjectMapperUtils.map(repository.save(slideEntity), SlideResponseDto.class);
     }
 
     @Transactional
@@ -93,16 +98,16 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
         SlideEntity slideEntity = op.get();
         slideEntity.setImageUrl(awss3Service.uploadFile(file));
         LOG.info("Update Slide: {}", slideEntity.getId());
-        return slideMapper.entity2Dto(repository.save(slideEntity));
+        return ObjectMapperUtils.map(repository.save(slideEntity), SlideResponseDto.class);
     }
 
     @Transactional
     @Override
-    public Boolean deleteSlide(String id){
-        if(repository.findById(id).isEmpty()){
+    public Boolean deleteSlide(String id) {
+        if (repository.findById(id).isEmpty()) {
             LOG.error("Failure to delete a slide, Slide with id {} not found", id);
             return false;
-        }else{
+        } else {
             repository.deleteById(id);
             LOG.info("Delete Slide: {}", id);
             return true;

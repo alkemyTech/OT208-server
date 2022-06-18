@@ -65,7 +65,7 @@ public class OrganizationEntity implements Serializable {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String welcomeText;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String aboutUsText;
 
     @Column(length = 100)
