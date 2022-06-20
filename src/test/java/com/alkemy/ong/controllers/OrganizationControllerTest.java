@@ -99,11 +99,13 @@ class OrganizationControllerTest {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+
     @Test
     @WithMockUser(username = "userMock", authorities = "NON_REGISTER")
     void publicDataResponse404() throws Exception {
-        ong = null;
-        when(organizationService.getPublicOrganizationData()).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+        OrganizationPublicDto dto = ObjectMapperUtils.map(ong, OrganizationPublicDto.class);
+        dto.setName(null);
+        when(organizationService.getPublicOrganizationData()).thenReturn(dto);
         mockMvc.perform(get("/organization/public"))
                 .andExpect(status().isNotFound())
                 .andDo(MockMvcResultHandlers.print())
@@ -153,9 +155,9 @@ class OrganizationControllerTest {
     @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
     void updateOrganizationResponse400() throws Exception {
         EntryOrganizationDto entryDto = new EntryOrganizationDto();
-        when(organizationService.updateOrganization(entryDto)).thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        entryDto.setName("A");
         mockMvc.perform(post("/organization/public").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(entryDto)))
+                .content(objectMapper.writeValueAsString(entryDto)))
                 .andExpect(status().isBadRequest())
                 .andDo(MockMvcResultHandlers.print());
     }
