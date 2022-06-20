@@ -61,11 +61,8 @@ public class NewsController {
 		
 		NewsEntity newsEntity  = ObjectMapperUtils.map(entryNewsDto, NewsEntity.class);
 		newsEntity.setType("news");
-		
-		if (!image.isEmpty()) {
-			String pathImage = awss3Service.uploadFile(image);
-			newsEntity.setImage(pathImage);
-		}
+		String pathImage = awss3Service.uploadFile(image);
+		newsEntity.setImage(pathImage);
 		
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(ObjectMapperUtils.map(newsService.save(newsEntity), BasicNewsDto.class));
@@ -114,7 +111,7 @@ public class NewsController {
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<Page<BasicNewsDto>> getMembers(@PageableDefault(size = 10) Pageable pageable) {
+	public ResponseEntity<Page<BasicNewsDto>> getNews(@PageableDefault(size = 10) Pageable pageable) {
 		return ResponseEntity.ok(newsService.getNews(pageable));
 	}
 }
