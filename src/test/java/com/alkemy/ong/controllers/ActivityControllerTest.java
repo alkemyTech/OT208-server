@@ -62,7 +62,7 @@ class ActivityControllerTest {
 	}
 
 	@Test
-	void update_existsById_returnedBasicActivityDtoStatus200() throws Exception {
+	void updateExistsByIdReturnedDtoStatus200() throws Exception {
 		BasicActivityDto activityDto = ObjectMapperUtils.map(activity, BasicActivityDto.class);
 		EntryActivityDto entryActivityDto = ObjectMapperUtils.map(activity, EntryActivityDto.class);
 		String jsonUserRegister = objectMapper.writeValueAsString(entryActivityDto);
@@ -78,7 +78,7 @@ class ActivityControllerTest {
 	}
 
 	@Test
-	void update_doesNotExistById_returnedStatus404() throws Exception {
+	void updateDoesNotExistByIdReturnedStatus404() throws Exception {
 		EntryActivityDto entryActivityDto = ObjectMapperUtils.map(activity, EntryActivityDto.class);
 		String jsonUserRegister = objectMapper.writeValueAsString(entryActivityDto);
 		id = "1111111";
