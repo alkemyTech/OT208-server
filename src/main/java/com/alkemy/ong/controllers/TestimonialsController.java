@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -75,13 +76,11 @@ public class TestimonialsController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TestimonialsEntity> deleteTestimonial(@PathVariable String id){
-        Optional<TestimonialsEntity> testimonialsEntity = testimonialsService.findById(id);
-        if(testimonialsEntity.isPresent()){
-            testimonialsService.deleteById(id);
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteTestimonial(@PathVariable String id){
+        if(testimonialsService.deleteTestimonial(id)){
+            return new ResponseEntity<>("It Was Delete", HttpStatus.NO_CONTENT);
         }else{
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("Id not found",HttpStatus.NOT_FOUND);
         }
     }
 }
