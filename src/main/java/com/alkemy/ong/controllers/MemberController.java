@@ -7,8 +7,10 @@ import com.alkemy.ong.exeptions.ValidationException;
 import com.alkemy.ong.models.MemberEntity;
 import com.alkemy.ong.services.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.Optional;
 
-
+@Tag(name = "Members", description = "Endpoint to List, Create, Update or Delete Members")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
@@ -64,8 +66,9 @@ public class MemberController {
             @ApiResponse(responseCode = "403", description = "Forbidden Access Denied"),
             @ApiResponse(responseCode = "404", description = "Id is empty, or does not exist")})
     @Operation(summary = "Delete member", description = "Delete a member by id, only if logged in as Administrator")
-    public ResponseEntity<String> deleteMember(@PathVariable String id) {
-        memberService.deleteMember(id);
+    public ResponseEntity<String> deleteMember(@PathVariable @Parameter (name = "ID", description = "Member ID", example = "602685aa-cf03-4f2e-9350-811208cd92b2") String id) {
+
+                memberService.deleteMember(id);
         return new ResponseEntity<>("Member was successfully deleted", HttpStatus.NO_CONTENT);
     }
 
