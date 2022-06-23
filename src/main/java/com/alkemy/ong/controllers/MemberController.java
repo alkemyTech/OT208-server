@@ -4,10 +4,8 @@ import com.alkemy.ong.dto.request.members.EditMemberDto;
 import com.alkemy.ong.dto.request.members.EntryMemberDto;
 import com.alkemy.ong.dto.response.members.MemberResponseDto;
 import com.alkemy.ong.exeptions.ValidationException;
-import com.alkemy.ong.models.MemberEntity;
 import com.alkemy.ong.services.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,9 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Tag(name = "Members", description = "Endpoint to List, Create, Update or Delete Members")
 @RestController
@@ -39,8 +37,8 @@ public class MemberController {
             @ApiResponse(responseCode = "403", description = "Forbidden Access Denied"),
             @ApiResponse(responseCode = "404", description = "Not Found")})
     @Operation(summary = "Get all members", description = "Get all members only if logged in as a User or as Administrator")
-    public ResponseEntity<Page<MemberResponseDto>> getMembers(@PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(memberService.getMembers(pageable));
+    public ResponseEntity<Page<MemberResponseDto>> getMembers(@PageableDefault(size = 10) Pageable page) {
+        return ResponseEntity.ok(memberService.getMembers(page));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -49,15 +47,16 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "There are validation errors or Required request parts are missing"),
             @ApiResponse(responseCode = "403", description = "Forbidden Access Denied")})
     @Operation(summary = "Create a new member", description = "Create a new member only if logged in as a User or as Administrator")
-    public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestPart(name = "dto") EntryMemberDto entryMemberDto, Errors errors,
-                                                          @RequestPart(name = "img") MultipartFile file) {
+    public ResponseEntity<MemberResponseDto> createMember(@Valid @RequestPart(name = "dto") EntryMemberDto entryMemberDto, Errors errors, @RequestPart(name = "img") MultipartFile file) {
         if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
         }
         if (!file.isEmpty()) {
-            return ResponseEntity.ok(memberService.createMember(entryMemberDto, file));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(memberService.createMember(entryMemberDto, file));
         }
-        return ResponseEntity.ok(memberService.createMember(entryMemberDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(memberService.createMember(entryMemberDto));
     }
 
     @DeleteMapping("/{id}")
@@ -66,10 +65,11 @@ public class MemberController {
             @ApiResponse(responseCode = "403", description = "Forbidden Access Denied"),
             @ApiResponse(responseCode = "404", description = "Id is empty, or does not exist")})
     @Operation(summary = "Delete member", description = "Delete a member by id, only if logged in as Administrator")
-    public ResponseEntity<String> deleteMember(@PathVariable @Parameter (name = "ID", description = "Member ID", example = "602685aa-cf03-4f2e-9350-811208cd92b2") String id) {
-
-                memberService.deleteMember(id);
-        return new ResponseEntity<>("Member was successfully deleted", HttpStatus.NO_CONTENT);
+    public ResponseEntity<String> deleteMember(@PathVariable String id) {
+        if (!memberService.existById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+        }
+        return new ResponseEntity<>(memberService.deleteMember(id), HttpStatus.NO_CONTENT);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -78,26 +78,20 @@ public class MemberController {
             @ApiResponse(responseCode = "400", description = "There are validation errors or Required request parts are missing"),
             @ApiResponse(responseCode = "403", description = "Forbidden Access Denied")})
     @Operation(summary = "Update member", description = "Update a member by id, only if logged in as Administrator")
-    public ResponseEntity<MemberResponseDto> updateMember(@Valid @RequestPart(name = "dto") EditMemberDto editMemberDto, Errors errorsDto,
-                                                          @PathVariable String id,
-                                                          @Valid @RequestPart(name = "img") MultipartFile file, Errors errorsFile) {
+    public ResponseEntity<MemberResponseDto> updateMember(@PathVariable String id, @Valid @RequestPart(name = "dto") EditMemberDto editMemberDto, Errors errorsDto, @RequestPart(name = "img") MultipartFile file) {
         if (errorsDto.hasErrors()) {
             throw new ValidationException(errorsDto.getFieldErrors());
         }
-
-        if (errorsFile.hasErrors()) {
-            throw new ValidationException(errorsFile.getFieldErrors());
+        if (!memberService.existById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
         }
-
-        Optional<MemberEntity> memberOptional = memberService.findById(id);
-        if (memberOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
         if (!file.isEmpty()) {
-            return ResponseEntity.ok(memberService.updateMember(editMemberDto, memberOptional.get(), file));
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(memberService.updateMember(editMemberDto, id, file));
         }
-        return ResponseEntity.ok(memberService.updateMember(editMemberDto, memberOptional.get()));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(memberService.updateMember(editMemberDto, id));
     }
-
 }
+
+
