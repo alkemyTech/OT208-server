@@ -32,6 +32,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -46,11 +47,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(value = AuthorizationController.class, excludeFilters = {
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                classes = { WebSecurityConfiguration.class, JwtTokenFilter.class})},
-        excludeAutoConfiguration = { SecurityAutoConfiguration.class })
+                classes = {WebSecurityConfiguration.class, JwtTokenFilter.class})},
+        excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 public class AuthorizationControllerTest {
 
-    ObjectMapper objectMapper; // mapea a json
+    ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -75,8 +76,7 @@ public class AuthorizationControllerTest {
         roleEntity = new RoleEntity("id", "description", LocalDateTime.now(), RolName.ROLE_USER);
         userEntity = new UserEntity("id", "Martin", "Perez", "email@gmail.com", "password", "photo", List.of(roleEntity), LocalDateTime.now(), false);
     }
-/*
-    //ANDA
+
     @Test
     void logIn_Status200() throws Exception {
         UserLoginDto userLoginDto = new UserLoginDto("email@gmail.com", "password");
@@ -85,7 +85,7 @@ public class AuthorizationControllerTest {
         when(userService.logIn(userLoginDto)).thenReturn("token");
 
         mockMvc.perform(post("/auth/logIn").contentType(MediaType.APPLICATION_JSON).content(userLoginJson))
-				.andExpect(status().isAccepted())
+                .andExpect(status().isAccepted())
                 .andExpect(content().contentType(MediaType.TEXT_PLAIN.toString().concat(";charset=UTF-8")))
                 .andExpect(content().string("token"))
                 .andDo(MockMvcResultHandlers.print());
@@ -93,24 +93,22 @@ public class AuthorizationControllerTest {
         verify(userService).logIn(userLoginDto);
     }
 
-    // ANDA
     @Test
-    void logIn_Status404() throws Exception {
+    void logIn_Status401() throws Exception {
         UserLoginDto userLoginDto = new UserLoginDto("test@gmail.com", "12345678");
         String userLoginJson = objectMapper.writeValueAsString(userLoginDto);
 
         when(userService.logIn(userLoginDto))
-        .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .thenThrow(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
 
         mockMvc.perform(post("/auth/logIn").contentType(MediaType.APPLICATION_JSON).content(userLoginJson))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andDo(MockMvcResultHandlers.print());
 
         verify(userService).logIn(userLoginDto);
     }
 
-    //ANDA
     @Test
     void logIn_BadCredentials() throws Exception {
         UserLoginDto userLoginDto = new UserLoginDto("email@gmail.com", "badPassword");
@@ -126,7 +124,6 @@ public class AuthorizationControllerTest {
         verify(userService).logIn(userLoginDto);
     }
 
-    // ANDA
     @Test
     void logIn_ValidationException() throws Exception {
         UserLoginDto userLoginDto = new UserLoginDto("", "badPassword");
@@ -141,7 +138,6 @@ public class AuthorizationControllerTest {
         verify(userService, never()).logIn(userLoginDto);
     }
 
-    // ANDA
     @Test
     void singUp_Status200() throws Exception {
         UserRegisterDto userRegisterDto = new UserRegisterDto(id, "Juan", "Perez", "correo@gmail.com", "password", "photo");
@@ -149,7 +145,8 @@ public class AuthorizationControllerTest {
 
         when(userService.singUp(userRegisterDto)).thenReturn("token");
 
-        mockMvc.perform(post("/auth/signUp").contentType(MediaType.APPLICATION_JSON).content(userRegisterJson))
+        mockMvc.perform(post("/auth/signUp").contentType(MediaType.APPLICATION_JSON)
+                        .content(userRegisterJson))
                 .andExpect(status().isAccepted())
                 .andExpect(content().contentType(MediaType.TEXT_PLAIN.toString().concat(";charset=UTF-8")))
                 .andExpect(content().string("token"))
@@ -157,54 +154,41 @@ public class AuthorizationControllerTest {
 
         verify(userService).singUp(userRegisterDto);
     }
-/*
+
     @Test
     void singUp_ValidationException() throws Exception {
-        UserLoginDto userRegisterDto = new UserLoginDto("", "badPassword");
+        UserLoginDto userRegisterDto = new UserLoginDto("asdf.com", "badPassword");
         String userRegisterJson = objectMapper.writeValueAsString(userRegisterDto);
 
-        mockMvc.perform(post("/auth/signUp").contentType(MediaType.APPLICATION_JSON).content(userRegisterJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
-                .andExpect(result -> assertEquals("There are validation errors.",
-                        result.getResolvedException().getMessage()));
+        mockMvc.perform(post("/auth/signUp").contentType(MediaType.APPLICATION_JSON)
+                        .content(userRegisterJson))
+                .andExpect(status().isBadRequest());
+        //.andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
+        //.andExpect(result -> assertEquals("There are validation errors.",
+        //        result.getResolvedException().getMessage()));
 
-        verify(userService, never()).singUp(userRegisterDto);
     }
-*/
-/*
+
     @Test
     void me_Status200() throws Exception {
         BasicUserDto basicUserDto = ObjectMapperUtils.map(userEntity, BasicUserDto.class);
         String basicUserJson = objectMapper.writeValueAsString(basicUserDto);
+        UserLoginDto userLoginDto = ObjectMapperUtils.map(userEntity, UserLoginDto.class);
+        String tokenPrueba = userService.logIn(userLoginDto);
 
-        when(jwtUtils.getToken(any())).thenReturn("tokenEmulado");
-        when(jwtUtils.extractId("tokenEmulado")).thenReturn("idUser");
-        when(userService.findById("idUser")).thenReturn(Optional.of(userEntity));
+        when(jwtUtils.getToken(any())).thenReturn(tokenPrueba);
+        when(jwtUtils.extractId(tokenPrueba)).thenReturn(userEntity.getId());
+        when(userService.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
 
-        mockMvc.perform(get("/auth/me").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "tokenEmulado"))
+        mockMvc.perform(get("/auth/me").contentType(MediaType.TEXT_PLAIN)
+                        .header("Authorization", "Bearer " + tokenPrueba))
                 .andExpect(status().isOk())
                 .andExpect(content().json(basicUserJson, true));
-                //.andDo(MockMvcResultHandlers.print());
+        //.andDo(MockMvcResultHandlers.print());
 
-        verify(userService).findById("idUser");
+        verify(userService).findById(userEntity.getId());
         verify(jwtUtils).getToken(any());
-        verify(jwtUtils).extractId("tokenEmulado");
+        verify(jwtUtils).extractId(tokenPrueba);
     }
-*/
-/* EJEMPLO ADRI
-    @Test
-    @WithMockUser(username = "userMock", authorities = "NON_REGISTER")
-    void updateOrganizationResponse403_NonRegister() throws Exception {
 
-        when(organizationService.updateOrganization(new EntryOrganizationDto()))
-                .thenThrow(new ResponseStatusException(HttpStatus.FORBIDDEN));
-
-        mockMvc.perform(post("/organization/public").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new EntryOrganizationDto())))
-                .andExpect(status().isForbidden())
-                .andDo(MockMvcResultHandlers.print());
-    }
-*/
 }

@@ -54,18 +54,18 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
     @Override
     public String logIn(UserLoginDto userLoginDto) throws BadCredentialsException {
-        try {
-            return this.getToken(userLoginDto.getEmail(), userLoginDto.getPassword());
-        }catch (Exception e) {
-            throw new BadCredentialsException("Invalid username or password");
+        if (!this.repository.existsByEmail(userLoginDto.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The user " +  userLoginDto.getEmail() + " is not registered");
         }
+
+        return this.getToken(userLoginDto.getEmail(), userLoginDto.getPassword());
     }
 
     @Override
     public String singUp(UserRegisterDto userRegisterDto) throws EmailNotSendException, IOException {
 
         if (this.repository.existsByEmail(userRegisterDto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email already exists " + userRegisterDto.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The email " + userRegisterDto.getEmail() + " already exists");
         }
 
         this.saveUser(userRegisterDto);
