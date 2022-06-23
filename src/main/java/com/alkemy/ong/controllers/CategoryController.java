@@ -33,6 +33,7 @@ import com.alkemy.ong.services.mappers.CategoryMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -59,12 +60,11 @@ public class CategoryController {
 					content = @Content(schema = @Schema(implementation = ValidationException.class))),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error",
 					content = @Content(schema = @Schema()))})
-    
     @PostMapping
     public ResponseEntity<CategoryDetailDto>createCategory(
-    		@Valid @RequestPart(name = "name",required = true) EntryCategoryDto entryCategoryDto,
+    		@Valid @RequestPart(name = "name",required = true)@Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = EntryCategoryDto.class))) EntryCategoryDto entryCategoryDto,
             Errors errors, 
-            @RequestPart(name = "img",required = true) MultipartFile image){
+            @RequestPart(name = "img",required = true)@Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = MultipartFile.class))) MultipartFile image){
         if (errors.hasErrors()){
             throw new ValidationException(errors.getFieldErrors());
         }
@@ -88,8 +88,6 @@ public class CategoryController {
 					content = @Content(schema = @Schema())),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error",
 					content = @Content(schema = @Schema()))})
-    @RequestBody(description = "algo que describir", content = @Content(schema = 
-    		@Schema( implementation = MultipartFile.class), mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDetailDto>editCategory(
     		@Parameter(description = "Id of the category to be edited", example = "528f22c3-1f9c-493f-8334-c70b83b5b885") 
