@@ -85,7 +85,7 @@ public class MemberController {
         if (!memberService.existById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
         }
-        if (!file.isEmpty()) {
+        if (!file.isEmpty()){
             return ResponseEntity.status(HttpStatus.OK)
                     .body(memberService.updateMember(editMemberDto, id, file));
         }

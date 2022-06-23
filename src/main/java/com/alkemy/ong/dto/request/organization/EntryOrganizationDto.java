@@ -23,6 +23,9 @@ public class EntryOrganizationDto {
     @Email(message = "Must be a properly formatted email address.")
     private String email;
 
+    @Size(max = 2000000000, message = "Length of the About text should be a maximum of 2000000000 characters")
+    private String aboutUsText;
+
     @Size(min = 10, message = "Min 10 characters in address")
     private String address;
 
