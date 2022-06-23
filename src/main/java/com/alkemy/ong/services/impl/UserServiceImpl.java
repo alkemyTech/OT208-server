@@ -54,15 +54,11 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
 
     @Override
     public String logIn(UserLoginDto userLoginDto) throws BadCredentialsException {
-        Optional<UserEntity> entityOptional = findByEmail(userLoginDto.getEmail());
-
-        if (entityOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User's email not found");
+        try {
+            return this.getToken(userLoginDto.getEmail(), userLoginDto.getPassword());
+        }catch (Exception e) {
+            throw new BadCredentialsException("Invalid username or password");
         }
-
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword()));
-
-        return this.getToken(authentication);
     }
 
     @Override
@@ -72,15 +68,13 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email already exists " + userRegisterDto.getEmail());
         }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userRegisterDto.getEmail(), userRegisterDto.getPassword()));
-
         this.saveUser(userRegisterDto);
         emailService.sendEmailRegister(userRegisterDto.getEmail());
-        return this.getToken(authentication);
+        return this.getToken(userRegisterDto.getEmail(), userRegisterDto.getPassword());
     }
 
-    private String getToken(Authentication authentication) {
+    private String getToken(String email, String password) throws BadCredentialsException {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtUtils.generateToken(authentication);
     }
