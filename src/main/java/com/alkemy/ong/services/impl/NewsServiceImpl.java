@@ -4,7 +4,7 @@ import com.alkemy.ong.dto.response.news.BasicNewsDto;
 import com.alkemy.ong.models.NewsEntity;
 import com.alkemy.ong.repositories.INewsRepository;
 import com.alkemy.ong.services.NewsService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

@@ -32,7 +32,7 @@ import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.security.WebSecurityConfiguration;
 import com.alkemy.ong.security.enums.RolName;
 import com.alkemy.ong.services.UserService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

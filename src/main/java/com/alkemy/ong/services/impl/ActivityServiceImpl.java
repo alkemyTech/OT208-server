@@ -5,7 +5,7 @@ import com.alkemy.ong.dto.response.activity.BasicActivityDto;
 import com.alkemy.ong.models.ActivityEntity;
 import com.alkemy.ong.repositories.IActivityRepository;
 import com.alkemy.ong.services.ActivityService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

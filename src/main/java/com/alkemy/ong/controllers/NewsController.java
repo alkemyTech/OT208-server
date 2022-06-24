@@ -9,7 +9,7 @@ import com.alkemy.ong.models.NewsEntity;
 import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.CategoryService;
 import com.alkemy.ong.services.NewsService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
