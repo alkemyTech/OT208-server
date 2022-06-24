@@ -22,7 +22,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISlideRepository> implements SlideService {
 

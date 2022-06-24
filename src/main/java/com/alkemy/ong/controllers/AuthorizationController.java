@@ -1,7 +1,5 @@
 package com.alkemy.ong.controllers;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 

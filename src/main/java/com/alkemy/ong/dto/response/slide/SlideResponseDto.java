@@ -1,6 +1,5 @@
 package com.alkemy.ong.dto.response.slide;
 
-import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,16 +1,3 @@
-/*
-Ticket OT208-18
-
-COMO desarrollador QUIERO agregar la entidad Category
-PARA representar en la implementación la estructura de datos
-
-Criterios de aceptación: 
-Nombre de tabla: categories. Los campos son:
-name: VARCHAR NOT NULL
-description: VARCHAR NULLABLE
-image: VARCHAR NULLABLE
-timestamps y softDelete
- */
 package com.alkemy.ong.models;
 
 import java.io.Serializable;

@@ -1,11 +1,3 @@
-/*COMO usuario administrador
-  QUIERO gestionar las imágenes
-  PARA modificar eficientemente el contenido visual
-
-   Criterios de aceptación:
-   Los Slides de la pantalla de inicio serán gestionados de forma dinámica por el administrador del sitio.
-   Los mismos tendrán como campos imageUrl, text, order y organizationId (ya que pertenecerán una ONG).
- */
 package com.alkemy.ong.models;
 
 import lombok.AllArgsConstructor;

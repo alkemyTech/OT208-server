@@ -36,7 +36,6 @@ import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @WebMvcTest(value = UserController.class, excludeFilters = {
     	@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, 
     	classes = { WebSecurityConfiguration.class, JwtTokenFilter.class})},  

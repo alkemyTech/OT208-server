@@ -1,7 +1,5 @@
 package com.alkemy.ong.dto.response.activity;
 
-
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -9,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class BasicActivityDto {
-
 
     private String name;
 

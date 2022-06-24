@@ -7,10 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ValidationServiceImpl implements ValidationService {
-//    @Override
-//    public boolean roleValidation(RoleForm roleForm) {
-//        return roleForm.getRol().equals(RolesEnum.USER.name()) || roleForm.getRol().equals(RolesEnum.ADMIN.name());
-//    }
 
     @Override
     public boolean roleValidation(List<RoleEntity> role) {

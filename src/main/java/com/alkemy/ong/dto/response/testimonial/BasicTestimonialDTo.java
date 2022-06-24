@@ -1,6 +1,5 @@
 package com.alkemy.ong.dto.response.testimonial;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

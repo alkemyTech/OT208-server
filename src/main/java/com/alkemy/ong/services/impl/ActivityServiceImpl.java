@@ -9,7 +9,6 @@ import com.alkemy.ong.services.mappers.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-
 @Service
 public class ActivityServiceImpl extends BasicServiceImpl<ActivityEntity, String, IActivityRepository> implements ActivityService {
 

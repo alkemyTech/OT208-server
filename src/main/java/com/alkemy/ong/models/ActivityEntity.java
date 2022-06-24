@@ -1,16 +1,3 @@
-/*
-* Ticket OT208-21
-* COMO desarollador
-* QUIERO agregar la entidad Activity
-* PARA representar en la implementacion la estructura de datos
-*
-* Criterios de Aceptacion:
-* Nombre de la tabla: activities, Campos:
-* name: VARCHAR NOT NULL
-* content: TEXT NOT NULL
-* image: VARCHAR NOT NULL
-* timestamps y softDelete
- */
 package com.alkemy.ong.models;
 
 import lombok.AllArgsConstructor;

@@ -8,11 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author nestor.agredo
- * @project OT208-server
- * @class ObjectMapperUtils
- */
 public class ObjectMapperUtils {
 
     private static ModelMapper modelMapper;

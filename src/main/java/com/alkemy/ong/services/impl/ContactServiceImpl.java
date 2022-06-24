@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class ContactServiceImpl extends BasicServiceImpl<ContactEntity, String, IContactRepository> implements ContactService {
 
