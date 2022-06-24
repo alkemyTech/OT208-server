@@ -6,6 +6,7 @@ import com.alkemy.ong.dto.response.members.MemberResponseDto;
 import com.alkemy.ong.exeptions.ValidationException;
 import com.alkemy.ong.services.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
