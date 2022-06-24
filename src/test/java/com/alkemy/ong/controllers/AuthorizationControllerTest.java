@@ -30,9 +30,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
-
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -87,8 +84,7 @@ public class AuthorizationControllerTest {
         mockMvc.perform(post("/auth/logIn").contentType(MediaType.APPLICATION_JSON).content(userLoginJson))
                 .andExpect(status().isAccepted())
                 .andExpect(content().contentType(MediaType.TEXT_PLAIN.toString().concat(";charset=UTF-8")))
-                .andExpect(content().string("token"))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(content().string("token"));
 
         verify(userService).logIn(userLoginDto);
     }
@@ -118,8 +114,7 @@ public class AuthorizationControllerTest {
                 .thenThrow(BadCredentialsException.class);
 
         mockMvc.perform(post("/auth/logIn").contentType(MediaType.APPLICATION_JSON).content(userLoginJson))
-                .andExpect(status().isUnauthorized())
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(status().isUnauthorized());
 
         verify(userService).logIn(userLoginDto);
     }
@@ -139,7 +134,7 @@ public class AuthorizationControllerTest {
     }
 
     @Test
-    void singUp_Status200() throws Exception {
+    void signUp_Status200() throws Exception {
         UserRegisterDto userRegisterDto = new UserRegisterDto(id, "Juan", "Perez", "correo@gmail.com", "password", "photo");
         String userRegisterJson = objectMapper.writeValueAsString(userRegisterDto);
 
@@ -149,23 +144,19 @@ public class AuthorizationControllerTest {
                         .content(userRegisterJson))
                 .andExpect(status().isAccepted())
                 .andExpect(content().contentType(MediaType.TEXT_PLAIN.toString().concat(";charset=UTF-8")))
-                .andExpect(content().string("token"))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(content().string("token"));
 
         verify(userService).singUp(userRegisterDto);
     }
 
     @Test
-    void singUp_ValidationException() throws Exception {
+    void signUp_ValidationException() throws Exception {
         UserLoginDto userRegisterDto = new UserLoginDto("asdf.com", "badPassword");
         String userRegisterJson = objectMapper.writeValueAsString(userRegisterDto);
 
         mockMvc.perform(post("/auth/signUp").contentType(MediaType.APPLICATION_JSON)
                         .content(userRegisterJson))
                 .andExpect(status().isBadRequest());
-        //.andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
-        //.andExpect(result -> assertEquals("There are validation errors.",
-        //        result.getResolvedException().getMessage()));
 
     }
 
@@ -184,7 +175,6 @@ public class AuthorizationControllerTest {
                         .header("Authorization", "Bearer " + tokenPrueba))
                 .andExpect(status().isOk())
                 .andExpect(content().json(basicUserJson, true));
-        //.andDo(MockMvcResultHandlers.print());
 
         verify(userService).findById(userEntity.getId());
         verify(jwtUtils).getToken(any());
