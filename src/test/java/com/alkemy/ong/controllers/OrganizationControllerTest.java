@@ -6,7 +6,7 @@ import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import com.alkemy.ong.models.OrganizationEntity;
 import com.alkemy.ong.models.SlideEntity;
 import com.alkemy.ong.services.OrganizationService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

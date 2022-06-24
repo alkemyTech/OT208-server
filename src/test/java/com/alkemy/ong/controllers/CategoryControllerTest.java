@@ -10,7 +10,7 @@ import com.alkemy.ong.models.CategoryEntity;
 import com.alkemy.ong.security.WebSecurityConfiguration;
 import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.CategoryService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;

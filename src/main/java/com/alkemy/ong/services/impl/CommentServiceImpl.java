@@ -12,7 +12,7 @@ import com.alkemy.ong.dto.response.comment.CompleteCommentDto;
 import com.alkemy.ong.models.CommentEntity;
 import com.alkemy.ong.repositories.ICommentRepository;
 import com.alkemy.ong.services.CommentService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 
 @Service
 public class CommentServiceImpl extends BasicServiceImpl<CommentEntity, String, ICommentRepository>

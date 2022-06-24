@@ -1,7 +1,6 @@
 package com.alkemy.ong.services.impl;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +20,13 @@ import com.alkemy.ong.dto.request.user.UserLoginDto;
 import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.dto.response.user.BasicUserDto;
 import com.alkemy.ong.exeptions.ArgumentRequiredException;
-import com.alkemy.ong.exeptions.EmailExistsException;
 import com.alkemy.ong.jwt.JwtUtils;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.repositories.IRoleRepository;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.security.enums.RolName;
 import com.alkemy.ong.services.UserService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 
 @Service
 public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService {

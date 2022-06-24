@@ -5,7 +5,7 @@ import com.alkemy.ong.dto.response.contact.BasicContactDto;
 import com.alkemy.ong.models.ContactEntity;
 import com.alkemy.ong.repositories.IContactRepository;
 import com.alkemy.ong.services.ContactService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

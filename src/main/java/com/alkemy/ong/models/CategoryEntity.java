@@ -1,26 +1,6 @@
-/*
-Ticket OT208-18
-
-COMO desarrollador QUIERO agregar la entidad Category
-PARA representar en la implementación la estructura de datos
-
-Criterios de aceptación: 
-Nombre de tabla: categories. Los campos son:
-name: VARCHAR NOT NULL
-description: VARCHAR NULLABLE
-image: VARCHAR NULLABLE
-timestamps y softDelete
- */
 package com.alkemy.ong.models;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +10,9 @@ import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "categories")
@@ -50,20 +32,21 @@ public class CategoryEntity implements Serializable {
     @GeneratedValue(generator = "uuid")
     @Column(length = 36)
     @Schema(description = "Id of the category entity.", example = "528f22c3-1f9c-493f-8334-c70b83b5b885",
-    		maxLength = 50, minLength = 1)
+            maxLength = 50, minLength = 1)
     private String id;
 
     @Column(nullable = false, length = 50)
     @Schema(description = "Category name.", example = "Drama", maxLength = 50, minLength = 1)
     private String name;
 
-    @Schema(description = "A description of what this category represents.", 
-    		example = "This is a melodramatic type category", nullable = true)
+    @Column(length = 255)
+    @Schema(description = "A description of what this category represents.",
+            example = "This is a melodramatic type category", nullable = true)
     private String description;
 
-    @Column(nullable = false, length = 255)
-    @Schema(description = "Url of the image belonging to the category.", 
-    		example = "myImage.jpg", maxLength = 255, minLength = 1)
+    @Column(length = 255)
+    @Schema(description = "Url of the image belonging to the category.",
+            example = "myImage.jpg", maxLength = 255, minLength = 1)
     private String image;
 
     @Column(nullable = false)

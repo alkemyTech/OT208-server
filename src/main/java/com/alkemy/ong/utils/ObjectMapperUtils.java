@@ -1,4 +1,4 @@
-package com.alkemy.ong.services.mappers;
+package com.alkemy.ong.utils;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
