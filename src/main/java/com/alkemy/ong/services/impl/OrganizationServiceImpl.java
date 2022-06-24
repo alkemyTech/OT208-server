@@ -7,7 +7,7 @@ import com.alkemy.ong.models.OrganizationEntity;
 import com.alkemy.ong.repositories.IOrganizationRepository;
 import com.alkemy.ong.services.OrganizationService;
 import com.alkemy.ong.services.SlideService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

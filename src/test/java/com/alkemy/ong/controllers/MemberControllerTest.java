@@ -6,7 +6,7 @@ import com.alkemy.ong.dto.response.members.MemberResponseDto;
 import com.alkemy.ong.exeptions.ValidationException;
 import com.alkemy.ong.models.MemberEntity;
 import com.alkemy.ong.services.MemberService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -12,7 +12,7 @@ import com.alkemy.ong.security.WebSecurityConfiguration;
 import com.alkemy.ong.security.enums.RolName;
 import com.alkemy.ong.services.EmailService;
 import com.alkemy.ong.services.UserService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

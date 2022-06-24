@@ -17,4 +17,6 @@ public interface TestimonialsService extends BasicService<TestimonialsEntity, St
 
     Page<BasicTestimonialDTo> getTestimonials(Pageable pageable);
 
+    Boolean deleteTestimonial(String id);
+
 }

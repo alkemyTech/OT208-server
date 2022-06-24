@@ -8,7 +8,7 @@ import com.alkemy.ong.repositories.IOrganizationRepository;
 import com.alkemy.ong.repositories.ISlideRepository;
 import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.SlideService;
-import com.alkemy.ong.services.mappers.ObjectMapperUtils;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import com.alkemy.ong.utils.Base64Decode2Multipart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
