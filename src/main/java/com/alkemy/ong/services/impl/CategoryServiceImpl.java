@@ -85,18 +85,16 @@ public class CategoryServiceImpl extends BasicServiceImpl<CategoryEntity, String
 
     @Override
     public CategoryDetailDto editCategory(String id, EntryCategoryDto entryCategoryDto, MultipartFile image) {
-
-        if (this.existById(id)) {
-
-            CategoryEntity categoryEntity = findById(id).get();
-            categoryEntity = ObjectMapperUtils.map(entryCategoryDto, categoryEntity);
+        Optional<CategoryEntity> op = repository.findById(id);
+        if (op.isPresent()) {
+            CategoryEntity categoryEntity = ObjectMapperUtils.map(entryCategoryDto, op.get());
             if (!image.isEmpty()) {
                 categoryEntity.setImage(awss3Service.uploadFile(image));
             }
             categoryEntity = this.edit(categoryEntity);
             return ObjectMapperUtils.map(categoryEntity, CategoryDetailDto.class);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id no encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not Found");
         }
 
     }

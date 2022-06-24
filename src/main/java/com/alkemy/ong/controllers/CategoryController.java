@@ -4,7 +4,6 @@ import com.alkemy.ong.dto.request.category.EntryCategoryDto;
 import com.alkemy.ong.dto.response.category.CategoryBasicDto;
 import com.alkemy.ong.dto.response.category.CategoryDetailDto;
 import com.alkemy.ong.exeptions.ValidationException;
-import com.alkemy.ong.models.CategoryEntity;
 import com.alkemy.ong.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/categories")
@@ -48,7 +46,7 @@ public class CategoryController {
                     content = @Content(schema = @Schema()))})
     @PostMapping
     public ResponseEntity<CategoryDetailDto> createCategory(
-            @Valid @RequestPart(name = "name", required = true) @Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = EntryCategoryDto.class))) EntryCategoryDto entryCategoryDto,
+            @Valid @RequestPart(name = "category", required = true) @Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = EntryCategoryDto.class))) EntryCategoryDto entryCategoryDto,
             Errors errors,
             @RequestPart(name = "img", required = true) @Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE, schema = @Schema(implementation = MultipartFile.class))) MultipartFile image) {
         if (errors.hasErrors()) {
@@ -77,11 +75,15 @@ public class CategoryController {
             @PathVariable String id,
             @Valid @RequestPart(name = "category", required = true) EntryCategoryDto entryCategoryDto,
             Errors errors,
-            @RequestPart(name = "img", required = false) MultipartFile image) {
+            @RequestPart(name = "img", required = true) MultipartFile image) {
         if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
         }
-        return ResponseEntity.ok().body(categoryService.editCategory(id, entryCategoryDto, image));
+        if (categoryService.existById(id)) {
+            return ResponseEntity.ok().body(categoryService.editCategory(id, entryCategoryDto, image));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @Operation(summary = "Endpoint to delete a category.", description = "It provides the necessary mechanism to be able to eliminate a category based on its id.")
@@ -92,14 +94,12 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(schema = @Schema()))})
     @DeleteMapping("/{id}")
-    public ResponseEntity<CategoryEntity> deleteCategory(
-            @Parameter(description = "Id of the category to delete.", example = "528f22c3-1f9c-493f-8334-c70b83b5b885")
-            @PathVariable String id) {
+    public ResponseEntity<String> deleteCategory(@Parameter(description = "Id of the category to delete.", example = "528f22c3-1f9c-493f-8334-c70b83b5b885") @PathVariable String id) {
         if (categoryService.existById(id)) {
             categoryService.deleteById(id);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>("Category deleted", HttpStatus.NO_CONTENT);
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>("Category not found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -123,7 +123,7 @@ public class CategoryController {
     @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = CategoryDetailDto.class)))
     @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema()))
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDetailDto>getCategory(@PathVariable final String id){
+    public ResponseEntity<CategoryDetailDto> getCategory(@PathVariable final String id) {
         return ResponseEntity.ok(categoryService.getDetailDto(id));
     }
 }
