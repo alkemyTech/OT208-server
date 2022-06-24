@@ -5,13 +5,12 @@ import com.alkemy.ong.dto.request.user.UserRegisterDto;
 import com.alkemy.ong.dto.response.user.BasicUserDto;
 import com.alkemy.ong.models.UserEntity;
 
+import java.io.IOException;
 import java.util.List;
 
 import java.util.Optional;
 
 public interface UserService extends BasicService<UserEntity, String> {
-
-    UserEntity saveUser(UserRegisterDto userDTO);
 
     boolean deleteUser(String id);
 
@@ -21,7 +20,7 @@ public interface UserService extends BasicService<UserEntity, String> {
 
     List<UserRegisterDto> getAll();
 
-    String singUp(UserRegisterDto userRegisterDto);
+    String singUp(UserRegisterDto userRegisterDto) throws IOException;
     
     boolean isAdmin(UserEntity user);
 

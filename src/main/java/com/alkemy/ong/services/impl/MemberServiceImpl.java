@@ -47,11 +47,12 @@ public class MemberServiceImpl extends BasicServiceImpl<MemberEntity, String, IM
     }
 
     @Override
-    public void deleteMember(String id) {
-        if (id.isEmpty() || !repository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("Id is empty, or does not exist"));
-        }else {
+    public String deleteMember(String id) {
+        try {
             repository.deleteById(id);
+            return "Member was successfully deleted";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("Member not found"));
         }
     }
 
@@ -76,14 +77,16 @@ public class MemberServiceImpl extends BasicServiceImpl<MemberEntity, String, IM
     }
 
     @Override
-    public MemberResponseDto updateMember(EditMemberDto editMemberDto, MemberEntity memberEntity, MultipartFile file) {
+    public MemberResponseDto updateMember(EditMemberDto editMemberDto, String id, MultipartFile file) {
+        MemberEntity memberEntity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ("Member not found")));
         memberEntity.setImage(awss3Service.uploadFile(file));
         edit(ObjectMapperUtils.map(editMemberDto, memberEntity));
         return ObjectMapperUtils.map(memberEntity, MemberResponseDto.class);
     }
 
     @Override
-    public MemberResponseDto updateMember(EditMemberDto editMemberDto, MemberEntity memberEntity) {
+    public MemberResponseDto updateMember(EditMemberDto editMemberDto, String id) {
+        MemberEntity memberEntity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ("Member not found")));
         edit(ObjectMapperUtils.map(editMemberDto, memberEntity));
         return ObjectMapperUtils.map(memberEntity, MemberResponseDto.class);
     }

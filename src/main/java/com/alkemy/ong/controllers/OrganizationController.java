@@ -4,13 +4,11 @@ import com.alkemy.ong.dto.request.organization.EntryOrganizationDto;
 import com.alkemy.ong.dto.response.Organization.OrganizationPublicDto;
 import com.alkemy.ong.services.OrganizationService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/organization")
