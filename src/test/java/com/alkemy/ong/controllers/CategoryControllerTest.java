@@ -4,7 +4,6 @@ package com.alkemy.ong.controllers;
 import com.alkemy.ong.dto.request.category.EntryCategoryDto;
 import com.alkemy.ong.dto.response.category.CategoryBasicDto;
 import com.alkemy.ong.dto.response.category.CategoryDetailDto;
-import com.alkemy.ong.exeptions.ArgumentRequiredException;
 import com.alkemy.ong.exeptions.ValidationException;
 import com.alkemy.ong.jwt.JwtTokenFilter;
 import com.alkemy.ong.models.CategoryEntity;
@@ -80,7 +79,7 @@ public class CategoryControllerTest {
     }
 
     @Test
-    void getCategoryResponse404()throws Exception{
+    void getCategoryResponse404() throws Exception {
         Page<CategoryBasicDto> dto = Mockito.mock(Page.class);
         when(categoryService.getCategories(any(Pageable.class))).thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
         mockMvc.perform(get("/categories"))
@@ -98,12 +97,12 @@ public class CategoryControllerTest {
                 objectMapper.writeValueAsString(entryCategoryDto).getBytes());
         MockMultipartFile multipartImage = new MockMultipartFile("img", "image.jpg", "image/jpeg", "image".getBytes());
 
-        when(categoryService.saveCategory(entryCategoryDto,multipartImage)).thenReturn(categoryDetailDto);
+        when(categoryService.saveCategory(entryCategoryDto, multipartImage)).thenReturn(categoryDetailDto);
         mockMvc.perform(multipart("/categories").file(mockMultiparEntryDto).file(multipartImage))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(categoryDetailDto), true));
-        verify(categoryService).saveCategory(entryCategoryDto,multipartImage);
+        verify(categoryService).saveCategory(entryCategoryDto, multipartImage);
     }
 
     @Test
@@ -119,7 +118,7 @@ public class CategoryControllerTest {
                 null,
                 "image/jpeg", new byte[0]);
 
-        when(categoryService.saveCategory(any(),any())).thenReturn(categoryDetailDto);
+        when(categoryService.saveCategory(any(), any())).thenReturn(categoryDetailDto);
         mockMvc.perform(multipart("/categories").file(mockMultiparEntryDto).file(multipartImage))
                 .andExpect(status().isCreated());
         verify(categoryService).saveCategory(entryCategoryDto);
@@ -144,7 +143,7 @@ public class CategoryControllerTest {
                 .andExpect(result -> assertEquals("There are validation errors.",
                         result.getResolvedException().getMessage()))
                 .andDo(MockMvcResultHandlers.print());
-        verify(categoryService,never()).saveCategory(entryCategoryDto,multipartImage);
+        verify(categoryService, never()).saveCategory(entryCategoryDto, multipartImage);
 
     }
 
@@ -164,7 +163,10 @@ public class CategoryControllerTest {
         when(categoryService.existById(id)).thenReturn(true);
         when(categoryService.editCategory(id, entryCategoryDto, multipartImage)).thenReturn(categoryDetailDto);
         mockMvc.perform(multipart("/categories/" + id).file(mockMultiparEntryDto).file(multipartImage)
-                    .with( request -> {request.setMethod("PUT"); return request;}))
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(categoryDetailDto), true));
@@ -183,9 +185,12 @@ public class CategoryControllerTest {
         id = "any";//id is not exist
 
         mockMvc.perform(multipart("/categories/" + id).file(mockMultiparEntryDto).file(multipartImage)
-                        .with( request -> {request.setMethod("PUT"); return request;}))
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
                 .andExpect(status().isNotFound());
-        verify(categoryService,never()).editCategory(id, entryCategoryDto, multipartImage);
+        verify(categoryService, never()).editCategory(id, entryCategoryDto, multipartImage);
     }
 
     @Test
@@ -204,13 +209,16 @@ public class CategoryControllerTest {
         when(categoryService.existById(id)).thenReturn(true);
         when(categoryService.editCategory(id, entryCategoryDto, multipartImage)).thenReturn(categoryDetailDto);
         mockMvc.perform(multipart("/categories/" + id).file(mockMultiparEntryDto).file(multipartImage)
-                        .with( request -> {request.setMethod("PUT"); return request;}))
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException))
                 .andExpect(result -> assertEquals("There are validation errors.",
                         result.getResolvedException().getMessage()))
                 .andDo(MockMvcResultHandlers.print());
-        verify(categoryService,never()).editCategory(id, entryCategoryDto, multipartImage);
+        verify(categoryService, never()).editCategory(id, entryCategoryDto, multipartImage);
     }
 
     @Test
@@ -227,7 +235,7 @@ public class CategoryControllerTest {
         when(categoryService.existById(id)).thenReturn(false);
         mockMvc.perform(delete("/categories/" + id))
                 .andExpect(status().isNotFound());
-        verify(categoryService,never()).deleteById(id);
+        verify(categoryService, never()).deleteById(id);
     }
 
     @Test
