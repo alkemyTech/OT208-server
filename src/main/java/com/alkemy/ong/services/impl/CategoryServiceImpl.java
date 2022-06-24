@@ -20,12 +20,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CategoryServiceImpl extends BasicServiceImpl<CategoryEntity,String, ICategoryRepository> implements CategoryService {
+public class CategoryServiceImpl extends BasicServiceImpl<CategoryEntity, String, ICategoryRepository> implements CategoryService {
 
-     private final AWSS3Service  awss3Service;
+    private final AWSS3Service awss3Service;
 
-
-    public CategoryServiceImpl(ICategoryRepository iCategoryRepository, AWSS3Service awss3Service){
+    public CategoryServiceImpl(ICategoryRepository iCategoryRepository, AWSS3Service awss3Service) {
         super(iCategoryRepository);
         this.awss3Service = awss3Service;
     }
@@ -33,84 +32,71 @@ public class CategoryServiceImpl extends BasicServiceImpl<CategoryEntity,String,
     @Override
     public CategoryDetailDto saveCategory(EntryCategoryDto entryCategoryDto, MultipartFile image) {
 
-        CategoryEntity  categoryEntity = ObjectMapperUtils.map(entryCategoryDto,CategoryEntity.class);
+        CategoryEntity categoryEntity = ObjectMapperUtils.map(entryCategoryDto, CategoryEntity.class);
 
         categoryEntity.setImage(awss3Service.uploadFile(image));
 
         repository.save(categoryEntity);
 
-        return ObjectMapperUtils.map(categoryEntity,CategoryDetailDto.class);
+        return ObjectMapperUtils.map(categoryEntity, CategoryDetailDto.class);
     }
 
     @Override
     public CategoryDetailDto saveCategory(EntryCategoryDto entryCategoryDto) {
 
-        CategoryEntity categoryEntity = ObjectMapperUtils.map(entryCategoryDto,CategoryEntity.class);
+        CategoryEntity categoryEntity = ObjectMapperUtils.map(entryCategoryDto, CategoryEntity.class);
 
         repository.save(categoryEntity);
 
-        return ObjectMapperUtils.map(categoryEntity,CategoryDetailDto.class);
+        return ObjectMapperUtils.map(categoryEntity, CategoryDetailDto.class);
     }
 
     @Override
-    public List<CategoryBasicDto> getCategoriesDto() {
-        List<CategoryBasicDto> categoryBasicDtos = ObjectMapperUtils.mapAll(this.findAll(),CategoryBasicDto.class);
-        if(categoryBasicDtos.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        else{
-            return categoryBasicDtos;
-        }
-
-    }
-
-    @Override
-    public CategoryDetailDto getCategoryByIdDto(String id) {
-
+    public CategoryDetailDto getDetailDto(String id) {
 
         Optional<CategoryEntity> categoryEntityop = repository.findById(id);
 
-        if (categoryEntityop.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id not Found");
-        }else{
-            return ObjectMapperUtils.map(categoryEntityop.get(),CategoryDetailDto.class);
+        if (categoryEntityop.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not Found");
+        } else {
+            return ObjectMapperUtils.map(categoryEntityop.get(), CategoryDetailDto.class);
         }
 
     }
 
     @Override
-    public Page<CategoryDetailDto> getCategories(Pageable pageable) {
+    public Page<CategoryBasicDto> getCategories(Pageable pageable) {
 
         List<CategoryEntity> categoryEntities = repository.findAll();
-        List<CategoryDetailDto> response;
+        List<CategoryBasicDto> response;
 
-        if(!categoryEntities.isEmpty()){
-            response = ObjectMapperUtils.mapAll(categoryEntities,CategoryDetailDto.class);
+        if (!categoryEntities.isEmpty()) {
+            response = ObjectMapperUtils.mapAll(categoryEntities, CategoryBasicDto.class);
 
-            final int star = (int)pageable.getOffset();
-            final int end = Math.min((star+pageable.getPageSize()),response.size());
+            final int star = (int) pageable.getOffset();
+            final int end = Math.min((star + pageable.getPageSize()), response.size());
 
-            return new PageImpl<>(response.subList(star,end),pageable,response.size());
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"There's not Category");
+            return new PageImpl<>(response.subList(star, end), pageable, response.size());
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There's not Category");
         }
 
     }
 
     @Override
-    public CategoryDetailDto editCategory(String id,EntryCategoryDto entryCategoryDto, MultipartFile image) {
+    public CategoryDetailDto editCategory(String id, EntryCategoryDto entryCategoryDto, MultipartFile image) {
 
-        if(this.existById(id)){
+        if (this.existById(id)) {
 
             CategoryEntity categoryEntity = findById(id).get();
-            categoryEntity = ObjectMapperUtils.map(entryCategoryDto,categoryEntity);
-            if(!image.isEmpty()){
+            categoryEntity = ObjectMapperUtils.map(entryCategoryDto, categoryEntity);
+            if (!image.isEmpty()) {
                 categoryEntity.setImage(awss3Service.uploadFile(image));
             }
             categoryEntity = this.edit(categoryEntity);
             return ObjectMapperUtils.map(categoryEntity, CategoryDetailDto.class);
-        }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Id no encontrado");
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id no encontrado");
         }
 
     }
