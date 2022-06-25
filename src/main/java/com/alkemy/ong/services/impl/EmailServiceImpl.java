@@ -65,7 +65,7 @@ public class EmailServiceImpl implements EmailService {
 		if (StringUtils.hasText(response.getBody())) {
 			ErrorMail errorsEmail = objectMapper.readValue(response.getBody(), ErrorMail.class);
 			errorsEmail.getErrors().forEach(e -> log.error(e.toString()));
-			throw new EmailNotSendException("Error al registrar el email.");
+			throw new EmailNotSendException("Error registering email.");
 		}
 
 		return response;
