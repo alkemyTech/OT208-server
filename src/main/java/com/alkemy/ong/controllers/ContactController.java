@@ -25,24 +25,25 @@ public class ContactController {
     private final EmailService emailService;
 
     @PostMapping
-    public ResponseEntity<BasicContactDto> create(@Valid @RequestBody EntryContactDto contactDto, Errors errors) throws EmailNotSendException, IOException {
+    public ResponseEntity<BasicContactDto> create(
+    		@Valid @RequestBody EntryContactDto contactDto, Errors errors) throws EmailNotSendException, IOException {
 
-        if (errors.hasErrors() || contactDto.getEmail().isEmpty() || contactDto.getName().isEmpty()) {
+        if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
 
         } else {
             emailService.sendEmailContactForm(contactDto.getEmail());
-            return new ResponseEntity<>(this.service.saveContact(contactDto), HttpStatus.OK);
+            return new ResponseEntity<>(this.service.saveContact(contactDto), HttpStatus.CREATED);
         }
 
     }
 
     @GetMapping
     public ResponseEntity<List<BasicContactDto>> getAll() {
-        try {
-            return new ResponseEntity<>(this.service.getAllContacts(), HttpStatus.OK);
-        } catch (RuntimeException ex) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    	List<BasicContactDto> contacts = service.getAllContacts();
+    	if(contacts.isEmpty()) {
+    		return ResponseEntity.notFound().build();
+    	}
+        return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 }
