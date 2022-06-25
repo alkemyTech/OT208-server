@@ -146,7 +146,7 @@ class MemberControllerTest {
                 "",
                 "", "".getBytes());
 
-        Mockito.when(memberService.createMember(entryDto, multipartImg)).thenReturn(responseDto);
+        Mockito.when(memberService.createMember(entryDto)).thenReturn(responseDto);
 
         RequestBuilder request = MockMvcRequestBuilders.multipart("/members")
                 .file(multipartJson)
@@ -154,6 +154,8 @@ class MemberControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().json(objectMapper.writeValueAsString(responseDto)))
                 .andDo(MockMvcResultHandlers.print());
 
         verify(memberService).createMember(entryDto);
@@ -230,10 +232,9 @@ class MemberControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
     void deleteMember404() throws Exception {
-        String test = "test";
-        mockMvc.perform(delete("/members/" + test)) //test is not a valid id
+        mockMvc.perform(delete("/members/test")) //test is not a valid id
                 .andExpect(status().isNotFound());
-        verify(memberService).existById(test);
+        verify(memberService).existById("test");
     }
 
     @Test
