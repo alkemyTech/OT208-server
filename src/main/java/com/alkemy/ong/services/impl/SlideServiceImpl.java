@@ -68,10 +68,13 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
         Optional<OrganizationEntity> op = organizationRepository.findById(dto.getOrganizationId());
         if (op.isEmpty()) {
             LOG.error("Failure to create a slide, Organization with id {} not found", dto.getOrganizationId());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter" + slideEntity.getOrganizationEntityId().getId()));
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter"));
         }
-        slideEntity.setOrganizationEntityId(op.get());
+        slideEntity.setOrganizationEntity(op.get());
         Integer slideListMax = repository.getMaxOrder();
+        if (slideListMax == null) {
+            slideListMax = 0;
+        }
         if (dto.getOrder() == null) {
             slideEntity.setOrder(1 + slideListMax);
         } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {

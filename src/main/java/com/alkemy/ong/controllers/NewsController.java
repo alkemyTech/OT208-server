@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
@@ -58,6 +59,9 @@ public class NewsController {
 		if (!categoryService.existById(entryNewsDto.getCategoryIdId())) {
 			throw new CategoryNotExistException(entryNewsDto.getCategoryIdId());
 		}
+		if (image.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Imagen can not be empty");
+		}
 		
 		NewsEntity newsEntity  = ObjectMapperUtils.map(entryNewsDto, NewsEntity.class);
 		newsEntity.setType("news");
@@ -73,7 +77,7 @@ public class NewsController {
 			@PathVariable String id, 
 			@Valid @RequestPart(name = "news", required = true) EntryEditNewsDto entryEditNewsDto,
 			Errors errors,
-			@RequestPart(name = "newsImage", required = false) MultipartFile image) {
+			@RequestPart(name = "newsImage", required = true) MultipartFile image) {
 		
 		if (errors.hasErrors()) {
 			throw new ValidationException(errors.getFieldErrors());
