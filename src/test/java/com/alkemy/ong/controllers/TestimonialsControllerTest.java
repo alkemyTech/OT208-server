@@ -181,8 +181,7 @@ class TestimonialsControllerTest {
     void testEditTestimonialNotFound404() throws Exception {
         EntryTestimonialDto entryDto = new EntryTestimonialDto("Test Name", "Test Description");
         TestimonialsEntity testEntity = ObjectMapperUtils.map(entryDto, TestimonialsEntity.class);
-        BasicTestimonialDTo testDto = ObjectMapperUtils.map(testEntity, BasicTestimonialDTo.class);
-
+        
         MockMultipartFile multipartJson = new MockMultipartFile(
                 "file",
                 "test.json",
