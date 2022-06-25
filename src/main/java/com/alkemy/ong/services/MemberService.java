@@ -13,8 +13,8 @@ public interface MemberService extends BasicService<MemberEntity, String> {
     MemberResponseDto createMember(EntryMemberDto entryMemberDto, MultipartFile file);
     MemberResponseDto createMember(EntryMemberDto entryMemberDto);
     Page<MemberResponseDto> getMembers(Pageable pageable);
-    void deleteMember(String id);
-    MemberResponseDto updateMember(EditMemberDto editMemberDto, MemberEntity member, MultipartFile file);
-    MemberResponseDto updateMember(EditMemberDto editMemberDto, MemberEntity memberEntity);
+    String deleteMember(String id);
+    MemberResponseDto updateMember(EditMemberDto editMemberDto, String id, MultipartFile file);
+    MemberResponseDto updateMember(EditMemberDto editMemberDto, String id);
 
 }
