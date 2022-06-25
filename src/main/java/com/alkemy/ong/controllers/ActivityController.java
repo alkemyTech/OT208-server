@@ -12,12 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("activities")
+@RequestMapping("/activities")
 @RequiredArgsConstructor
 @MultipartConfig(maxFileSize = 1024 * 1024 * 15)
 public class ActivityController {
@@ -29,22 +30,24 @@ public class ActivityController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BasicActivityDto> create(@Valid @RequestPart(name = "activity") EntryActivityDto entryActivityDto, Errors errors, @RequestPart MultipartFile file) {
 
-        if (errors.hasErrors() || file.isEmpty()) {
+        if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
+        }
+        if (file.isEmpty()) {
+        	throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The image cannot be empty");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveActivity(entryActivityDto, awss3Service.uploadFile(file)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BasicActivityDto> update(@Valid @RequestPart EntryActivityDto dto,
-                                                   @PathVariable String id, Errors errors,
-                                                   @RequestPart(required = false) MultipartFile file) {
+    public ResponseEntity<BasicActivityDto> update(
+    	@PathVariable String id,
+    	@Valid @RequestPart(name = "activity") EntryActivityDto dto,
+    	Errors errors, @RequestPart(required = true) MultipartFile file) {
+    	
         if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
         }
-        if (file.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body(service.updateActivity(dto, "", id));
-        } else
-            return ResponseEntity.status(HttpStatus.OK).body(service.updateActivity(dto, awss3Service.uploadFile(file), id));
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateActivity(dto, file, id));    
     }
 }
