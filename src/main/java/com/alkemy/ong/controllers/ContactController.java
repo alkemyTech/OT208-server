@@ -32,7 +32,7 @@ public class ContactController {
 
         } else {
             emailService.sendEmailContactForm(contactDto.getEmail());
-            return new ResponseEntity<>(this.service.saveContact(contactDto), HttpStatus.OK);
+            return new ResponseEntity<>(this.service.saveContact(contactDto), HttpStatus.CREATED);
         }
 
     }

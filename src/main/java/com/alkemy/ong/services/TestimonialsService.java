@@ -13,7 +13,9 @@ public interface TestimonialsService extends BasicService<TestimonialsEntity, St
 
     BasicTestimonialDTo createTestimonial(EntryTestimonialDto entryTestimonialDto);
 
-    BasicTestimonialDTo updateTestimonial(String id, EntryTestimonialDto entryTestimonialDto,String image);
+    BasicTestimonialDTo updateTestimonial(String id, EntryTestimonialDto entryTestimonialDto,MultipartFile img);
+
+    BasicTestimonialDTo updateTestimonial(String id, EntryTestimonialDto entryTestimonialDto);
 
     Page<BasicTestimonialDTo> getTestimonials(Pageable pageable);
 
