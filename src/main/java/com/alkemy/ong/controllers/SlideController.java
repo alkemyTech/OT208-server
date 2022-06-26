@@ -1,6 +1,6 @@
 package com.alkemy.ong.controllers;
 
-import com.alkemy.ong.dto.request.slide.SlideRequestDto;
+import com.alkemy.ong.dto.request.slide.EntrySlideDto;
 import com.alkemy.ong.dto.response.slide.SlideResponseDto;
 import com.alkemy.ong.services.SlideService;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ public class SlideController {
     }
 
     @PostMapping
-    public ResponseEntity<SlideResponseDto> createSlide(@RequestBody SlideRequestDto slideDto) {
+    public ResponseEntity<SlideResponseDto> createSlide(@RequestBody EntrySlideDto slideDto) {
         return new ResponseEntity<SlideResponseDto>(slideService.createSlide(slideDto), HttpStatus.CREATED);
     }
 

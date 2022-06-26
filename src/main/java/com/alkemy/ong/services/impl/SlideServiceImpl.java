@@ -1,6 +1,6 @@
 package com.alkemy.ong.services.impl;
 
-import com.alkemy.ong.dto.request.slide.SlideRequestDto;
+import com.alkemy.ong.dto.request.slide.EntrySlideDto;
 import com.alkemy.ong.dto.response.slide.SlideResponseDto;
 import com.alkemy.ong.models.OrganizationEntity;
 import com.alkemy.ong.models.SlideEntity;
@@ -63,7 +63,7 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
 
     @Override
     @Transactional
-    public SlideResponseDto createSlide(SlideRequestDto dto) {
+    public SlideResponseDto createSlide(EntrySlideDto dto) {
         SlideEntity slideEntity = new SlideEntity();
         Optional<OrganizationEntity> op = organizationRepository.findById(dto.getOrganizationId());
         if (op.isEmpty()) {
