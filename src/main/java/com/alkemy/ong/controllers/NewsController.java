@@ -29,93 +29,93 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/news")
-@MultipartConfig(maxFileSize = 1024*1024*15)
+@MultipartConfig(maxFileSize = 1024 * 1024 * 15)
 public class NewsController {
 
-	private final NewsService newsService;
-	private final AWSS3Service awss3Service;
-	private final CategoryService categoryService;
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<BasicNewsDto> getNews(@PathVariable String id){
-		Optional<NewsEntity> newsEntity = newsService.findById(id);
-		
-		if(!newsEntity.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		return ResponseEntity.ok(ObjectMapperUtils.map(newsEntity, BasicNewsDto.class));
-	}
+    private final NewsService newsService;
+    private final AWSS3Service awss3Service;
+    private final CategoryService categoryService;
 
-	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<BasicNewsDto> createNews(
-			@Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
-			Errors errors,
-			@RequestPart(name = "newsImage", required = true) MultipartFile image){
-		
-		if (errors.hasErrors()) {
-			throw new ValidationException(errors.getFieldErrors());
-		}
-		if (!categoryService.existById(entryNewsDto.getCategoryIdId())) {
-			throw new CategoryNotExistException(entryNewsDto.getCategoryIdId());
-		}
-		if (image.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Imagen can not be empty");
-		}
-		
-		NewsEntity newsEntity  = ObjectMapperUtils.map(entryNewsDto, NewsEntity.class);
-		newsEntity.setType("news");
-		String pathImage = awss3Service.uploadFile(image);
-		newsEntity.setImage(pathImage);
-		
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(ObjectMapperUtils.map(newsService.save(newsEntity), BasicNewsDto.class));
-	}
-	
-	@PutMapping("/{id}")
-	public ResponseEntity<BasicNewsDto> editNews(
-			@PathVariable String id, 
-			@Valid @RequestPart(name = "news", required = true) EntryEditNewsDto entryEditNewsDto,
-			Errors errors,
-			@RequestPart(name = "newsImage", required = true) MultipartFile image) {
-		
-		if (errors.hasErrors()) {
-			throw new ValidationException(errors.getFieldErrors());
-		}
-		if (!categoryService.existById(entryEditNewsDto.getCategory())) {
-			throw new CategoryNotExistException(entryEditNewsDto.getCategory());
-		}
-		Optional<NewsEntity> newsEntityOp = newsService.findById(id);
-		
-		if (!newsEntityOp.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		NewsEntity newsEntity = newsEntityOp.get();
-		newsEntity = ObjectMapperUtils.map(entryEditNewsDto, newsEntity);
-		newsEntity.setCategoryId(categoryService.findById(entryEditNewsDto.getCategory()).get());
+    @GetMapping("/{id}")
+    public ResponseEntity<BasicNewsDto> getNews(@PathVariable String id) {
+        Optional<NewsEntity> newsEntity = newsService.findById(id);
 
-		if (!image.isEmpty()) {
-			String pathImage = awss3Service.uploadFile(image);
-			newsEntity.setImage(pathImage);
-		}
-		
-		return ResponseEntity.ok(ObjectMapperUtils.map(newsService.edit(newsEntity), BasicNewsDto.class));
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<BasicNewsDto> deleteNews(@PathVariable String id) {
-		Optional<NewsEntity> newsEntity = newsService.findById(id);
+        if (!newsEntity.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
 
-		if (!newsEntity.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		newsService.delete(newsEntity.get());
+        return ResponseEntity.ok(ObjectMapperUtils.map(newsEntity, BasicNewsDto.class));
+    }
 
-		return ResponseEntity.noContent().build();
-	}
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BasicNewsDto> createNews(
+            @Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
+            Errors errors,
+            @RequestPart(name = "newsImage", required = true) MultipartFile image) {
 
-	@GetMapping("/list")
-	public ResponseEntity<Page<BasicNewsDto>> getNews(@PageableDefault(size = 10) Pageable pageable) {
-		return ResponseEntity.ok(newsService.getNews(pageable));
-	}
+        if (errors.hasErrors()) {
+            throw new ValidationException(errors.getFieldErrors());
+        }
+        if (!categoryService.existById(entryNewsDto.getCategoryIdId())) {
+            throw new CategoryNotExistException(entryNewsDto.getCategoryIdId());
+        }
+        if (image.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Imagen can not be empty");
+        }
+
+        NewsEntity newsEntity = ObjectMapperUtils.map(entryNewsDto, NewsEntity.class);
+        newsEntity.setType("news");
+        String pathImage = awss3Service.uploadFile(image);
+        newsEntity.setImage(pathImage);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ObjectMapperUtils.map(newsService.save(newsEntity), BasicNewsDto.class));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BasicNewsDto> editNews(
+            @PathVariable String id,
+            @Valid @RequestPart(name = "news", required = true) EntryEditNewsDto entryEditNewsDto,
+            Errors errors,
+            @RequestPart(name = "newsImage", required = true) MultipartFile image) {
+
+        if (errors.hasErrors()) {
+            throw new ValidationException(errors.getFieldErrors());
+        }
+        if (!categoryService.existById(entryEditNewsDto.getCategory())) {
+            throw new CategoryNotExistException(entryEditNewsDto.getCategory());
+        }
+        Optional<NewsEntity> newsEntityOp = newsService.findById(id);
+
+        if (!newsEntityOp.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        NewsEntity newsEntity = newsEntityOp.get();
+        newsEntity = ObjectMapperUtils.map(entryEditNewsDto, newsEntity);
+        newsEntity.setCategoryId(categoryService.findById(entryEditNewsDto.getCategory()).get());
+
+        if (!image.isEmpty()) {
+            String pathImage = awss3Service.uploadFile(image);
+            newsEntity.setImage(pathImage);
+        }
+
+        return ResponseEntity.ok(ObjectMapperUtils.map(newsService.edit(newsEntity), BasicNewsDto.class));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BasicNewsDto> deleteNews(@PathVariable String id) {
+        Optional<NewsEntity> newsEntity = newsService.findById(id);
+
+        if (!newsEntity.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        newsService.delete(newsEntity.get());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<BasicNewsDto>> getNews(@PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(newsService.getNews(pageable));
+    }
 }
