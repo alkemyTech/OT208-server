@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotNull;
 import java.io.*;
 
-public class Base64Decode2Multipart implements MultipartFile{
+public class Base64Decode2Multipart implements MultipartFile {
 
     private final byte[] imgContent;
     private final String header;

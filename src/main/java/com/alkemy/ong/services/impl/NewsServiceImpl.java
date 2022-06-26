@@ -17,24 +17,24 @@ import java.util.List;
 @Service
 public class NewsServiceImpl extends BasicServiceImpl<NewsEntity, String, INewsRepository> implements NewsService {
 
-	public NewsServiceImpl(INewsRepository repository) {
-		super(repository);
-	}
+    public NewsServiceImpl(INewsRepository repository) {
+        super(repository);
+    }
 
-	@Override
-	public Page<BasicNewsDto> getNews(Pageable pageable) {
-		List<NewsEntity> newsEntities = repository.findAll();
-		List<BasicNewsDto> response;
+    @Override
+    public Page<BasicNewsDto> getNews(Pageable pageable) {
+        List<NewsEntity> newsEntities = repository.findAll();
+        List<BasicNewsDto> response;
 
-		if (!newsEntities.isEmpty()) {
-			response = ObjectMapperUtils.mapAll(newsEntities, BasicNewsDto.class);
+        if (!newsEntities.isEmpty()) {
+            response = ObjectMapperUtils.mapAll(newsEntities, BasicNewsDto.class);
 
-			final int start = (int) pageable.getOffset();
-			final int end = Math.min((start + pageable.getPageSize()), response.size());
+            final int start = (int) pageable.getOffset();
+            final int end = Math.min((start + pageable.getPageSize()), response.size());
 
-			return new PageImpl<>(response.subList(start, end), pageable, response.size());
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("There's no news"));
-		}
-	}
+            return new PageImpl<>(response.subList(start, end), pageable, response.size());
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ("There's no news"));
+        }
+    }
 }

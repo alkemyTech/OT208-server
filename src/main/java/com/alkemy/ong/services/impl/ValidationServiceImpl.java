@@ -2,8 +2,9 @@ package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.services.ValidationService;
-import java.util.List;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ValidationServiceImpl implements ValidationService {

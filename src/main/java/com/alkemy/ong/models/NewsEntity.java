@@ -43,7 +43,7 @@ public class NewsEntity implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryId;
-    
+
     @Column(nullable = true, length = 50)
     private String type;
 
