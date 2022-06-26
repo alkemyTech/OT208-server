@@ -11,10 +11,15 @@ import org.springframework.web.multipart.MultipartFile;
 public interface MemberService extends BasicService<MemberEntity, String> {
 
     MemberResponseDto createMember(EntryMemberDto entryMemberDto, MultipartFile file);
+
     MemberResponseDto createMember(EntryMemberDto entryMemberDto);
+
     Page<MemberResponseDto> getMembers(Pageable pageable);
+
     String deleteMember(String id);
+
     MemberResponseDto updateMember(EditMemberDto editMemberDto, String id, MultipartFile file);
+
     MemberResponseDto updateMember(EditMemberDto editMemberDto, String id);
 
 }

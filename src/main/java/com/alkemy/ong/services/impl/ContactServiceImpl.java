@@ -8,6 +8,7 @@ import com.alkemy.ong.services.ContactService;
 import com.alkemy.ong.utils.ObjectMapperUtils;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -20,6 +21,7 @@ public class ContactServiceImpl extends BasicServiceImpl<ContactEntity, String, 
 
 
     @Override
+    @Transactional
     public BasicContactDto saveContact(EntryContactDto dto) {
         ContactEntity contactEntity = ObjectMapperUtils.map(dto, ContactEntity.class);
         contactEntity = this.save(contactEntity);
@@ -27,6 +29,7 @@ public class ContactServiceImpl extends BasicServiceImpl<ContactEntity, String, 
     }
 
     @Override
+    @Transactional
     public List<BasicContactDto> getAllContacts() {
         return ObjectMapperUtils.mapAll(this.findAll(), BasicContactDto.class);
     }

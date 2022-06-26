@@ -1,11 +1,18 @@
 package com.alkemy.ong.services.impl;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-
+import com.alkemy.ong.dto.request.user.UserLoginDto;
+import com.alkemy.ong.dto.request.user.UserRegisterDto;
+import com.alkemy.ong.dto.response.user.BasicUserDto;
+import com.alkemy.ong.exeptions.ArgumentRequiredException;
 import com.alkemy.ong.exeptions.EmailNotSendException;
+import com.alkemy.ong.jwt.JwtUtils;
+import com.alkemy.ong.models.UserEntity;
+import com.alkemy.ong.repositories.IRoleRepository;
+import com.alkemy.ong.repositories.IUserRepository;
+import com.alkemy.ong.security.enums.RolName;
 import com.alkemy.ong.services.EmailService;
+import com.alkemy.ong.services.UserService;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,17 +23,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.alkemy.ong.dto.request.user.UserLoginDto;
-import com.alkemy.ong.dto.request.user.UserRegisterDto;
-import com.alkemy.ong.dto.response.user.BasicUserDto;
-import com.alkemy.ong.exeptions.ArgumentRequiredException;
-import com.alkemy.ong.jwt.JwtUtils;
-import com.alkemy.ong.models.UserEntity;
-import com.alkemy.ong.repositories.IRoleRepository;
-import com.alkemy.ong.repositories.IUserRepository;
-import com.alkemy.ong.security.enums.RolName;
-import com.alkemy.ong.services.UserService;
-import com.alkemy.ong.utils.ObjectMapperUtils;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserRepository> implements UserService {
@@ -53,13 +53,14 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     @Override
     public String logIn(UserLoginDto userLoginDto) throws BadCredentialsException {
         if (!this.repository.existsByEmail(userLoginDto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The user " +  userLoginDto.getEmail() + " is not registered");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The user " + userLoginDto.getEmail() + " is not registered");
         }
 
         return this.getToken(userLoginDto.getEmail(), userLoginDto.getPassword());
     }
 
     @Override
+    @Transactional
     public String singUp(UserRegisterDto userRegisterDto) throws EmailNotSendException, IOException {
 
         if (this.repository.existsByEmail(userRegisterDto.getEmail())) {
@@ -91,6 +92,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     @Override
+    @Transactional
     public boolean deleteUser(String id) {
         if (id != null) {
             this.userRepository.deleteById(id);
@@ -106,6 +108,7 @@ public class UserServiceImpl extends BasicServiceImpl<UserEntity, String, IUserR
     }
 
     @Override
+    @Transactional
     public BasicUserDto updateUser(UserRegisterDto userRegisterDto, String id) {
         if (this.findById(id).isPresent()) {
             userRegisterDto.setId(id);

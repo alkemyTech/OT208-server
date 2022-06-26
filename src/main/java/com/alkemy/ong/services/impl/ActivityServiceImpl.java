@@ -7,12 +7,13 @@ import com.alkemy.ong.repositories.IActivityRepository;
 import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.ActivityService;
 import com.alkemy.ong.utils.ObjectMapperUtils;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.transaction.Transactional;
 
 
 @Service
@@ -27,6 +28,7 @@ public class ActivityServiceImpl extends BasicServiceImpl<ActivityEntity, String
     }
 
     @Override
+    @Transactional
     public BasicActivityDto saveActivity(EntryActivityDto entryActivityDto, String image) {
 
         ActivityEntity activityEntity = ObjectMapperUtils.map(entryActivityDto, ActivityEntity.class);
@@ -41,6 +43,7 @@ public class ActivityServiceImpl extends BasicServiceImpl<ActivityEntity, String
     }
 
     @Override
+    @Transactional
     public BasicActivityDto updateActivity(EntryActivityDto dto, MultipartFile image, String id) {
 
         if (this.existById(id)) {

@@ -33,16 +33,16 @@ public class OrganizationServiceImpl extends BasicServiceImpl<OrganizationEntity
             OrganizationPublicDto dto = ObjectMapperUtils.map(ong, OrganizationPublicDto.class);
             dto.setSlides(slideService.getAllByOrganizationId(ong.getId()));
             return dto;
-        }else{
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization not found");
         }
     }
 
-    @Transactional
     @Override
+    @Transactional
     public OrganizationPublicDto updateOrganization(EntryOrganizationDto entryDto) {
         OrganizationEntity ong = repository.findAll().get(0);
-        if(ong == null){
+        if (ong == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organization not found");
         }
         save(ObjectMapperUtils.map(entryDto, ong));

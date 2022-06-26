@@ -44,6 +44,6 @@ public class SlideEntity implements Serializable {
 
     @JoinColumn(name = "organizations", nullable = false)
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    private OrganizationEntity organizationEntityId;
+    private OrganizationEntity organizationEntity;
 
 }

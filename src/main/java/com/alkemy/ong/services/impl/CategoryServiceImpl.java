@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ public class CategoryServiceImpl extends BasicServiceImpl<CategoryEntity, String
     }
 
     @Override
+    @Transactional
     public CategoryDetailDto saveCategory(EntryCategoryDto entryCategoryDto, MultipartFile image) {
 
         CategoryEntity categoryEntity = ObjectMapperUtils.map(entryCategoryDto, CategoryEntity.class);
@@ -42,6 +44,7 @@ public class CategoryServiceImpl extends BasicServiceImpl<CategoryEntity, String
     }
 
     @Override
+    @Transactional
     public CategoryDetailDto saveCategory(EntryCategoryDto entryCategoryDto) {
 
         CategoryEntity categoryEntity = ObjectMapperUtils.map(entryCategoryDto, CategoryEntity.class);
@@ -84,6 +87,7 @@ public class CategoryServiceImpl extends BasicServiceImpl<CategoryEntity, String
     }
 
     @Override
+    @Transactional
     public CategoryDetailDto editCategory(String id, EntryCategoryDto entryCategoryDto, MultipartFile image) {
         Optional<CategoryEntity> op = repository.findById(id);
         if (op.isPresent()) {

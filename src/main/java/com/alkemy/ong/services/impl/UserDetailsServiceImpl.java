@@ -1,13 +1,13 @@
 package com.alkemy.ong.services.impl;
 
 import com.alkemy.ong.models.MyUserDetails;
+import com.alkemy.ong.models.UserEntity;
+import com.alkemy.ong.repositories.IUserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.alkemy.ong.models.UserEntity;
-import com.alkemy.ong.repositories.IUserRepository;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

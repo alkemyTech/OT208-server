@@ -34,20 +34,20 @@ public class ActivityController {
             throw new ValidationException(errors.getFieldErrors());
         }
         if (file.isEmpty()) {
-        	throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The image cannot be empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The image cannot be empty");
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveActivity(entryActivityDto, awss3Service.uploadFile(file)));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BasicActivityDto> update(
-    	@PathVariable String id,
-    	@Valid @RequestPart(name = "activity") EntryActivityDto dto,
-    	Errors errors, @RequestPart(required = true) MultipartFile file) {
-    	
+            @PathVariable String id,
+            @Valid @RequestPart(name = "activity") EntryActivityDto dto,
+            Errors errors, @RequestPart(required = true) MultipartFile file) {
+
         if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(service.updateActivity(dto, file, id));    
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateActivity(dto, file, id));
     }
 }

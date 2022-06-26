@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
@@ -47,18 +46,18 @@ public class TestimonialsController {
 
     @PutMapping("/{id}")
     public ResponseEntity<BasicTestimonialDTo> editTestimonial(@PathVariable String id,
-            @Valid @RequestPart(name = "file") EntryTestimonialDto entryTestimonialDto, Errors errors,
-            @RequestPart(name = "img", required = true) MultipartFile file) {
+                                                               @Valid @RequestPart(name = "file") EntryTestimonialDto entryTestimonialDto, Errors errors,
+                                                               @RequestPart(name = "img", required = true) MultipartFile file) {
         if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
         }
-        if(testimonialsService.existById(id)){
+        if (testimonialsService.existById(id)) {
             if (file.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.OK).body(testimonialsService.updateTestimonial(id, entryTestimonialDto));
             } else {
                 return ResponseEntity.status(HttpStatus.OK).body(testimonialsService.updateTestimonial(id, entryTestimonialDto, file));
             }
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 

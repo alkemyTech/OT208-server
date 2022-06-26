@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
@@ -38,6 +40,10 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     @Override
     public String uploadFile(@NotNull MultipartFile mFile) {
         String extension = StringUtils.getFilenameExtension(mFile.getOriginalFilename());
+        assert extension != null;
+        if (!isImage(extension)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File is not an image");
+        }
         String key = String.format("%s.%s", UUID.randomUUID().toString().replace("-", ""), extension);
         try {
             File myFile = new File(Objects.requireNonNull(mFile.getOriginalFilename()));
@@ -74,6 +80,19 @@ public class AWSS3ServiceImpl implements AWSS3Service {
     @Override
     public String getUrl(String key) {
         return amazonS3.getUrl(bucketName, key).toString();
+    }
+
+    private boolean isImage(String extension) {
+        String ext = extension.toLowerCase();
+        return ext.equals("jpg")
+                || ext.equals("png")
+                || ext.equals("jpeg")
+                || ext.equals("gif")
+                || ext.equals("bmp")
+                || ext.equals("tiff")
+                || ext.equals("tif")
+                || ext.equals("webp")
+                || ext.equals("svg");
     }
 
 }

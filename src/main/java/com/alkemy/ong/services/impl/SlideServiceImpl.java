@@ -8,8 +8,8 @@ import com.alkemy.ong.repositories.IOrganizationRepository;
 import com.alkemy.ong.repositories.ISlideRepository;
 import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.SlideService;
-import com.alkemy.ong.utils.ObjectMapperUtils;
 import com.alkemy.ong.utils.Base64Decode2Multipart;
+import com.alkemy.ong.utils.ObjectMapperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -61,17 +61,20 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
         return ObjectMapperUtils.map(op.get(), SlideResponseDto.class);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public SlideResponseDto createSlide(SlideRequestDto dto) {
         SlideEntity slideEntity = new SlideEntity();
         Optional<OrganizationEntity> op = organizationRepository.findById(dto.getOrganizationId());
         if (op.isEmpty()) {
             LOG.error("Failure to create a slide, Organization with id {} not found", dto.getOrganizationId());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter" + slideEntity.getOrganizationEntityId().getId()));
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ("Bad organization ID or null parameter"));
         }
-        slideEntity.setOrganizationEntityId(op.get());
+        slideEntity.setOrganizationEntity(op.get());
         Integer slideListMax = repository.getMaxOrder();
+        if (slideListMax == null) {
+            slideListMax = 0;
+        }
         if (dto.getOrder() == null) {
             slideEntity.setOrder(1 + slideListMax);
         } else if (dto.getOrder() != slideListMax || dto.getOrder() != 0) {
@@ -86,8 +89,8 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
         return ObjectMapperUtils.map(repository.save(slideEntity), SlideResponseDto.class);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public SlideResponseDto updateSlide(String id, MultipartFile file) {
 
         Optional<SlideEntity> op = repository.findById(id);
@@ -101,8 +104,8 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
         return ObjectMapperUtils.map(repository.save(slideEntity), SlideResponseDto.class);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public Boolean deleteSlide(String id) {
         if (repository.findById(id).isEmpty()) {
             LOG.error("Failure to delete a slide, Slide with id {} not found", id);

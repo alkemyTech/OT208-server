@@ -26,7 +26,7 @@ public class ContactController {
 
     @PostMapping
     public ResponseEntity<BasicContactDto> create(
-    		@Valid @RequestBody EntryContactDto contactDto, Errors errors) throws EmailNotSendException, IOException {
+            @Valid @RequestBody EntryContactDto contactDto, Errors errors) throws EmailNotSendException, IOException {
 
         if (errors.hasErrors()) {
             throw new ValidationException(errors.getFieldErrors());
@@ -40,10 +40,10 @@ public class ContactController {
 
     @GetMapping
     public ResponseEntity<List<BasicContactDto>> getAll() {
-    	List<BasicContactDto> contacts = service.getAllContacts();
-    	if(contacts.isEmpty()) {
-    		return ResponseEntity.notFound().build();
-    	}
+        List<BasicContactDto> contacts = service.getAllContacts();
+        if (contacts.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 }

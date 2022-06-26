@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -33,6 +34,7 @@ public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity
     }
 
     @Override
+    @Transactional
     public BasicTestimonialDTo createTestimonial(EntryTestimonialDto entryTestimonialDto, MultipartFile file) {
 
         TestimonialsEntity testimonialsEntity = ObjectMapperUtils.map(entryTestimonialDto, TestimonialsEntity.class);
@@ -45,6 +47,7 @@ public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity
     }
 
     @Override
+    @Transactional
     public BasicTestimonialDTo createTestimonial(EntryTestimonialDto entryTestimonialDto) {
 
         TestimonialsEntity testimonialsEntity = new TestimonialsEntity();
@@ -56,6 +59,7 @@ public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity
     }
 
     @Override
+    @Transactional
     public BasicTestimonialDTo updateTestimonial(String id, EntryTestimonialDto entryTestimonialDto, MultipartFile img) {
         TestimonialsEntity testimonialsEntity = findById(id).get();
         testimonialsEntity = ObjectMapperUtils.map(entryTestimonialDto, testimonialsEntity);
@@ -65,6 +69,7 @@ public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity
     }
 
     @Override
+    @Transactional
     public BasicTestimonialDTo updateTestimonial(String id, EntryTestimonialDto entryTestimonialDto) {
         TestimonialsEntity testimonialsEntity = findById(id).get();
         testimonialsEntity = ObjectMapperUtils.map(entryTestimonialDto, testimonialsEntity);
@@ -88,6 +93,7 @@ public class TestimonialsServiceImpl extends BasicServiceImpl<TestimonialsEntity
     }
 
     @Override
+    @Transactional
     public Boolean deleteTestimonial(String id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
