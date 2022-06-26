@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,13 @@ public class UploadFileController {
     private final AWSS3Service awss3Service;
 
     @PostMapping(value = "/upload")
-    public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
+    public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Please choose an image file type", HttpStatus.BAD_REQUEST);
+        }
+        if (file.getSize() > 2097152) { //2MB
+            return new ResponseEntity<>("File is too large, only images up to 2MB can be uploaded", HttpStatus.BAD_REQUEST);
+        }
         String response = awss3Service.uploadFile(file) + " File was successfully uploaded";
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
