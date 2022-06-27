@@ -1,4 +1,5 @@
 package com.alkemy.ong.dto.request.members;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

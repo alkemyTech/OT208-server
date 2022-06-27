@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Data
 public class MyUserDetails implements UserDetails {
-	private String id;
+    private String id;
     private String firstName;
     private String lastName;
     private String email;
@@ -24,7 +24,7 @@ public class MyUserDetails implements UserDetails {
 
     public MyUserDetails(String id, String firstName, String lastName, String email, String password, String photo, Collection<? extends GrantedAuthority> authorities, List<String> credentials) {
         this.id = id;
-    	this.firstName = firstName;
+        this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
@@ -33,7 +33,7 @@ public class MyUserDetails implements UserDetails {
         this.credentials = credentials;
     }
 
-    public static MyUserDetails build(UserEntity userEntity){
+    public static MyUserDetails build(UserEntity userEntity) {
         List<GrantedAuthority> authorities =
                 userEntity.getRoleIds().stream().map(rol ->
                         new SimpleGrantedAuthority(rol.getRolName().name())).collect(Collectors.toList());

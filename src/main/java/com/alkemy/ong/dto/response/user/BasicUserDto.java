@@ -18,7 +18,6 @@ public class BasicUserDto {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String password;
 	private String photo;
 	@JsonProperty(value = "roles")
 	private List<RoleEntityName> roleIdsRoleEntity;

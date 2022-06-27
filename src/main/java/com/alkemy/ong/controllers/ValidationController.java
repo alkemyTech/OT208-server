@@ -1,5 +1,6 @@
 package com.alkemy.ong.controllers;
 
+import com.alkemy.ong.models.RoleEntity;
 import com.alkemy.ong.models.UserEntity;
 import com.alkemy.ong.repositories.IUserRepository;
 import com.alkemy.ong.services.ValidationService;
@@ -27,19 +28,9 @@ public class ValidationController {
         Optional<UserEntity> op = userRepository.findById(id);
 
         if (op.isPresent()) {
-
             UserEntity user = op.get();
-
-            boolean role = validationService.roleValidation(user.getRoleIds());
-
-            if (role) {
-                return new ResponseEntity<>("Usuario autorizado", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("El usuario requiere un rol permitido", HttpStatus.FORBIDDEN);
-            }
+            return new ResponseEntity<>(validationService.roleValidation(user.getRoleIds()), HttpStatus.OK);
         }
-
-        return new ResponseEntity<>("El usuario no existe", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("The user is not registered", HttpStatus.NOT_FOUND);
     }
-
 }

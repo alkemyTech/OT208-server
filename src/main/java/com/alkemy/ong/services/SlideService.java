@@ -1,6 +1,6 @@
 package com.alkemy.ong.services;
 
-import com.alkemy.ong.dto.request.slide.SlideRequestDto;
+import com.alkemy.ong.dto.request.slide.EntrySlideDto;
 import com.alkemy.ong.dto.response.slide.SlideResponseDto;
 import com.alkemy.ong.models.SlideEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +15,7 @@ public interface SlideService extends BasicService<SlideEntity, String> {
 
     SlideResponseDto getSlide(String id);
 
-    SlideResponseDto createSlide(SlideRequestDto dto);
+    SlideResponseDto createSlide(EntrySlideDto dto);
 
     SlideResponseDto updateSlide(String id, MultipartFile file);
 

@@ -1,15 +1,15 @@
 /*
-* Ticket OT208-21
-* COMO desarollador
-* QUIERO agregar la entidad Activity
-* PARA representar en la implementacion la estructura de datos
-*
-* Criterios de Aceptacion:
-* Nombre de la tabla: activities, Campos:
-* name: VARCHAR NOT NULL
-* content: TEXT NOT NULL
-* image: VARCHAR NOT NULL
-* timestamps y softDelete
+ * Ticket OT208-21
+ * COMO desarollador
+ * QUIERO agregar la entidad Activity
+ * PARA representar en la implementacion la estructura de datos
+ *
+ * Criterios de Aceptacion:
+ * Nombre de la tabla: activities, Campos:
+ * name: VARCHAR NOT NULL
+ * content: TEXT NOT NULL
+ * image: VARCHAR NOT NULL
+ * timestamps y softDelete
  */
 package com.alkemy.ong.models;
 
@@ -21,6 +21,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;

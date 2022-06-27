@@ -1,18 +1,18 @@
 package com.alkemy.ong.models;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
-import javax.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data

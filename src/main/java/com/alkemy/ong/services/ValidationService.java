@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ValidationService {
 
-    public boolean roleValidation(List<RoleEntity> role);
+    public String roleValidation(List<RoleEntity> role);
 }
