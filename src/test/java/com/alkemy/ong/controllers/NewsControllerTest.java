@@ -181,6 +181,26 @@ class NewsControllerTest {
 	}
 	
 	@Test
+	void createNews_withEmptyImage_throwResponseStatusExceptionStatus400() throws Exception {
+		EntryNewsDto entryNewsDto = ObjectMapperUtils.map(newsEntity, EntryNewsDto.class);
+		MockMultipartFile multipartEntryDto = new MockMultipartFile("news", "news.json", "application/json",
+				objectMapper.writeValueAsString(entryNewsDto).getBytes());
+		MockMultipartFile multipartImage =  new MockMultipartFile("newsImage", "", "image/jpeg", 
+				"".getBytes());
+		
+		when(categoryService.existById(idCategory)).thenReturn(true);
+		
+		mockMvc.perform(multipart("/news").file(multipartEntryDto).file(multipartImage))
+					.andExpect(status().isBadRequest())
+					.andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException));
+		
+		
+		verify(categoryService).existById(idCategory);
+		verify(awss3Service, never()).uploadFile(any());
+		verify(newsService, never()).save(any());
+	}
+	
+	@Test
 	void editNews_withValidDtoAndImage_returnedBasicNewsDtoStatus200() throws Exception {
 		EntryEditNewsDto entryEditNewsDto = ObjectMapperUtils.map(newsEntity, EntryEditNewsDto.class);
 		entryEditNewsDto.setCategory(idCategory);

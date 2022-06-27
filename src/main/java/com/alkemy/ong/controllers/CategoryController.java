@@ -94,10 +94,12 @@ public class CategoryController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(schema = @Schema()))})
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategory(@Parameter(description = "Id of the category to delete.", example = "528f22c3-1f9c-493f-8334-c70b83b5b885") @PathVariable String id) {
+    public ResponseEntity<String> deleteCategory(
+    		@Parameter(description = "Id of the category to delete.", example = "528f22c3-1f9c-493f-8334-c70b83b5b885") 
+    		@PathVariable String id) {
         if (categoryService.existById(id)) {
             categoryService.deleteById(id);
-            return new ResponseEntity<>("Category deleted", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>("Category not found", HttpStatus.NOT_FOUND);
         }
