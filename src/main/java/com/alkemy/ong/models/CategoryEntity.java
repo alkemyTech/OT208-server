@@ -32,7 +32,7 @@ public class CategoryEntity implements Serializable {
     @GeneratedValue(generator = "uuid")
     @Column(length = 36)
     @Schema(description = "Id of the category entity.", example = "528f22c3-1f9c-493f-8334-c70b83b5b885",
-            maxLength = 50, minLength = 1)
+            maxLength = 36, minLength = 1)
     private String id;
 
     @Column(nullable = false, length = 50)
@@ -41,7 +41,7 @@ public class CategoryEntity implements Serializable {
 
     @Column(length = 255)
     @Schema(description = "A description of what this category represents.",
-            example = "This is a melodramatic type category", nullable = true)
+            example = "This is a melodramatic type category", nullable = true, maxLength = 255)
     private String description;
 
     @Column(length = 255)
