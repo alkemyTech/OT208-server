@@ -1,9 +1,9 @@
 # OT208-server
 <div style="display: inline_block">
   <a href="https://github.com/topics/java" target="_blank"><img align="center" alt="Made With JAVA"  src="https://img.shields.io/badge/Made%20With-Java-blue"></a>
-  <a href="" target="_blank"><img align="center" alt="COVERAGE"  src="https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_100.svg"></a>
+  <a href="#coverage"><img align="center" alt="COVERAGE"  src="https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_100.svg"></a>
   <a href="https://documenter.getpostman.com/view/21639215/UzBsHj42" target="_blank"><img align="center" alt="POSTMAN DOC"  src="https://img.shields.io/badge/Postman-ApiDoc-orange"></a>
-  <a href="" target="_blank"><img align="center" alt="COMMITS/M"  src="https://img.shields.io/github/commit-activity/m/alkemyTech/OT208-server"></a>
+  <a href=""><img align="center" alt="COMMITS/M"  src="https://img.shields.io/github/commit-activity/m/alkemyTech/OT208-server"></a>
 </div>
 <div style="display: inline_block"><br><br>
   <a href="https://github.com/alkemyTech" target="_blank"><img align="center" alt="ALKEMY" height="84" width="84" src="https://user-images.githubusercontent.com/85143329/175833035-20a3a828-2bb5-4919-88b9-d90efdd36074.png"></a>
@@ -82,7 +82,7 @@ Implement a User Seeder where users with different roles are created, ten users 
 
 -----
 
-Documentation
+**Documentation**
 
 Through Postman and Swagger
 
@@ -91,7 +91,19 @@ Through Postman and Swagger
 | POSTMAN |<a href="https://documenter.getpostman.com/view/21639215/UzBsHj42" target="_blank">LINK</a>|
 | SWAGGER |<a href="http://localhost:8080/api/swagger-ui/index.html" target="_blank">LINK</a> (only if running)|
 
+<br>
 
+-----
+
+**Testing Coverage**
+
+<div id="coverage">
+  <br>
+  <div>The full HTML report can be accessed from the compressed file CoverageReport.zip located in the project directory.</div>
+  <br>
+  
+  <img align="center" alt="COVERAGE" src="https://user-images.githubusercontent.com/85143329/175843592-2ac2e767-a7c3-473a-a5f4-3b97de5b231c.png">
+</div>
 
 
 
