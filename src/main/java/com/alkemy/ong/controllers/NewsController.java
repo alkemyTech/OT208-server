@@ -128,7 +128,7 @@ public class NewsController {
             description = "Endpoint for the administrator user can delete an " +
                     "existing activity in order to keep the information up to date.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "204", description = "No Content"),
             @ApiResponse(responseCode = "400", description = "Bad Request")})
     @DeleteMapping("/{id}")
     public ResponseEntity<BasicNewsDto> deleteNews(@PathVariable String id) {
