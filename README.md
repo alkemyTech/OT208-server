@@ -3,7 +3,7 @@
   <a href="https://github.com/topics/java" target="_blank"><img align="center" alt="Made With JAVA"  src="https://img.shields.io/badge/Made%20With-Java-blue"></a>
   <a href="#coverage"><img align="center" alt="COVERAGE"  src="https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_100.svg"></a>
   <a href="https://documenter.getpostman.com/view/21639215/UzBsHj42" target="_blank"><img align="center" alt="POSTMAN DOC"  src="https://img.shields.io/badge/Postman-ApiDoc-orange"></a>
-  <a href=""><img align="center" alt="COMMITS/M"  src="https://img.shields.io/github/commit-activity/m/alkemyTech/OT208-server"></a>
+  <a href=https://github.com/alkemyTech/OT208-server/graphs/traffic" target="_blank"><img align="center" alt="COMMITS/M"  src="https://img.shields.io/github/commit-activity/m/alkemyTech/OT208-server"></a>
 </div>
 <div style="display: inline_block"><br><br>
   <a href="https://github.com/alkemyTech" target="_blank"><img align="center" alt="ALKEMY" height="84" width="84" src="https://user-images.githubusercontent.com/85143329/175833035-20a3a828-2bb5-4919-88b9-d90efdd36074.png"></a>
@@ -26,18 +26,20 @@ Developed by:
 
 Mentor: Juan Esteban Lopez
 
------
 As part of Alkemy's acceleration for Java BackEnd. Implements functionalities for an NGO and its online management through a portal that allows access with security and differentiated by roles of Users and Administrators, facilitating the administration of partners, news, comments or contacts received from the Organization, and other features such as storing files in an AWS S3 bucket depending on the functionality, as well as the automatic sending of emails.
 
-<br>
+
+-----
 
 **Entity Relationship Diagram**
 
------
+<br>
 
 ![ERot208](https://user-images.githubusercontent.com/85143329/175832651-337fb842-e15b-4476-b2b4-1cfa9957d663.png)
 
-In addition to Spring Boot's own dependencies, the following dependencies were used:
+-----
+
+In order to meet all specifications, the following dependencies were implemented:
 
 
 |       Dependency        |      Link   |
@@ -50,8 +52,12 @@ In addition to Spring Boot's own dependencies, the following dependencies were u
 |MySQL 8.0.25             |<a href="https://dev.mysql.com/doc/" target="_blank">MySQL Doc</a>|
 |ModelMapper 3.1.0        |<a href="https://github.com/modelmapper/modelmapper" target="_blank">ModelMapper</a>|
 
+
+-----
+
+Of the 110 Classes developed, one of them is a Seeder in which users with different roles are created, 10 users with Administrative permissions and 10 with basic User permissions. 
+
 <br>
-Implement a User Seeder where users with different roles are created, ten users with the Administrator role and ten with the User role.
 
 **User List**
 
@@ -99,7 +105,7 @@ Through Postman and Swagger
 
 <div id="coverage">
   <br>
-  <div>The full HTML report can be accessed from the compressed file CoverageReport.zip located in the project directory.</div>
+  <div>The full HTML report can be accessed from the compressed file <a href="https://github.com/alkemyTech/OT208-server/raw/main/CoverageReport.zip" target="_blank">CoverageReport.zip</a> located in the project directory.</div>
   <br>
   
   <img align="center" alt="COVERAGE" src="https://user-images.githubusercontent.com/85143329/175843592-2ac2e767-a7c3-473a-a5f4-3b97de5b231c.png">
