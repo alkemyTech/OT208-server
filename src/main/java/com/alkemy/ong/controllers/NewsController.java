@@ -10,6 +10,10 @@ import com.alkemy.ong.services.AWSS3Service;
 import com.alkemy.ong.services.CategoryService;
 import com.alkemy.ong.services.NewsService;
 import com.alkemy.ong.utils.ObjectMapperUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +30,7 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
 import java.util.Optional;
 
+@Tag(name = "Testimonials", description = "Enpoints to be able to inform the organization news.")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/news")
@@ -36,6 +41,11 @@ public class NewsController {
     private final AWSS3Service awss3Service;
     private final CategoryService categoryService;
 
+    @Operation(summary = "Get a news",
+            description = "Get a news item if it already exists in the application.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok Exists By Id"),
+            @ApiResponse(responseCode = "404", description = "Not found")})
     @GetMapping("/{id}")
     public ResponseEntity<BasicNewsDto> getNews(@PathVariable String id) {
         Optional<NewsEntity> newsEntity = newsService.findById(id);
@@ -47,6 +57,12 @@ public class NewsController {
         return ResponseEntity.ok(ObjectMapperUtils.map(newsEntity, BasicNewsDto.class));
     }
 
+    @Operation(summary = "Create a news",
+            description = "Endpoint to allow the administrator user to add a new " +
+                    "feature to the system in order to report the organisation's news.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "400", description = "Bad Request")})
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BasicNewsDto> createNews(
             @Valid @RequestPart(name = "news", required = true) EntryNewsDto entryNewsDto,
@@ -72,6 +88,12 @@ public class NewsController {
                 .body(ObjectMapperUtils.map(newsService.save(newsEntity), BasicNewsDto.class));
     }
 
+    @Operation(summary = "Update a news",
+            description = "Endpoint for the administrator user to update an existing " +
+                    "development in order to keep the information up to date.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "400", description = "Bad Request")})
     @PutMapping("/{id}")
     public ResponseEntity<BasicNewsDto> editNews(
             @PathVariable String id,
@@ -102,6 +124,12 @@ public class NewsController {
         return ResponseEntity.ok(ObjectMapperUtils.map(newsService.edit(newsEntity), BasicNewsDto.class));
     }
 
+    @Operation(summary = "Delete a news",
+            description = "Endpoint for the administrator user can delete an " +
+                    "existing activity in order to keep the information up to date.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "400", description = "Bad Request")})
     @DeleteMapping("/{id}")
     public ResponseEntity<BasicNewsDto> deleteNews(@PathVariable String id) {
         Optional<NewsEntity> newsEntity = newsService.findById(id);
@@ -114,6 +142,12 @@ public class NewsController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Get pegeable news",
+            description = "Endpoint for the user to display paginated news " +
+                    "results in order to increase the speed of response.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "400", description = "Bad Request")})
     @GetMapping("/list")
     public ResponseEntity<Page<BasicNewsDto>> getNews(@PageableDefault(size = 10) Pageable pageable) {
         return ResponseEntity.ok(newsService.getNews(pageable));
