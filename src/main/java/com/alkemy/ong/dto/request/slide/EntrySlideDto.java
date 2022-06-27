@@ -11,14 +11,11 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class EntrySlideDto {
 
-    @NotBlank(message = "An image in base64 must be specified.")
-    private String imageUrl;
+    private Integer order;
 
     @NotBlank(message = "A text must be provided.")
     private String text;
 
-    private Integer order;
-
-    @NotBlank(message = "An organization must be specified.")
-    private String organizationId;
+    @NotBlank(message = "An image in base64 must be specified.")
+    private String imageUrl;
 }
