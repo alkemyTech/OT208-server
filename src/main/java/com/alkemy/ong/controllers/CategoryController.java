@@ -1,18 +1,8 @@
 package com.alkemy.ong.controllers;
 
-import com.alkemy.ong.dto.request.category.EntryCategoryDto;
-import com.alkemy.ong.dto.response.category.CategoryBasicDto;
-import com.alkemy.ong.dto.response.category.CategoryDetailDto;
-import com.alkemy.ong.exeptions.ValidationException;
-import com.alkemy.ong.services.CategoryService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
+import javax.servlet.annotation.MultipartConfig;
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,11 +10,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.annotation.MultipartConfig;
-import javax.validation.Valid;
+import com.alkemy.ong.dto.request.category.EntryCategoryDto;
+import com.alkemy.ong.dto.response.category.CategoryBasicDto;
+import com.alkemy.ong.dto.response.category.CategoryDetailDto;
+import com.alkemy.ong.exeptions.ValidationException;
+import com.alkemy.ong.services.CategoryService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/categories")
@@ -35,8 +43,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Operation(summary = "Endpoint to create a category.",
-            description = "It provides the necessary mechanism to be able to create a new category.",
-            requestBody = @RequestBody)
+            description = "It provides the necessary mechanism to be able to create a new category.")
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),

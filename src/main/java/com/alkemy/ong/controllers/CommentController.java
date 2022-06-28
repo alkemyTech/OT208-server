@@ -1,8 +1,24 @@
 package com.alkemy.ong.controllers;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alkemy.ong.dto.request.comment.EditCommentDto;
 import com.alkemy.ong.dto.request.comment.EntryCommentDto;
-import com.alkemy.ong.dto.response.category.CategoryDetailDto;
 import com.alkemy.ong.dto.response.comment.BasicCommentDto;
 import com.alkemy.ong.dto.response.comment.CompleteCommentDto;
 import com.alkemy.ong.exeptions.NewsNotExistException;
@@ -19,20 +35,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -64,8 +69,7 @@ public class CommentController {
     }
     
     @Operation(summary = "Endpoint to create a comment.",
-            description = "It provides the necessary mechanism to be able to create a new comment.",
-            requestBody = @RequestBody)
+            description = "It provides the necessary mechanism to be able to create a new comment.")
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created",  content = @Content(schema = @Schema(implementation = CompleteCommentDto.class))),
