@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -31,8 +32,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,17 +42,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class SlideControllerTest {
 
+    @MockBean
+    public SlideService slideService;
+    @Autowired
+    public MockMvc mockMvc;
     String id;
     OrganizationEntity ong;
     SlideEntity slide;
     ObjectMapper objectMapper;
     ObjectWriter objectWriter;
-
-    @MockBean
-    public SlideService slideService;
-
-    @Autowired
-    public MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
@@ -129,8 +127,9 @@ class SlideControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
-    void getSlide() throws Exception {
+    void getSlide200() throws Exception {
         SlideResponseDto dtoResponse = ObjectMapperUtils.map(slide, SlideResponseDto.class);
+        Mockito.when(slideService.existById(id)).thenReturn(true);
         Mockito.when(slideService.getSlide(dtoResponse.getId())).thenReturn(dtoResponse);
         mockMvc.perform(get("/slides/" + dtoResponse.getId()))
                 .andExpect(status().isOk())
@@ -140,10 +139,89 @@ class SlideControllerTest {
         verify(slideService).getSlide(dtoResponse.getId());
     }
 
+    @Test
+    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    void getSlide404() throws Exception {
+        SlideResponseDto dtoResponse = ObjectMapperUtils.map(slide, SlideResponseDto.class);
+        Mockito.when(slideService.existById("test")).thenReturn(false);
+        mockMvc.perform(get("/slides/" + "test"))
+                .andExpect(status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
+        verify(slideService, never()).getSlide(dtoResponse.getId());
+    }
+
 
     @Test
-    void updateSlide() {
-        
+    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    void updateSlide200() throws Exception {
+        SlideResponseDto dtoResponse = ObjectMapperUtils.map(slide, SlideResponseDto.class);
+        MockMultipartFile multipartImg = new MockMultipartFile(
+                "file",
+                "imagen.jpg",
+                "image/jpeg", "imagen.jpg".getBytes());
+
+        when(slideService.existById(id)).thenReturn(true);
+        when(slideService.updateSlide(id, multipartImg)).thenReturn(dtoResponse);
+        mockMvc.perform(multipart("/slides/" + id)
+                        .file(multipartImg)
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(dtoResponse), true))
+                .andDo(MockMvcResultHandlers.print());
+        verify(slideService).existById(id);
+        verify(slideService).updateSlide(id, multipartImg);
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    void updateSlide400() throws Exception {
+        SlideResponseDto dtoResponse = ObjectMapperUtils.map(slide, SlideResponseDto.class);
+        MockMultipartFile multipartImg = new MockMultipartFile(
+                "file",
+                "",
+                "image/jpeg", "".getBytes());
+
+        when(slideService.existById(id)).thenReturn(true);
+        when(slideService.updateSlide(id, multipartImg)).thenReturn(dtoResponse);
+        mockMvc.perform(multipart("/slides/" + id)
+                        .file(multipartImg)
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                //.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                //.andExpect(content().json(objectMapper.writeValueAsString(dtoResponse), true))
+                .andDo(MockMvcResultHandlers.print());
+        verify(slideService).existById(id);
+        verify(slideService, never()).updateSlide(id, multipartImg);
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    void updateSlide404() throws Exception {
+        SlideResponseDto dtoResponse = ObjectMapperUtils.map(slide, SlideResponseDto.class);
+        MockMultipartFile multipartImg = new MockMultipartFile(
+                "file",
+                "imagen.jpg",
+                "image/jpeg", "imagen.jpg".getBytes());
+
+        when(slideService.existById("test")).thenReturn(false);
+        when(slideService.updateSlide("test", multipartImg)).thenReturn(dtoResponse);
+        mockMvc.perform(multipart("/slides/" + id)
+                        .file(multipartImg)
+                        .with(request -> {
+                            request.setMethod("PUT");
+                            return request;
+                        }))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(MockMvcResultHandlers.print());
+        verify(slideService).existById(id);
+        verify(slideService, never()).updateSlide(id, multipartImg);
     }
 
 
@@ -161,11 +239,10 @@ class SlideControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
     void testDeleteSlides404() throws Exception {
-        id = "test";
+
         when(slideService.deleteSlide(id)).thenReturn(false);
         mockMvc.perform(delete("/testimonials/test"))
                 .andExpect(status().isNotFound());
-        verify(slideService,never()).deleteSlide("test");
-
+        verify(slideService).deleteSlide("test");
     }
 }

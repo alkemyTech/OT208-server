@@ -271,7 +271,7 @@ class TestimonialsControllerTest {
     // GET TESTIMONIALS
     @Test
     @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
-    void testGetMembersPage200() throws Exception {
+    void testGetTestimonialPage200() throws Exception {
         Page<BasicTestimonialDTo> dToPage = Mockito.mock(Page.class);
         when(service.getTestimonials(any(Pageable.class))).thenReturn(dToPage);
 

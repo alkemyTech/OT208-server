@@ -108,7 +108,7 @@ public class SlideServiceImpl extends BasicServiceImpl<SlideEntity, String, ISli
     @Override
     @Transactional
     public Boolean deleteSlide(String id) {
-        if (repository.findById(id).isEmpty()) {
+        if (!repository.existsById(id)) {
             LOG.error("Failure to delete a slide, Slide with id {} not found", id);
             return false;
         } else {
