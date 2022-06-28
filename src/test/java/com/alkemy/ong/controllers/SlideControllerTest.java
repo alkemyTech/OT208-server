@@ -26,11 +26,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,8 +56,8 @@ class SlideControllerTest {
 
     @BeforeEach
     void setUp() {
-        id = "o123n123g123";
-        ong = new OrganizationEntity(id,
+        id = "111111111111111111111111";
+        ong = new OrganizationEntity("o123n123g123",
                 "theName",
                 "http:/aImage.jpg",
                 null,
@@ -68,7 +69,7 @@ class SlideControllerTest {
                 null,
                 null, LocalDateTime.now(),
                 false);
-        slide = new SlideEntity("1111111",
+        slide = new SlideEntity(id,
                 "http:/anotherImage1.jpg",
                 "one text",
                 1, ong);
@@ -114,22 +115,43 @@ class SlideControllerTest {
     }
 
     @Test
-    void getAll() {
+    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    void getAll200() throws Exception {
+        SlideResponseDto dtoResponse = ObjectMapperUtils.map(slide, SlideResponseDto.class);
+        Mockito.when(slideService.getAll()).thenReturn(List.of(dtoResponse));
+        mockMvc.perform(get("/slides"))
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print());
+        verify(slideService).getAll();
     }
 
+
     @Test
-    void getSlide() {
+    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    void getSlide() throws Exception {
+        SlideResponseDto dtoResponse = ObjectMapperUtils.map(slide, SlideResponseDto.class);
+        Mockito.when(slideService.getSlide(dtoResponse.getId())).thenReturn(dtoResponse);
+        mockMvc.perform(get("/slides/" + dtoResponse.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(dtoResponse)))
+                .andDo(MockMvcResultHandlers.print());
+        verify(slideService).getSlide(dtoResponse.getId());
     }
+
 
     @Test
     void updateSlide() {
+        
     }
 
 
-    // DELETE TESTIMONIALS
+    // DELETE SLIDES
     @Test
     @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
     void testDeleteSlides204() throws Exception {
+
         when(slideService.deleteSlide(id)).thenReturn(true);
         mockMvc.perform(delete("/slides/" + id))
                 .andExpect(status().isNoContent());
@@ -143,6 +165,7 @@ class SlideControllerTest {
         when(slideService.deleteSlide(id)).thenReturn(false);
         mockMvc.perform(delete("/testimonials/test"))
                 .andExpect(status().isNotFound());
+        verify(slideService,never()).deleteSlide("test");
 
     }
 }

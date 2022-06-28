@@ -28,9 +28,10 @@ public class SlideController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SlideResponseDto> getSlide(@PathVariable String id) {
-        if (slideService.findById(id).isPresent()) {
-            return new ResponseEntity<SlideResponseDto>(slideService.getSlide(id), HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (!slideService.existById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(slideService.getSlide(id));
     }
 
     @PostMapping
