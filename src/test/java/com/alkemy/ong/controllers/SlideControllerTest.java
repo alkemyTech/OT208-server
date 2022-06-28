@@ -29,6 +29,9 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,15 +41,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class SlideControllerTest {
 
-    @MockBean
-    public SlideService slideService;
-    @Autowired
-    public MockMvc mockMvc;
     String id;
     OrganizationEntity ong;
     SlideEntity slide;
     ObjectMapper objectMapper;
     ObjectWriter objectWriter;
+
+    @MockBean
+    public SlideService slideService;
+
+    @Autowired
+    public MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
@@ -86,6 +91,7 @@ class SlideControllerTest {
                 .andExpect(status().is(201))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print());
+        verify(slideService).createSlide(dtoRequest);
     }
 
     @Test
@@ -119,7 +125,24 @@ class SlideControllerTest {
     void updateSlide() {
     }
 
+
+    // DELETE TESTIMONIALS
     @Test
-    void deleteSlide() {
+    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    void testDeleteSlides204() throws Exception {
+        when(slideService.deleteSlide(id)).thenReturn(true);
+        mockMvc.perform(delete("/slides/" + id))
+                .andExpect(status().isNoContent());
+        verify(slideService).deleteSlide(id);
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
+    void testDeleteSlides404() throws Exception {
+        id = "test";
+        when(slideService.deleteSlide(id)).thenReturn(false);
+        mockMvc.perform(delete("/testimonials/test"))
+                .andExpect(status().isNotFound());
+
     }
 }
