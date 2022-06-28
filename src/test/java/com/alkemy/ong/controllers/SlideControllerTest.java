@@ -241,7 +241,7 @@ class SlideControllerTest {
     void testDeleteSlides404() throws Exception {
 
         when(slideService.deleteSlide(id)).thenReturn(false);
-        mockMvc.perform(delete("/testimonials/test"))
+        mockMvc.perform(delete("/slides/test"))
                 .andExpect(status().isNotFound());
         verify(slideService).deleteSlide("test");
     }
