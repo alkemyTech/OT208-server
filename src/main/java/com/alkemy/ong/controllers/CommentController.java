@@ -88,8 +88,8 @@ public class CommentController {
         if (!newsService.existById(entryCommentDto.getNewsIdId())) {
             throw new NewsNotExistException(entryCommentDto.getNewsIdId());
         }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.saveEntity(entryCommentDto));
+        CompleteCommentDto a = commentService.saveEntity(entryCommentDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(a);
     }
     
     @Operation(summary = "Endpoint to edit a comment.",

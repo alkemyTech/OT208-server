@@ -1,9 +1,9 @@
-# OT208-server
+# 🚀 OT208 Rocket Team - ONG-server 
 <div style="display: inline_block">
   <a href="https://github.com/topics/java" target="_blank"><img align="center" alt="Made With JAVA"  src="https://img.shields.io/badge/Made%20With-Java-blue"></a>
   <a href="#coverage"><img align="center" alt="COVERAGE"  src="https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_100.svg"></a>
   <a href="https://documenter.getpostman.com/view/21639215/UzBsHj42" target="_blank"><img align="center" alt="POSTMAN DOC"  src="https://img.shields.io/badge/Postman-ApiDoc-orange"></a>
-  <a href=https://github.com/alkemyTech/OT208-server/graphs/traffic" target="_blank"><img align="center" alt="COMMITS/M"  src="https://img.shields.io/github/commit-activity/m/alkemyTech/OT208-server"></a>
+  <a href="https://github.com/alkemyTech/OT208-server/graphs/contributors" target="_blank"><img align="center" alt="COMMITS/M"  src="https://img.shields.io/github/commit-activity/m/alkemyTech/OT208-server"></a>
 </div>
 <div style="display: inline_block"><br><br>
   <a href="https://github.com/alkemyTech" target="_blank"><img align="center" alt="ALKEMY" height="84" width="84" src="https://user-images.githubusercontent.com/85143329/175833035-20a3a828-2bb5-4919-88b9-d90efdd36074.png"></a>
@@ -15,16 +15,16 @@
 
 ----
 
-**OT208-server is a REST API in JAVA 11 with Spring Boot 2.5.1**
+**ONG-server is a REST API in JAVA 11 with Spring Boot 2.5.1**
 
-Developed by:
-* Nestor Raul Agredo
-* Eduardo Sanchez
-* Oriana Pellegrini
-* Martin Iriarte
-* Adrian Camus
+Rocket Team:
+* :colombia: Nestor Raul Agredo  [LinkedIn](https://www.linkedin.com/in/nestor-raul-agredo-llanten/ ) - [GitHub](https://github.com/nestoragredollanten)
+* :peru: Eduardo Sanchez [LinkedIn](https://www.linkedin.com/in/eduardo-sanchez-038086232/ ) - [GitHub](https://github.com/EdwardDavys)
+* :argentina: Oriana Pellegrini [LinkedIn](https://www.linkedin.com/in/oriana-pellegrini/ ) - [GitHub](https://github.com/Oriana10)
+* :argentina: Martin Iriarte [LinkedIn](https://www.linkedin.com/in/martin-iriarte/ ) - [GitHub](https://github.com/MartinIriarte89)
+* :argentina: Adrian Camus [LinkedIn](https://www.linkedin.com/in/acamus79/ ) - [GitHub](https://github.com/acamus79)
 
-Mentor: Juan Esteban Lopez
+Mentor: Juan Esteban Lopez [LinkedIn](https://www.linkedin.com/in/juan-esteban-lopez-8bb677b/ ) - [GitHub](https://github.com/juan1977lopez)
 
 As part of Alkemy's acceleration for Java BackEnd. Implements functionalities for an NGO and its online management through a portal that allows access with security and differentiated by roles of Users and Administrators, facilitating the administration of partners, news, comments or contacts received from the Organization, and other features such as storing files in an AWS S3 bucket depending on the functionality, as well as the automatic sending of emails.
 
@@ -108,8 +108,10 @@ Through Postman and Swagger
   <div>The full HTML report can be accessed from the compressed file <a href="https://github.com/alkemyTech/OT208-server/raw/main/CoverageReport.zip" target="_blank">CoverageReport.zip</a> located in the project directory.</div>
   <br>
   
-  <img align="center" alt="COVERAGE" src="https://user-images.githubusercontent.com/85143329/175843592-2ac2e767-a7c3-473a-a5f4-3b97de5b231c.png">
+  <img align="center" alt="COVERAGE" src="https://user-images.githubusercontent.com/85143329/176202236-2d970474-17e3-40d7-82e4-03743f36e5fc.png">
 </div>
+
+
 
 
 
