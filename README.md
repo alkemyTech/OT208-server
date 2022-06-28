@@ -18,13 +18,13 @@
 **OT208-server is a REST API in JAVA 11 with Spring Boot 2.5.1**
 
 Developed by:
-* Nestor Raul Agredo
-* Eduardo Sanchez
-* Oriana Pellegrini
-* Martin Iriarte
-* Adrian Camus
+* Nestor Raul Agredo  [LinkedIn](https://www.linkedin.com/in/nestor-raul-agredo-llanten/ ) - [GitHub](https://github.com/nestoragredollanten)
+* Eduardo Sanchez [LinkedIn](https://www.linkedin.com/in/eduardo-sanchez-038086232/ ) - [GitHub](https://github.com/EdwardDavys)
+* Oriana Pellegrini [LinkedIn](https://www.linkedin.com/in/oriana-pellegrini/ ) - [GitHub](https://github.com/Oriana10)
+* Martin Iriarte [LinkedIn](https://www.linkedin.com/in/martin-iriarte/ ) - [GitHub](https://github.com/MartinIriarte89)
+* Adrian Camus [LinkedIn](https://www.linkedin.com/in/acamus79/ ) - [GitHub](https://github.com/acamus79)
 
-Mentor: Juan Esteban Lopez
+Mentor: Juan Esteban Lopez [LinkedIn](https://www.linkedin.com/in/juan-esteban-lopez-8bb677b/ ) - [GitHub](https://github.com/juan1977lopez)
 
 As part of Alkemy's acceleration for Java BackEnd. Implements functionalities for an NGO and its online management through a portal that allows access with security and differentiated by roles of Users and Administrators, facilitating the administration of partners, news, comments or contacts received from the Organization, and other features such as storing files in an AWS S3 bucket depending on the functionality, as well as the automatic sending of emails.
 
