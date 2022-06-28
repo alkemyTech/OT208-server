@@ -53,7 +53,9 @@ public class SlideController {
     public ResponseEntity<String> deleteSlide(@PathVariable String id) {
         if (slideService.deleteSlide(id)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else return new ResponseEntity<>("ID not found or null: " + id, HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>("ID not found", HttpStatus.NOT_FOUND);
+        }
     }
 
 }
