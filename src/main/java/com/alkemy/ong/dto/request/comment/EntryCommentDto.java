@@ -1,14 +1,13 @@
 package com.alkemy.ong.dto.request.comment;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Getter
-@Setter
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+@Data
 public class EntryCommentDto {
 
     @NotBlank(message = "The userId cannot be empty or null")

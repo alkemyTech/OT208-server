@@ -1,5 +1,7 @@
 package com.alkemy.ong.controllers;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -57,6 +59,8 @@ class UploadFileControllerTest {
 				.andExpect(status().isCreated())
 				.andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE.concat(";charset=UTF-8")))
 				.andExpect(content().string("miImage.jpg File was successfully uploaded"));
+		
+		verify(awss3Service).uploadFile(multipartImage);
 	}
 	
 	@Test
@@ -68,6 +72,8 @@ class UploadFileControllerTest {
 				.andExpect(status().isBadRequest())
 				.andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE.concat(";charset=UTF-8")))
 				.andExpect(content().string("Please choose an image file type"));
+		
+		verify(awss3Service, never()).uploadFile(multipartImage);
 	}
 	
 	@Test
@@ -80,6 +86,8 @@ class UploadFileControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(content().json(objectMapper.writeValueAsString(urlImages), true));
+		
+		verify(awss3Service).getAllObjectsFromS3();
 	}
 	
 	@Test
@@ -90,6 +98,8 @@ class UploadFileControllerTest {
 		
 		mockMvc.perform(get("/storage/list").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
+		
+		verify(awss3Service).getAllObjectsFromS3();
 	}
 	
 	@Test
@@ -99,6 +109,8 @@ class UploadFileControllerTest {
 		
 		mockMvc.perform(get("/storage/download?key=" + key).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
+		
+		verify(awss3Service).downloadFile(key);
 	}
 	
 	@Test
@@ -108,5 +120,7 @@ class UploadFileControllerTest {
 		
 		mockMvc.perform(get("/storage/download?key=" + key).contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isNotFound());
+		
+		verify(awss3Service).downloadFile(key);
 	}
 }
