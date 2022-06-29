@@ -111,7 +111,16 @@ Through Postman and Swagger
   <img align="center" alt="COVERAGE" src="https://user-images.githubusercontent.com/85143329/176202236-2d970474-17e3-40d7-82e4-03743f36e5fc.png">
 </div>
 
+-----
 
+**Credentials required to compile**
+
+To execute this project, before compiling, the application properties file must be completed in its corresponding sections:
+
+* Specify a token secret key, and the token duration in milliseconds.
+* Must have Sendgrid and AWS credentials which you must complete 
+
+![imagen](https://user-images.githubusercontent.com/85143329/176469696-50668039-eba5-4d23-8a75-20d01b6e1f69.png)
 
 
 
