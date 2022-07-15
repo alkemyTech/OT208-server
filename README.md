@@ -4,6 +4,7 @@
   <a href="#coverage"><img align="center" alt="COVERAGE"  src="https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_100.svg"></a>
   <a href="https://documenter.getpostman.com/view/21639215/UzBsHj42" target="_blank"><img align="center" alt="POSTMAN DOC"  src="https://img.shields.io/badge/Postman-ApiDoc-orange"></a>
   <a href="https://github.com/alkemyTech/OT208-server/graphs/contributors" target="_blank"><img align="center" alt="COMMITS/M"  src="https://img.shields.io/github/commit-activity/m/alkemyTech/OT208-server"></a>
+  <a href="https://youtu.be/ZeZzy2XrEO0" target="_blank"><img align="center" alt="YOUTUBE" src="https://img.shields.io/youtube/views/ZeZzy2XrEO0?label=View%20Video&style=social"></a>
 </div>
 <div style="display: inline_block"><br><br>
   <a href="https://github.com/alkemyTech" target="_blank"><img align="center" alt="ALKEMY" height="84" width="84" src="https://user-images.githubusercontent.com/85143329/175833035-20a3a828-2bb5-4919-88b9-d90efdd36074.png"></a>
